@@ -1,10 +1,25 @@
-.card-container {
-  margin-top: '88px';
-  
-  .card-container-title {
-    font-size: 24px;
-    color: #FFF;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
+.dispatch-list {
+  margin-top: clamp(3rem, 7vw, 6rem);
+}
+
+.dispatch-list__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+}
+
+.dispatch-list__title {
+  margin: 0;
+  color: var(--void-cream-muted);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.dispatch-list__items {
+  display: grid;
 }

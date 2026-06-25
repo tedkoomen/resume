@@ -1,18 +1,43 @@
 import React from "react";
+import { graphql } from "gatsby";
 import Layout from "../components/Layout/Layout";
-import Hero from "../components/Hero/Hero";
-import { BLACK_BACKGROUND } from "../constants";
+import Seo from "../components/seo";
+import CardContainer from "../components/CardContainer/CardContainer";
+import "./blog.scss";
 
-const Blog = () => (
-  <Layout>
-    <Hero
-      height="1400px"
-      background={BLACK_BACKGROUND}
-      style={{ textAlign: "center" }}
-    >
-      <h1 style={{ paddingTop: "500px" }}>Coming Soon</h1>
-    </Hero>
-  </Layout>
-);
+const Blog = ({ data }) => {
+  const posts = data.allMarkdownRemark.edges;
+
+  return (
+    <Layout>
+      <Seo title="Archive" />
+      <section className="archive-header">
+        <p>Archive</p>
+        <h1>Every article, in reverse chronological order.</h1>
+      </section>
+      <CardContainer containerTitle="All Articles" data={posts} />
+    </Layout>
+  );
+};
+
+export const archivePostsQuery = graphql`
+  query ArchivePosts {
+    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+      edges {
+        node {
+          timeToRead
+          frontmatter {
+            description
+            path
+            posttype
+            title
+            date
+            dispatch
+          }
+        }
+      }
+    }
+  }
+`;
 
 export default Blog;

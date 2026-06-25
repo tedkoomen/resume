@@ -1,125 +1,50 @@
 import React from "react";
-import Layout from "../components/Layout/Layout";
-import Hero from "../components/Hero/Hero";
-import { BLACK_BACKGROUND } from "../constants";
-import Seo from "../components/seo";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { graphql } from "gatsby";
+import { graphql, Link } from "gatsby";
 import Img from "gatsby-image";
+import Layout from "../components/Layout/Layout";
+import Seo from "../components/seo";
+import "./about-me.scss";
 
-const AboutMePage = ({ data, path, location }) => {
+const AboutMePage = ({ data, path }) => {
   return (
     <Layout path={path}>
-      <Seo title="About Me" />
-      <Hero
-        height="1400px"
-        style={{ overflowX: "hidden", paddingTop: "10%" }}
-        background={BLACK_BACKGROUND}
-      >
-        <div
-          className="row responsive-margins"
-          style={{
-            paddingTop: "70px",
-            justifyContent: "center",
-          }}
-        >
-          <Img
-            fluid={data.file.childImageSharp.fluid}
-            style={{
-              marginTop: "5px",
-              maxHeight: "500px",
-              maxWidth: "400px",
-              marginBottom: "10%",
-            }}
-            className="col-md"
-          />
-          <div style={{ maxWidth: "500px" }} className="col-md">
-            <div className="col-md-12">
-              <p
-                style={{
-                  fontSize: "16px",
-                  color: "#fff",
-                  fontWeight: "300",
-                  opacity: ".9",
-                }}
-              >
-                I have over 3 years of experience as a software engineer, and
-                have worked at both small startups and large organizations.
-                While I'm a proficient full-stack developer, my expertise is in
-                building scalable backend services (API services, stream
-                processing, and async mechanisms).
-              </p>
-
-              <p
-                style={{
-                  fontSize: "16px",
-                  color: "#fff",
-                  fontWeight: "300",
-                  opacity: ".9",
-                }}
-              >
-                I love building things. While hard engineering problems are
-                often intrinsically fun to tackle, I'm most attracted to solving
-                real customer problems with a business justification. Previously
-                I worked in the Finance and Insurance industry, and I try to
-                incorporate my background in these industries to give users
-                well-rounded, immersive experiences. I am eager to join teams
-                that are building meaningful products and value a collaborative
-                culture with an emphasis on continuous learning.
-              </p>
-
-              <h1
-                style={{
-                  fontSize: "24px",
-                  fontWeight: "bold",
-                  color: "#fff",
-                  marginTop: "10%",
-                }}
-              >
-                Highlights
-              </h1>
-              <div style={{ marginTop: "5%" }}>
-                <p
-                  style={{
-                    fontSize: "16px",
-                    color: "#fff",
-                    fontWeight: "300",
-                    opacity: ".9",
-                  }}
-                >
-                  Engineered ordering capabilities for COVID-19 test for the
-                  State of Connecticut at a rate of ten thousand tests per day.
-                </p>
-                <p
-                  style={{
-                    fontSize: "16px",
-                    color: "#fff",
-                    fontWeight: "300",
-                    opacity: ".9",
-                  }}
-                >
-                  Decreased page load time of largest genetic testing provider
-                  by 87.5%
-                </p>
-                <p
-                  style={{
-                    fontSize: "16px",
-                    color: "#fff",
-                    fontWeight: "300",
-                    opacity: ".9",
-                  }}
-                >
-                  Lead team of engineers in revamping front end framework of a
-                  multi-billion dollar company
-                </p>
-              </div>
-            </div>
+      <Seo title="About" />
+      <section className="about-page">
+        <div className="about-page__image">
+          <Img fluid={data.file.childImageSharp.fluid} alt="Ted Koomen" />
+        </div>
+        <div className="about-page__copy">
+          <p className="about-page__kicker">About</p>
+          <h1>Ted Koomen</h1>
+          <p className="about-page__lede">
+            I build software systems and write articles about engineering,
+            performance, AI, and the places where elegant abstractions stop
+            helping.
+          </p>
+          <p>
+            My work has focused on scalable backend services, API design, stream
+            processing, and asynchronous mechanisms. I am most interested in
+            engineering that survives contact with production constraints.
+          </p>
+          <p>
+            Screaming Into The Void is where I publish long-form notes on
+            software, systems, and the industry habits worth questioning.
+          </p>
+          <div className="about-page__links">
+            <Link to="/resume/">Resume →</Link>
+            <a href="https://github.com/tedkoomen" rel="noreferrer" target="_blank">
+              GitHub →
+            </a>
+            <a href="https://www.linkedin.com/in/tedkoomen/" rel="noreferrer" target="_blank">
+              LinkedIn →
+            </a>
           </div>
         </div>
-      </Hero>
+      </section>
     </Layout>
   );
 };
+
 export const data = graphql`
   query AboutMeImageQuery {
     file(relativePath: { eq: "professional.jpg" }) {

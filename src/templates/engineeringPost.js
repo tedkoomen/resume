@@ -1,66 +1,72 @@
 import React from "react";
-import { graphql } from "gatsby";
+import { graphql, Link } from "gatsby";
 import Layout from "../components/Layout/Layout";
-import Hero from '../components/Hero/Hero';
-import Seo from '../components/seo';
-import moment from 'moment';
-import Img from 'gatsby-image';
-import './engineeringPost.scss'
-import "bootstrap/dist/css/bootstrap.min.css";
+import Seo from "../components/seo";
+import moment from "moment";
+import "./engineeringPost.scss";
 
+const formatPostType = (posttype) => (posttype || "dispatch").replace(/-/g, " ");
 
 export default ({ data, location }) => {
   if (!data?.markdownRemark) {
     return null;
   }
 
-  const {
-    date,
-    title,
-    description,
-    posttype,
-    featured,
-    snippet,
-    image,
-    featuredImage,
-    author,
-  } = data.markdownRemark.frontmatter;
+  const { date, title, description, posttype, snippet, featuredImage, author, dispatch } =
+    data.markdownRemark.frontmatter;
 
   const post = data.markdownRemark;
   const seoImage = featuredImage?.childImageSharp?.resize;
+  const formattedDate = date ? moment(date).format("YYYY-MM-DD") : "Undated";
 
   return (
-    <Layout navWhite>
-      { console.log(seoImage) }
+    <Layout>
       <Seo
         title={title}
         description={description}
         pathname={location.pathname}
         image={seoImage}
       />
-      <Hero background="#FFF">
-        <div className="container">
-          <div style={{
-            marginTop: "10%",
-            marginBottom: "10%"
-          }}>
-              <div className={`post-type post-type-${posttype}`}>
-                {posttype}
+      <article className="dispatch-page">
+        <header className="dispatch-hero">
+          <Link className="dispatch-hero__back" to="/">
+            ← Back to articles
+          </Link>
+          <div className="dispatch-hero__grid">
+            <div className="dispatch-hero__main">
+              <p className="dispatch-hero__kicker">
+                Dispatch {dispatch ? String(dispatch).padStart(3, "0") : ""} / {formatPostType(posttype)}
+              </p>
+              <h1>{title}</h1>
+              {description && <p className="dispatch-hero__description">{description}</p>}
+              {snippet && <p className="dispatch-hero__snippet">{snippet}</p>}
+              <p className="dispatch-hero__byline">by {author || "Ted Koomen"}</p>
+            </div>
+            <dl className="dispatch-hero__meta">
+              <div>
+                <dt>Date</dt>
+                <dd>{formattedDate}</dd>
               </div>
-              <p style={{fontWeight: "bold", fontSize: "32px"}}>{description}</p>     
-              <div style={{maxWidth: "550px"}}>
-                <p style={{fontSize: '16px', fontWeight: "300"}}>{snippet}</p>
+              <div>
+                <dt>Reading time</dt>
+                <dd>{post.timeToRead || 1} min read</dd>
               </div>
-              <div className="post-date">{moment(date).format('MMMM DD, YYYY')}</div>
-              <div className="post-date">{author}</div>
-              <a href="https://twitter.com/Ted_Koomen?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @Ted_Koomen</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+              <div>
+                <dt>Category</dt>
+                <dd>{formatPostType(posttype)}</dd>
+              </div>
+            </dl>
           </div>
+        </header>
+
+        <div className="dispatch-body">
+          <div dangerouslySetInnerHTML={{ __html: post.html }} />
         </div>
-      </Hero>
-      <Img fluid={image.childImageSharp.fluid} style={{maxHeight: "500px", marginBottom: "50px", minHeight: '500px'}} />
-      <div className="container">
-        <div dangerouslySetInnerHTML={{ __html: post.html }} />
-      </div>
+
+        <nav className="dispatch-after" aria-label="Article navigation">
+          <Link to="/blog/">View archive →</Link>
+        </nav>
+      </article>
     </Layout>
   );
 };
@@ -69,26 +75,22 @@ export const pageQuery = graphql`
   query EngineeringPostByPath($pathSlug: String!) {
     markdownRemark(frontmatter: { path: { eq: $pathSlug } }) {
       html
+      timeToRead
       frontmatter {
         path
         date
         title
         description
         posttype
-        featured
         snippet
         author
-        image {
-          childImageSharp {
-            fluid(maxWidth: 1400, quality: 90) {
-              ...GatsbyImageSharpFluid
-            }
-          }
-        }
+        dispatch
         featuredImage {
           childImageSharp {
             resize(width: 1200) {
               src
+              height
+              width
             }
           }
         }

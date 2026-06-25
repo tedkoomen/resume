@@ -1,43 +1,49 @@
 import React from "react";
-import Img from 'gatsby-image';
-import { Link } from 'gatsby'
+import { Link } from "gatsby";
+import moment from "moment";
 import "./card.scss";
-import moment from 'moment';
 
-export default ({ data }) => {
+const formatPostType = (posttype) => (posttype || "dispatch").replace(/-/g, " ");
+
+export default ({ data, issue }) => {
   const {
     node: {
-      frontmatter: {
-        description,
-        image: { childImageSharp },
-        posttype,
-        date,
-        path
-      },
+      frontmatter: { description, posttype, date, path, title, dispatch },
+      timeToRead,
     },
   } = data;
 
-  const formatDate = () => {
-    if (date) {
-      return moment(date).format('MMMM DD, YYYY')
-    } else {
-     return ''
-    }
-  }
+  const formattedDate = date ? moment(date).format("YYYY-MM-DD") : "Undated";
+  const issueNumber = String(dispatch || issue).padStart(3, "0");
+
   return (
-    <div className="single-card-container" style={{width: "362px", margin: "0px 20px 0px 20px" }}>
-      <Link to={path}>
-      <div className="col-md-12 blog-card">
-        <Img fluid={childImageSharp.fluid} style={{ height: "300px", width: "362px" }} />
-        <div style={{maxWidth: "100%" }} className="post-info">
-          <div className={`card-title post-type post-type-${posttype}`}>
-            {posttype}
-          </div>
-          <div style={{maxWidth: "287px"}} className="card-body">{description}</div>
-          <div style={{maxWidth: "287px"}} className="post-date">{formatDate()}</div>
+    <article className="dispatch-card">
+      <Link to={path} className="dispatch-card__link">
+        <div className="dispatch-card__issue" aria-label={`Dispatch ${issueNumber}`}>
+          <span>{issueNumber}</span>
+          <i aria-hidden="true" />
         </div>
-      </div>
+        <div className="dispatch-card__body">
+          <p className="dispatch-card__kicker">{formatPostType(posttype)}</p>
+          <h2>{title || description}</h2>
+          {description && <p className="dispatch-card__description">{description}</p>}
+          <span className="dispatch-card__cta">Read dispatch →</span>
+        </div>
+        <dl className="dispatch-card__meta">
+          <div>
+            <dt>Filed</dt>
+            <dd>{formatPostType(posttype)}</dd>
+          </div>
+          <div>
+            <dt>Date</dt>
+            <dd>{formattedDate}</dd>
+          </div>
+          <div>
+            <dt>Read</dt>
+            <dd>{timeToRead || 1} min</dd>
+          </div>
+        </dl>
       </Link>
-    </div>
+    </article>
   );
 };

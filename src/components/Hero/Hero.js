@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-const Hero = ({ height, background, children, style }) => (
-  <div style={{height, background, ...style}}>
+const Hero = ({ height, background, children, style, className }) => (
+  <section className={className} style={{ height, background, ...style }}>
     {children}
-  </div>
+  </section>
 );
 
 export default Hero;

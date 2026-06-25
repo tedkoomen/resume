@@ -3,6 +3,7 @@ path: '/blog/engineering/sorting-with-ruby'
 date: '2020-10-26'
 title: 'Basic Sorting Algorithms in Ruby'
 author: 'Ted Koomen'
+dispatch: 15
 description: 'Sorting algorithms that you will encounter in an introduction class to computer science'
 posttype: 'engineering'
 tag: ["ruby", "sorting", "algorithms", "faang"]

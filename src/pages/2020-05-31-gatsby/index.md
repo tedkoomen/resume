@@ -3,6 +3,7 @@ path: '/blog/engineering/create-gatsby-blog'
 date: '2020-05-31'
 title: 'Gatsby Starter'
 author: 'Ted Koomen'
+dispatch: 13
 description: 'Using Gatsby to create your own 
 personal website and blog.'
 posttype: "engineering"

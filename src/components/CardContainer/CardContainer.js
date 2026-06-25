@@ -1,28 +1,26 @@
 import React from "react";
 import Card from "../Card/Card";
-
 import "./cardContainer.scss";
 
 const CardContainer = ({ containerTitle, data }) => {
   const renderContainerTitle = () => {
-    if (containerTitle) {
-      return <h2 className="card-container-title">{containerTitle}</h2>;
-    } else {
+    if (!containerTitle) {
       return null;
     }
+
+    return <h2 className="dispatch-list__title">{containerTitle}</h2>;
   };
 
-  const renderCards = () => {
-    return data.map((obj) => {
-      return <Card data={obj} key={obj.node.frontmatter.path} />;
-    });
-  };
+  const renderCards = () =>
+    data.map((obj, index) => (
+      <Card data={obj} issue={obj.node.frontmatter.dispatch || data.length - index} key={obj.node.frontmatter.path} />
+    ));
 
   return (
-    <div className="card-container" style={{ marginTop: "88px" }}>
-      {renderContainerTitle()}
-      <div style={{justifyContent: "center" }} className="row">{renderCards()}</div>
-    </div>
+    <section className="dispatch-list">
+      <div className="dispatch-list__header">{renderContainerTitle()}</div>
+      <div className="dispatch-list__items">{renderCards()}</div>
+    </section>
   );
 };
 

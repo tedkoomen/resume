@@ -12,14 +12,14 @@ const siteUrl = isNetlifyProduction ? NETLIFY_SITE_URL : NETLIFY_DEPLOY_URL
 
 module.exports = {
   siteMetadata: {
-    title: `Ted Koomen`,
-    description: `Ted Koomen's personal blog and portfolio.`,
+    title: `Screaming Into The Void`,
+    description: `A technical journal by Ted Koomen about software, systems, AI, and performance.`,
     author: `Ted Koomen`,
     siteUrl: "https://www.tedkoomen.com",
     url: "https://www.tedkoomen.com",
-    image: "/images/professional.jpg",
+    image: "/icons/icon.svg",
     twitterUsername: "@ted_koomen",
-    keywords: ["software engineering"]
+    keywords: ["software engineering", "distributed systems", "performance", "AI", "technical writing"]
   },
   plugins: [
     {
@@ -71,24 +71,16 @@ module.exports = {
         path: `${__dirname}/src/images`,
       },
     },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: 'fonts',
-
-        path: `${__dirname}/src/fonts/`
-      }
-    },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     isProduction && {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Ted Koomen Resume`,
-        short_name: `Resume`,
+        name: `Screaming Into The Void`,
+        short_name: `S/V`,
         start_url: `/`,
-        background_color: `#ffffff`,
-        theme_color: `#111827`,
+        background_color: `#050505`,
+        theme_color: `#050505`,
         display: `minimal-ui`,
         icons: [
           {

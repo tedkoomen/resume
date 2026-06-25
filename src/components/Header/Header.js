@@ -1,43 +1,30 @@
 import React from "react";
-import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "gatsby";
 import "./header.scss";
 
-const Header = ({ path, white }) => {
-  const links = {
-    about: {
-      path: "/about-me/",
-      text: "About Me",
-    },
-    resume: {
-      path: "/resume/",
-      text: "Resume",
-    },
-  };
-
-  const renderNavLinks = () =>
-    Object.keys(links).map((key) => (
-        <Link
-          className={`link nav-link header-link`}
-          to={links[key].path}
-          key={links[key].path}
-        >
-          {links[key].text}
-        </Link>
-    ));
+const Header = () => {
+  const links = [
+    { path: "/", text: "Articles" },
+    { path: "/about-me/", text: "About" },
+    { path: "/resume/", text: "Resume" },
+    { path: "/blog/", text: "Archive" },
+  ];
 
   return (
-    <Navbar id="header" className={white ? "header-white" : "header"} expand="lg">
-      <div className="text-left navbar-brand text-left" id="header-brand" href="#home">
-        <Link className="link" to="/">
-          Ted Koomen
-        </Link>
-      </div>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav" className="text-right">
-        <Nav className="ml-auto">{renderNavLinks()}</Nav>
-      </Navbar.Collapse>
-    </Navbar>
+    <header className="site-header">
+      <Link className="site-header__brand" to="/" aria-label="Screaming Into The Void home">
+        <span className="site-header__mark" aria-hidden="true" />
+        <span className="site-header__wordmark">Screaming Into The Void</span>
+      </Link>
+      <nav className="site-header__nav" aria-label="Primary navigation">
+        {links.map((link) => (
+          <Link activeClassName="is-active" key={link.path} to={link.path}>
+            {link.text}
+          </Link>
+        ))}
+      </nav>
+    </header>
   );
 };
+
 export default Header;

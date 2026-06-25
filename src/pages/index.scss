@@ -1,0 +1,101 @@
+.home-masthead {
+  position: relative;
+  max-width: 66rem;
+  margin: clamp(2rem, 6vw, 5rem) auto 0;
+  padding: clamp(2rem, 5vw, 4rem) 0 clamp(2.5rem, 6vw, 5rem);
+  text-align: center;
+}
+
+.home-masthead__mark {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 16rem;
+  height: 16rem;
+  transform: translate(-50%, -20%);
+  border: 1px solid rgba(239, 228, 207, 0.08);
+  border-radius: 50%;
+  opacity: 0.4;
+  filter: blur(0.2px);
+}
+
+.home-masthead__eyebrow {
+  position: relative;
+  margin: 0 0 1.2rem;
+  color: var(--void-cream-muted);
+  font-family: var(--font-mono);
+  font-size: clamp(0.72rem, 1.4vw, 0.9rem);
+  letter-spacing: 0.23em;
+  text-transform: uppercase;
+}
+
+.home-masthead h1 {
+  position: relative;
+  margin: 0;
+  color: var(--void-cream);
+  font-family: var(--font-script);
+  font-size: clamp(4rem, 13vw, 12rem);
+  font-weight: 400;
+  line-height: 0.78;
+  text-wrap: balance;
+  text-shadow: 0 0 40px rgba(245, 231, 200, 0.08);
+}
+
+.home-masthead__dek {
+  max-width: 41rem;
+  margin: 0 auto;
+  color: var(--void-cream);
+  font-size: clamp(1.25rem, 2.4vw, 2.15rem);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.home-manifesto {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem;
+  align-items: center;
+  margin: 0 auto;
+  padding: clamp(1.25rem, 2.5vw, 2rem) 0;
+  border-top: 1px solid var(--void-line);
+  border-bottom: 1px solid var(--void-line);
+  color: var(--void-cream-muted);
+}
+
+.home-manifesto p {
+  max-width: 44rem;
+  margin: 0;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  line-height: 1.55;
+}
+
+.home-manifesto a {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .home-masthead {
+    text-align: left;
+  }
+
+  .home-masthead h1 {
+    max-width: 27rem;
+  }
+
+  .home-masthead .decorative-rule {
+    justify-content: flex-start;
+  }
+
+  .home-masthead__dek {
+    margin-left: 0;
+  }
+
+  .home-manifesto {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

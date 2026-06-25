@@ -3,6 +3,7 @@ path: '/blog/engineering/metaprogramming-ruby'
 date: '2020-09-18'
 title: 'Metaprogramming in Ruby Part I'
 author: 'Ted Koomen'
+dispatch: 14
 description: 'Metaprogramming and its relation to the cuttlefish.'
 posttype: 'engineering'
 tag: ["ruby", "ruby on rails", "metaprogramming"]

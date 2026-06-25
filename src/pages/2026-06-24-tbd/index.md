@@ -3,6 +3,7 @@ path: '/blog/engineering/ai-illusion-of-optimization'
 date: '2026-06-24'
 title: 'AI and the Illusion of Optimization'
 author: 'Ted Koomen'
+dispatch: 18
 description: 'AI can accelerate engineering, but it can also create false confidence in bad solutions.'
 posttype: 'engineering'
 tag: ['ai', 'engineering', 'databases', 'performance']

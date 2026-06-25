@@ -1,53 +1,74 @@
-#header {
-  padding-top: 49px;
-  padding-right: 7%;
-  padding-left: 7%;
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: clamp(1.5rem, 4vw, 3rem) 0;
+  color: var(--void-cream);
 }
 
-.header {
-  background: #010001 !important;
-  #header-brand {
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 24px;
-    .link {
-      color: #fff;
-    }
+.site-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.site-header__mark {
+  flex: 0 0 auto;
+  width: 2.3rem;
+  height: 2.3rem;
+  border: 1px solid var(--void-accent);
+  border-radius: 50%;
+  box-shadow: 0 0 26px rgba(245, 231, 200, 0.12);
+}
+
+.site-header__wordmark {
+  display: none;
+  font-family: var(--font-script);
+  font-size: clamp(1.5rem, 2vw, 2.2rem);
+  line-height: 1;
+  color: var(--void-cream);
+}
+
+.site-header__nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(1rem, 3vw, 2.75rem);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.site-header__nav a {
+  color: var(--void-cream-muted);
+  transition: color 160ms ease, opacity 160ms ease;
+}
+
+.site-header__nav a:hover,
+.site-header__nav a:focus,
+.site-header__nav a.is-active {
+  color: var(--void-cream);
+}
+
+@media (max-width: 760px) {
+  .site-header {
+    align-items: flex-start;
+    gap: 1.25rem;
   }
 
-  .navbar-collapse {
-    .navbar-nav {
-      .link:hover {
-        color: #fff !important;
-        text-decoration: underline;
-      }
-      .header-link {
-        opacity: 0.5;
-        color: #fff;
-        text-transform: uppercase;
-        font-weight: bold;
-        font-size: 16px;
-
-        .link {
-          color: #fff;
-        }
-      }
-    }
-  }
-  .navbar-toggler {
-    background: #fff !important;
+  .site-header__nav {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    gap: 0.7rem 1.2rem;
+    font-size: 0.72rem;
   }
 }
 
-.header-white {
-  #header-brand {
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 24px;
-    color: #010001 !important;
-
-    .link {
-      color: #010001;
-    }
+@media (min-width: 1120px) {
+  .site-header__wordmark {
+    display: inline;
   }
 }

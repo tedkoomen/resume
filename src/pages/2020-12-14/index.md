@@ -3,6 +3,7 @@ path: '/blog/engineering/es2020-features'
 date: '2020-12-14'
 title: "What's new in JavaScript: ES2020"
 author: 'Ted Koomen'
+dispatch: 16
 description: 'New ES2020 features that will make your life easier'
 posttype: 'engineering'
 tag: ["javascript", "es2020", "es6"]

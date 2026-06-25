@@ -1,24 +1,4 @@
-@font-face{
-  font-family:"Proxima Nova W05 Regular";
-  src:url("./proxima-nova/5596744/33ca2000-af7b-4444-97cd-6392ab2e24b2.woff2") format("woff2"),url("./proxima-nova/5596744/1c003cc6-0f8f-4c82-adde-a5a026b56b50.woff") format("woff");
-}
-@font-face{
-  font-family:"Proxima Nova A W05 Regular";
-  src:url("./proxima-nova/5596877/238fae7b-8b7d-4759-acf1-691d8f95b00b.woff2") format("woff2"),url("./proxima-nova/5596877/efdd991e-642d-4eac-aabf-740f1693268c.woff") format("woff");
-}
-@font-face{
-  font-family:"Proxima Nova W05 Italic";
-  src:url("./proxima-nova/5596892/cf5ef906-e055-4b2c-8fc5-fcc4ab3ed9a2.woff2") format("woff2"),url("./proxima-nova/5596892/19f65509-8952-44f0-b007-4dc3c4ba8aed.woff") format("woff");
-}
-@font-face{
-  font-family:"Proxima Nova A W05 Italic";
-  src:url("./proxima-nova/5596898/37398730-e410-4262-ba0b-8825097146d4.woff2") format("woff2"),url("./proxima-nova/5596898/fc26a6ea-893c-4419-81c3-4eba707d9ce6.woff") format("woff");
-}
-@font-face{
-  font-family:"Proxima Nova S W05 Regular";
-  src:url("./proxima-nova/5738913/ea390d66-81f6-41c4-831e-2cd14c917713.woff2") format("woff2"),url("./proxima-nova/5738913/48d2ade9-bc17-4259-bd73-d0f086801eb4.woff") format("woff");
-}
-@font-face{
-  font-family:"Proxima Nova S W05 Italic";
-  src:url("./proxima-nova/5738919/de2feb1c-9962-4d92-9377-a49ea831d713.woff2") format("woff2"),url("./proxima-nova/5738919/a36a40b4-d2c3-452d-8589-a2d68bc1ac1c.woff") format("woff");
-}
+/*
+ * Proprietary font binaries are intentionally not bundled.
+ * The design uses local/system font stacks defined in src/components/Layout/layout.scss.
+ */

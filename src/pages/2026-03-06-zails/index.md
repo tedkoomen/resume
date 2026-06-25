@@ -3,6 +3,7 @@ path: '/blog/engineering/why-zig-server-framework'
 date: '2026-03-06'
 title: "Why I'm Building a Server Framework in Zig"
 author: 'Ted Koomen'
+dispatch: 17
 description: 'F1 telemetry, low-latency trading, and choosing Zig over C++ and Rust'
 posttype: 'engineering'
 tag: ["zig", "systems-programming", "low-latency", "server"]

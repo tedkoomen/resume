@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" role="img" aria-label="Abstract eclipse in a dark field">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="48%" r="45%">
+      <stop offset="0" stop-color="#efe4cf" stop-opacity="0.9"/>
+      <stop offset="0.12" stop-color="#efe4cf" stop-opacity="0.22"/>
+      <stop offset="0.26" stop-color="#efe4cf" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#050504" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="8"/></filter>
+  </defs>
+  <rect width="720" height="420" fill="#050504"/>
+  <circle cx="360" cy="210" r="168" fill="url(#g)" filter="url(#blur)"/>
+  <circle cx="360" cy="210" r="82" fill="#050504" stroke="#efe4cf" stroke-width="2"/>
+  <g opacity="0.22" fill="#efe4cf">
+    <circle cx="126" cy="96" r="1.3"/>
+    <circle cx="562" cy="118" r="1"/>
+    <circle cx="518" cy="292" r="1.2"/>
+    <circle cx="196" cy="278" r="0.9"/>
+    <circle cx="630" cy="216" r="0.8"/>
+    <circle cx="86" cy="206" r="0.7"/>
+  </g>
+</svg>
