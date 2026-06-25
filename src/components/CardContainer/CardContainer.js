@@ -13,7 +13,7 @@ const CardContainer = ({ containerTitle, data }) => {
 
   const renderCards = () =>
     data.map((obj, index) => (
-      <Card data={obj} issue={obj.node.frontmatter.dispatch || data.length - index} key={obj.node.frontmatter.path} />
+      <Card data={obj} issue={data.length - index} key={obj.node.frontmatter.path} />
     ));
 
   return (

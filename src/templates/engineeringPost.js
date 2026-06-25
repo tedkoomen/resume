@@ -5,19 +5,20 @@ import Seo from "../components/seo";
 import moment from "moment";
 import "./engineeringPost.scss";
 
-const formatPostType = (posttype) => (posttype || "dispatch").replace(/-/g, " ");
+const formatPostType = (posttype) => (posttype || "article").replace(/-/g, " ");
 
-export default ({ data, location }) => {
+export default ({ data, location, pageContext }) => {
   if (!data?.markdownRemark) {
     return null;
   }
 
-  const { date, title, description, posttype, snippet, featuredImage, author, dispatch } =
+  const { date, title, description, posttype, snippet, featuredImage, author } =
     data.markdownRemark.frontmatter;
 
   const post = data.markdownRemark;
   const seoImage = featuredImage?.childImageSharp?.resize;
   const formattedDate = date ? moment(date).format("YYYY-MM-DD") : "Undated";
+  const issueNumber = String(pageContext?.issueNumber || 1).padStart(3, "0");
 
   return (
     <Layout>
@@ -35,7 +36,7 @@ export default ({ data, location }) => {
           <div className="dispatch-hero__grid">
             <div className="dispatch-hero__main">
               <p className="dispatch-hero__kicker">
-                Dispatch {dispatch ? String(dispatch).padStart(3, "0") : ""} / {formatPostType(posttype)}
+                Article {issueNumber} / {formatPostType(posttype)}
               </p>
               <h1>{title}</h1>
               {description && <p className="dispatch-hero__description">{description}</p>}
