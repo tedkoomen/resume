@@ -1,10 +1,11 @@
 const path = require('path');
 
-exports.createPages = ({ boundActionCreators, graphql }) => {
-  const { createPage } = boundActionCreators;
+exports.createPages = ({ actions, graphql }) => {
+  const { createPage } = actions;
 
   const postTemplate = path.resolve('src/templates/engineeringPost.js');
-   return graphql(`
+
+  return graphql(`
     {
       allMarkdownRemark {
         edges {
@@ -16,14 +17,19 @@ exports.createPages = ({ boundActionCreators, graphql }) => {
         }
       }
     }
-  `).then(res => {
-    if (res.errors)  {return Promise.reject(res.errors) }
+  `).then(result => {
+    if (result.errors) {
+      return Promise.reject(result.errors);
+    }
 
-    res.data.allMarkdownRemark.edges.forEach(({ node }) => {
+    result.data.allMarkdownRemark.edges.forEach(({ node }) => {
       createPage({
         path: node.frontmatter.path,
-        component: postTemplate
-      })
-    })
-  })
-}
+        component: postTemplate,
+        context: {
+          pathSlug: node.frontmatter.path,
+        },
+      });
+    });
+  });
+};

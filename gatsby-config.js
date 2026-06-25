@@ -7,6 +7,7 @@ const {
   CONTEXT: NETLIFY_ENV = NODE_ENV,
 } = process.env;
 const isNetlifyProduction = NETLIFY_ENV === 'production'
+const isProduction = NODE_ENV === 'production'
 const siteUrl = isNetlifyProduction ? NETLIFY_SITE_URL : NETLIFY_DEPLOY_URL
 
 module.exports = {
@@ -80,17 +81,26 @@ module.exports = {
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
-    {
+    isProduction && {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `gatsby-starter-default`,
-        short_name: `starter`,
+        name: `Ted Koomen Resume`,
+        short_name: `Resume`,
         start_url: `/`,
-        background_color: `#663399`,
-        theme_color: `#663399`,
-        display: `minimal-ui`
+        background_color: `#ffffff`,
+        theme_color: `#111827`,
+        display: `minimal-ui`,
+        icons: [
+          {
+            src: `/icons/icon.svg`,
+            sizes: `any`,
+            type: `image/svg+xml`,
+            purpose: `any`,
+          },
+        ],
       },
     },
+    isProduction && `gatsby-plugin-offline`,
     {
       resolve: `gatsby-transformer-remark`,
       options: {
@@ -163,9 +173,5 @@ module.exports = {
         ],
       },
     },
-    
-    // this (optional) plugin enables Progressive Web App + Offline functionality
-    // To learn more, visit: https://gatsby.dev/offline
-    // `gatsby-plugin-offline`,
-  ],
-}
+  ].filter(Boolean),
+};

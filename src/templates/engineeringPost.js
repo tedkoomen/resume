@@ -10,9 +10,25 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 
 export default ({ data, location }) => {
-  const { date, title, description, posttype, featured, snippet, image, featuredImage, author } = data.markdownRemark.frontmatter
+  if (!data?.markdownRemark) {
+    return null;
+  }
+
+  const {
+    date,
+    title,
+    description,
+    posttype,
+    featured,
+    snippet,
+    image,
+    featuredImage,
+    author,
+  } = data.markdownRemark.frontmatter;
+
   const post = data.markdownRemark;
-  const seoImage = featuredImage.childImageSharp.resize
+  const seoImage = featuredImage?.childImageSharp?.resize;
+
   return (
     <Layout navWhite>
       { console.log(seoImage) }
@@ -49,37 +65,34 @@ export default ({ data, location }) => {
   );
 };
 
-export const postQuery = graphql`
-  query EngineeringPost($path: String!) {
-    markdownRemark(frontmatter: { path: { eq: $path } }) {
-      frontmatter {
-        author
-          description
-          featured
-          path
-          posttype
-          tags
-          title
-          date
-          snippet
-          image {
-            childImageSharp {
-              fluid(quality: 90) {
-               ...GatsbyImageSharpFluid
-              }
-            }
-          }
-          featuredImage {
-            childImageSharp{
-              resize(width: 1200) {
-                src
-                height
-                width
-              }
-            }
-          }
-      }
+export const pageQuery = graphql`
+  query EngineeringPostByPath($pathSlug: String!) {
+    markdownRemark(frontmatter: { path: { eq: $pathSlug } }) {
       html
+      frontmatter {
+        path
+        date
+        title
+        description
+        posttype
+        featured
+        snippet
+        author
+        image {
+          childImageSharp {
+            fluid(maxWidth: 1400, quality: 90) {
+              ...GatsbyImageSharpFluid
+            }
+          }
+        }
+        featuredImage {
+          childImageSharp {
+            resize(width: 1200) {
+              src
+            }
+          }
+        }
+      }
     }
   }
-`
+`;
