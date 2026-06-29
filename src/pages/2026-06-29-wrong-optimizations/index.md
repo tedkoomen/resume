@@ -359,4 +359,6 @@ AI helped build their system. The code compiles, it connects, it parses, it feed
 
 That is the problem. AI accelerates output, not judgment. And the cost of building the wrong thing is not zero, even if the implementation is "free."
 
-My code is available at [github.com/tedkoomen/blog_code_samples/tree/main/orderbook](https://github.com/tedkoomen/blog_code_samples/tree/main/orderbook). The repository I reviewed is at [github.com/SitaramD/FPGA/tree/main/BTCUSDT](https://github.com/SitaramD/FPGA/tree/main/BTCUSDT).
+My code is available at [github.com/tedkoomen/blog_code_samples/tree/main/orderbook](https://github.com/tedkoomen/blog_code_samples/tree/main/orderbook), including benchmarks for every stage of the pipeline. Instructions for running the benchmarks are in the [README](https://github.com/tedkoomen/blog_code_samples/blob/main/orderbook/README.md). It is worth noting that all benchmarks in this post, both mine and theirs, measure only the hot path from JSON parsing to output. They do not include WebSocket receive time, TLS decryption, or network latency. The benchmarks for their code measure from `json::parse` through `std::map` insertion to `write_tick` output. The benchmarks for my code measure from SIMD parse through SHM write to OBI and volatility compute. Neither includes the FPGA simulation or the WebSocket layer.
+
+The repository I reviewed is at [github.com/SitaramD/FPGA/tree/main/BTCUSDT](https://github.com/SitaramD/FPGA/tree/main/BTCUSDT).
