@@ -107,3 +107,9 @@ Looking for more guidance? Full documentation for Gatsby lives [on the website](
 The lab includes cache hierarchy, batching, tail latency, NUMA, false sharing, TLB/page walks, SIMD, and packet replay. Every value is illustrative. False sharing uses a disclosed alternating-writer schedule, while SIMD compares arithmetic instruction counts rather than promising a runtime speedup. Calm/reduced-motion modes stop automatic animation and leave explicit stepping available.
 
 Run `npm test` for queue, translation, cache-path, coherence-progress and SIMD invariants alongside the article/theme tests; `npm run build` verifies the complete site. Browser QA covers desktop and 375px layouts, both themes, resume/blog navigation, and the Canvas compatibility renderer. WebGL is disabled in the available QA browser, so GPU rendering was not visually tested.
+
+## Article concept animations
+
+Articles opt into small React explanations using a raw HTML `div` with `data-concept-animation="counter|io|layout|latency"` (choose one value). Include a paragraph inside the div as the readable no-JavaScript fallback. `ArticleAnimations` mounts a portal into each supported marker and restores the fallback on cleanup; ordinary article HTML and Mermaid rendering stay intact.
+
+The four deterministic teaching models live in `src/utils/article-animation-models.js` and are covered by `npm test`. Controls start paused, support manual stepping, pause offscreen/in background tabs, and disable playback for reduced-motion preferences. The figures use the site's light/dark colors and explain their assumptions in expandable notes. They add no dependencies or WebGL workload to articles.

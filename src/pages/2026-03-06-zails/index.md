@@ -129,6 +129,10 @@ Three things stand out after a few months of work:
 
 The single biggest performance gain wasn't a clever data structure or a cache-line alignment trick. It was switching from blocking I/O to event-driven I/O , a 1,139x throughput improvement. All the micro-optimizations I did afterward combined for maybe 25% on top.
 
+<div data-concept-animation="io">
+<p><strong>Concept in motion:</strong> A worker blocked on one slow socket cannot serve other ready connections. Readiness-based I/O lets it serve those connections while waiting for the slow one.</p>
+</div>
+
 > Get the architecture right first.
 
 ### Comptime is a superpower with limits.

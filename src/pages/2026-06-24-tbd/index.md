@@ -97,6 +97,10 @@ onPageLoad(productId):
     )
 ```
 
+<div data-concept-animation="counter">
+<p><strong>Concept in motion:</strong> Two requests that both read zero can both write one, losing an increment. Letting each UPDATE increment the current row value produces two.</p>
+</div>
+
 ## This Still Has Limits
 
 Now imagine the same pattern under real load.

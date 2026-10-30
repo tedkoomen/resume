@@ -215,6 +215,10 @@ Even if we fix every inefficiency in the software, even if we use SIMD parsing, 
 
 The WebSocket message arrives over the public internet with 10 to 50 milliseconds of jitter. Whether you process it in 146 microseconds or 7.5 microseconds, you are still tens of milliseconds behind a colocated firm with a direct binary feed. The firms winning this race are not optimizing JSON parsers. They are eliminating JSON entirely.
 
+<div data-concept-animation="latency">
+<p><strong>Concept in motion:</strong> The article compares 146.8 microseconds with 7.5 microseconds of processing. Adding the same assumed 10 milliseconds of network delay yields 10.1468 ms and 10.0075 ms end to end.</p>
+</div>
+
 ## My Solution
 
 My implementation computes the same results: OBI, rolling volatility, and regime classification. It is 19.6x faster end to end. Here is why.
@@ -293,6 +297,10 @@ With SoA, all the prices are contiguous in memory. When you load a cache line of
 Their `std::map` is the worst case for cache locality. Each node is a separate heap allocation at an arbitrary memory address. Iterating the map means following a pointer to a random location in memory for every single level. That is a cache miss on almost every access, which means going to L2 or L3 or even main memory each time instead of L1.
 
 For 200 levels, that is potentially 200 cache misses, each costing 10-100 nanoseconds, just to read data that could have been a single linear scan.
+
+<div data-concept-animation="layout">
+<p><strong>Concept in motion:</strong> For 16 four-byte prices, interleaved four-byte quantities make an AoS scan span two 64-byte cache lines. SoA puts all 16 prices in one line. If both fields are needed, both layouts require two lines.</p>
+</div>
 
 ### Shared Memory with a Seqlock, Not stdout
 
