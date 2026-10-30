@@ -1,4 +1,3 @@
-/*
- * Proprietary font binaries are intentionally not bundled.
- * The design uses local/system font stacks defined in src/components/Layout/layout.scss.
+/* IBM Plex Mono is self-hosted under static/fonts with its SIL Open Font License.
+ * @font-face rules and theme tokens live in src/components/Layout/layout.scss.
  */

@@ -7,8 +7,8 @@ dispatch: 18
 description: 'AI can accelerate engineering, but it can also create false confidence in bad solutions.'
 posttype: 'engineering'
 tag: ['ai', 'engineering', 'databases', 'performance']
-image: '../../images/engineering-post.png'
-featuredImage: '../../images/engineering-post.png'
+image: '../../images/social-ai-illusion.png'
+featuredImage: '../../images/social-ai-illusion.png'
 featured: true
 snippet: 'AI can help engineers move faster, but it can also make weak solutions look deceptively correct.'
 ---

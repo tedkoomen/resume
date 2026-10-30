@@ -7,8 +7,8 @@ dispatch: 19
 description: 'AI makes it easier than ever to build impressive-looking systems that are architecturally defeated before they start.'
 posttype: 'engineering'
 tag: ['ai', 'engineering', 'performance', 'fpga', 'simd']
-image: '../../images/engineering-post.png'
-featuredImage: '../../images/engineering-post.png'
+image: '../../images/social-wrong-thing.png'
+featuredImage: '../../images/social-wrong-thing.png'
 featured: true
 snippet: 'AI gives engineers a productivity boost in writing code. That makes it easier to build the wrong thing.'
 ---

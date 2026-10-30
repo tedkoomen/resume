@@ -1,24 +1,30 @@
-import React from "react";
-import { graphql, Link } from "gatsby";
-import Layout from "../components/Layout/Layout";
-import Seo from "../components/seo";
-import moment from "moment";
-import "./engineeringPost.scss";
+import React from "react"
+import { graphql, Link } from "gatsby"
+import Layout from "../components/Layout/Layout"
+import Seo from "../components/seo"
+import moment from "moment"
+import "./engineeringPost.scss"
 
-const formatPostType = (posttype) => (posttype || "article").replace(/-/g, " ");
+const formatPostType = posttype => (posttype || "article").replace(/-/g, " ")
 
 export default ({ data, location, pageContext }) => {
   if (!data?.markdownRemark) {
-    return null;
+    return null
   }
 
-  const { date, title, description, posttype, snippet, featuredImage, author } =
-    data.markdownRemark.frontmatter;
+  const {
+    date,
+    title,
+    description,
+    posttype,
+    featuredImage,
+    author,
+  } = data.markdownRemark.frontmatter
 
-  const post = data.markdownRemark;
-  const seoImage = featuredImage?.childImageSharp?.resize;
-  const formattedDate = date ? moment(date).format("YYYY-MM-DD") : "Undated";
-  const issueNumber = String(pageContext?.issueNumber || 1).padStart(3, "0");
+  const post = data.markdownRemark
+  const seoImage = featuredImage?.childImageSharp?.resize
+  const formattedDate = date ? moment(date).format("YYYY-MM-DD") : "Undated"
+  const issueNumber = String(pageContext?.issueNumber || 1).padStart(3, "0")
 
   return (
     <Layout>
@@ -27,11 +33,12 @@ export default ({ data, location, pageContext }) => {
         description={description}
         pathname={location.pathname}
         image={seoImage}
+        article
       />
       <article className="dispatch-page">
         <header className="dispatch-hero">
           <Link className="dispatch-hero__back" to="/">
-            ← Back to articles
+            ← writing /
           </Link>
           <div className="dispatch-hero__grid">
             <div className="dispatch-hero__main">
@@ -39,9 +46,12 @@ export default ({ data, location, pageContext }) => {
                 Article {issueNumber} / {formatPostType(posttype)}
               </p>
               <h1>{title}</h1>
-              {description && <p className="dispatch-hero__description">{description}</p>}
-              {snippet && <p className="dispatch-hero__snippet">{snippet}</p>}
-              <p className="dispatch-hero__byline">by {author || "Ted Koomen"}</p>
+              {description && (
+                <p className="dispatch-hero__description">{description}</p>
+              )}
+              <p className="dispatch-hero__byline">
+                by {author || "Ted Koomen"}
+              </p>
             </div>
             <dl className="dispatch-hero__meta">
               <div>
@@ -69,8 +79,8 @@ export default ({ data, location, pageContext }) => {
         </nav>
       </article>
     </Layout>
-  );
-};
+  )
+}
 
 export const pageQuery = graphql`
   query EngineeringPostByPath($pathSlug: String!) {
@@ -88,7 +98,7 @@ export const pageQuery = graphql`
         dispatch
         featuredImage {
           childImageSharp {
-            resize(width: 1200) {
+            resize(width: 1200, height: 630, fit: CONTAIN, quality: 95) {
               src
               height
               width
@@ -98,4 +108,4 @@ export const pageQuery = graphql`
       }
     }
   }
-`;
+`
