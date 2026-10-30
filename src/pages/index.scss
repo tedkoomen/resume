@@ -1,4 +1,4 @@
 .home-masthead { padding: clamp(3rem, 7vw, 5.5rem) 0 2rem; }
-.home-masthead__eyebrow { color: var(--void-accent); font-size: .8rem; margin: 0 0 1.2rem; }
 .home-masthead h1 { color: var(--void-cream); font-family: var(--font-serif); font-size: clamp(2.8rem, 6.8vw, 5rem); line-height: 1.06; font-weight: 500; letter-spacing: -.035em; margin: 0; }
-.home-masthead__dek { max-width: 65ch; font-size: .95rem; color: var(--void-cream-muted); line-height: 1.85; margin: 1.4rem 0 0; }
+.writing-header { padding: 2.5rem 0 0; }
+.writing-header h1 { margin: 0; font: 500 clamp(2.2rem, 4vw, 3rem)/1.15 var(--font-serif); letter-spacing: -.025em; }
