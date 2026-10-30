@@ -20,6 +20,7 @@
     "gatsby-source-filesystem": "^5.16.0",
     "gatsby-transformer-remark": "^6.16.0",
     "gatsby-transformer-sharp": "^5.16.0",
+    "mermaid": "^11.17.2",
     "moment": "^2.28.0",
     "prismjs": "^1.21.0",
     "prop-types": "^15.7.2",
