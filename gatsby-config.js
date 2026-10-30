@@ -97,6 +97,7 @@ module.exports = {
       resolve: `gatsby-transformer-remark`,
       options: {
         plugins: [
+          { resolve: require.resolve("./plugins/gatsby-remark-reading-sections") },
           {
             resolve: `gatsby-remark-prismjs`,
             options: {

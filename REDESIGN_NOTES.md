@@ -35,3 +35,12 @@ fonts, and the SIL Open Font License are included in `static/fonts/`.
 Verification completed: production build, theme unit tests, unique 1200 × 630
 metadata for all three articles, preserved article bodies, and browser checks
 for both color themes, navigation, and persisted selection.
+
+## Article reading and diagrams
+
+- Mermaid fenced blocks render lazily as accessible, theme-aware SVG diagrams. Rendering is serialized, reruns on theme changes, and retains a readable source fallback if loading fails.
+- Horizontal flowcharts switch to vertical layouts on small screens. Wider diagrams scroll inside a keyboard-focusable region instead of shrinking labels or overflowing the page.
+- Each post has a three-point overview, linked contents (sticky on desktop, collapsible on mobile), numbered major section dividers, and highlighted pull quotes.
+- Heading hierarchy is normalized to one page title. A local Remark plugin and shared slug utility keep heading IDs and contents links aligned.
+- Existing code examples and article claims are preserved; dense paragraphs are split and the Zig subsystem overview is a list.
+- Validation: seven Node tests, Gatsby production build, generated anchor checks, and browser checks of all three articles, light/dark themes, and 320/390px layouts.

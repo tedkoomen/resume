@@ -11,9 +11,13 @@ image: '../../images/social-ai-illusion.png'
 featuredImage: '../../images/social-ai-illusion.png'
 featured: true
 snippet: 'AI can help engineers move faster, but it can also make weak solutions look deceptively correct.'
+takeaways:
+  - "Fix correctness before chasing performance."
+  - "A faster query still has architectural limits."
+  - "Treat AI output as a proposal to verify."
 ---
 
-# AI Is Democratizing Code. That isn't necessarily a good thing.
+## AI Is Democratizing Code. That isn't necessarily a good thing.
 
 Not everything needs to be a democracy. There is a reason people spend years becoming specialists. Lately, because of AI, everybody on Reddit, Twitter (I will not call it X), and especially LinkedIn, thinks they are a software engineer now. Worse, some engineers in the lower quartile seem to think they can build software far beyond what their actual skill level supports.
 
@@ -21,7 +25,7 @@ To be clear, I do not think I am some genius. I think I am a good engineer. I ha
 
 This article is a little different. I am going to break down a LinkedIn post from an engineer with 20 years of experience who said he learned a lot from an LLM while writing a SQL query. Because I am not a complete ass, I blurred out the user's name and occupation. There is no reason for embarrassment here.
 
-# The Post In Question
+## The Post In Question
 
 Here is the post:
 
@@ -55,6 +59,8 @@ If two requests hit the system at the same time, this can create a race conditio
 
 ```mermaid
 sequenceDiagram
+    accTitle: Two requests, one lost increment
+    accDescr: Both clients read zero and write one, so the second update overwrites the first.
     participant A as Client A
     participant B as Client B
     participant DB as Database
@@ -106,7 +112,9 @@ That is where the "optimization" starts to look less impressive. If the same row
 
 This is why I do not like pretending every problem needs a real-time write path.
 
-If all you want is a hit counter, ask why you are not using analytics, batching, a queue, or even just not caring that much. Sometimes the correct solution is to stop inventing infrastructure.
+If all you want is a hit counter, ask why you are not using analytics, batching, a queue, or even just not caring that much.
+
+> Sometimes the correct solution is to stop inventing infrastructure.
 
 ## Taking a Breather
 

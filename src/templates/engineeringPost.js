@@ -1,13 +1,17 @@
-import React from "react"
+import React, { useMemo } from "react"
 import { graphql, Link } from "gatsby"
 import Layout from "../components/Layout/Layout"
 import Seo from "../components/seo"
 import moment from "moment"
+import ArticleBody from "../components/Article/ArticleBody"
+import ArticleContents from "../components/Article/ArticleContents"
+import { getArticleSections } from "../utils/article-sections"
 import "./engineeringPost.scss"
 
 const formatPostType = posttype => (posttype || "article").replace(/-/g, " ")
 
 export default ({ data, location, pageContext }) => {
+  const sections = useMemo(() => getArticleSections(data?.markdownRemark?.headings || []), [data?.markdownRemark?.headings])
   if (!data?.markdownRemark) {
     return null
   }
@@ -19,6 +23,7 @@ export default ({ data, location, pageContext }) => {
     posttype,
     featuredImage,
     author,
+    takeaways,
   } = data.markdownRemark.frontmatter
 
   const post = data.markdownRemark
@@ -70,8 +75,15 @@ export default ({ data, location, pageContext }) => {
           </div>
         </header>
 
-        <div className="dispatch-body">
-          <div dangerouslySetInnerHTML={{ __html: post.html }} />
+        {takeaways?.length > 0 && (
+          <aside className="article-brief" aria-labelledby="article-brief-title">
+            <h2 id="article-brief-title"><span aria-hidden="true">┌─ </span>In this article</h2>
+            <ul>{takeaways.map(item => <li key={item}>{item}</li>)}</ul>
+          </aside>
+        )}
+        <div className="article-reading-layout">
+          <ArticleContents sections={sections} />
+          <ArticleBody html={post.html} />
         </div>
 
         <nav className="dispatch-after" aria-label="Article navigation">
@@ -87,6 +99,7 @@ export const pageQuery = graphql`
     markdownRemark(frontmatter: { path: { eq: $pathSlug } }) {
       html
       timeToRead
+      headings { depth value }
       frontmatter {
         path
         date
@@ -95,6 +108,7 @@ export const pageQuery = graphql`
         posttype
         snippet
         author
+        takeaways
         dispatch
         featuredImage {
           childImageSharp {
