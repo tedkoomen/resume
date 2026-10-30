@@ -12,7 +12,7 @@ const siteUrl = isNetlifyProduction ? NETLIFY_SITE_URL : NETLIFY_DEPLOY_URL
 
 module.exports = {
   siteMetadata: {
-    title: `Screaming Into The Void`,
+    title: `Critical Section`,
     description: `A technical journal by Ted Koomen about software, systems, AI, and performance.`,
     author: `Ted Koomen`,
     siteUrl: "https://www.tedkoomen.com",
@@ -42,7 +42,9 @@ module.exports = {
         resolveEnv: () => NETLIFY_ENV,
         env: {
           production: {
-            policy: [{ userAgent: '*' }],
+            policy: [{ userAgent: '*', allow: '/' }],
+            sitemap: 'https://www.tedkoomen.com/sitemap.xml',
+            host: 'https://www.tedkoomen.com',
           },
           'branch-deploy': {
             policy: [{ userAgent: '*', disallow: ['/'] }],
@@ -76,11 +78,11 @@ module.exports = {
     isProduction && {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Screaming Into The Void`,
-        short_name: `S/V`,
+        name: `Critical Section`,
+        short_name: `CS`,
         start_url: `/`,
-        background_color: `#171817`,
-        theme_color: `#171817`,
+        background_color: `#242720`,
+        theme_color: `#242720`,
         display: `minimal-ui`,
         icons: [
           {

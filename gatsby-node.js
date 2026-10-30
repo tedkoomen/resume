@@ -12,6 +12,7 @@ exports.createPages = ({ actions, graphql }) => {
           node {
             frontmatter {
               path
+              title
             }
           }
         }
@@ -31,6 +32,7 @@ exports.createPages = ({ actions, graphql }) => {
         context: {
           pathSlug: node.frontmatter.path,
           issueNumber: posts.length - index,
+          relatedPosts: posts.filter(post => post.node.frontmatter.path !== node.frontmatter.path).map(post => post.node.frontmatter),
         },
       });
     });
@@ -46,7 +48,11 @@ exports.onPreBootstrap = async () => {
 
 // Gatsby removes HTML for deleted React pages late in the build. Copy this
 // standalone route after that cleanup, including on cached Netlify builds.
-exports.onPostBuild = async () => {
+exports.onPostBuild = async ({ graphql }) => {
   const fs = require('fs/promises');
   await fs.cp(path.resolve('static/resume'), path.resolve('public/resume'), { recursive: true });
+  const result = await graphql(`{ allMarkdownRemark { nodes { frontmatter { path } } } }`);
+  if (result.errors) throw new Error('Cannot generate sitemap: ' + JSON.stringify(result.errors));
+  const { sitemapXml } = require('./src/utils/seo-data');
+  await fs.writeFile(path.resolve('public/sitemap.xml'), sitemapXml(result.data.allMarkdownRemark.nodes.map(node => node.frontmatter.path)));
 };

@@ -10,7 +10,6 @@ const CardContainer = ({ containerTitle, data }) => {
 
     return (
       <h2 className="dispatch-list__title">
-        <span aria-hidden="true">┌─ </span>
         {containerTitle}
       </h2>
     )

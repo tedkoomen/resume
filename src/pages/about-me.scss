@@ -10,7 +10,7 @@
 .about-page__image {
   border: 1px solid var(--void-line);
   filter: grayscale(1) contrast(1.08);
-  box-shadow: 0 22px 60px var(--void-shadow);
+
 }
 
 .about-page__copy {
@@ -42,7 +42,7 @@
   margin-top: 1.4rem !important;
   color: var(--void-cream) !important;
   font-size: clamp(1rem, 2vw, 1.2rem) !important;
-  line-height: 1.32 !important;
+  line-height: 1.8 !important;
 }
 
 .about-page p {

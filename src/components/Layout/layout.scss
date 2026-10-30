@@ -1,4 +1,11 @@
 @font-face {
+  font-family: "Newsreader";
+  src: url("/fonts/Newsreader-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
   font-family: "IBM Plex Mono";
   src: url("/fonts/IBMPlexMono-Regular.woff2") format("woff2");
   font-weight: 400;
@@ -14,16 +21,16 @@
 }
 @mixin light-palette {
   color-scheme: light;
-  --void-black: #f1ede3;
-  --void-black-soft: #e9e4d8;
-  --void-panel: #e9e4d8;
-  --void-panel-strong: #e4dbc6;
-  --void-cream: #302f29;
-  --void-cream-muted: #68685b;
-  --void-cream-dim: #68685b;
-  --void-line: #cbc5b7;
-  --void-line-strong: #a49b87;
-  --void-accent: #826020;
+  --void-black: #eeece5;
+  --void-black-soft: #e6e4db;
+  --void-panel: #e6e4db;
+  --void-panel-strong: #d2d7bc;
+  --void-cream: #292a23;
+  --void-cream-muted: #65665a;
+  --void-cream-dim: #65665a;
+  --void-line: #c7c8bb;
+  --void-line-strong: #989d89;
+  --void-accent: #626b43;
   --void-shadow: rgba(48, 47, 41, 0.06);
   --syntax-string: #37694a;
   --syntax-keyword: #75508c;
@@ -34,22 +41,22 @@
   @include light-palette;
   --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono",
     Menlo, monospace;
-  --font-serif: var(--font-mono);
+  --font-serif: "Newsreader", Georgia, serif;
   --font-sans: var(--font-mono);
   --font-script: var(--font-mono);
 }
 @mixin dark-palette {
   color-scheme: dark;
-  --void-black: #171817;
-  --void-black-soft: #1e201e;
-  --void-panel: #1e201e;
-  --void-panel-strong: #2d2b23;
-  --void-cream: #e7e5dc;
-  --void-cream-muted: #acada3;
-  --void-cream-dim: #acada3;
-  --void-line: #41443b;
-  --void-line-strong: #767967;
-  --void-accent: #d8b878;
+  --void-black: #242720;
+  --void-black-soft: #2b2f26;
+  --void-panel: #2b2f26;
+  --void-panel-strong: #454e38;
+  --void-cream: #e6e6da;
+  --void-cream-muted: #aeb0a0;
+  --void-cream-dim: #aeb0a0;
+  --void-line: #4b5142;
+  --void-line-strong: #7d866c;
+  --void-accent: #b1bc91;
   --void-shadow: rgba(0, 0, 0, 0.12);
   --syntax-string: #acd3b4;
   --syntax-keyword: #cbb6e6;
@@ -98,7 +105,7 @@ h4,
 h5,
 h6 {
   color: var(--void-cream);
-  font-family: var(--font-mono);
+  font-family: var(--font-serif);
   font-weight: 500;
 }
 a {
@@ -127,7 +134,7 @@ img {
 }
 .site-shell {
   min-height: 100vh;
-  max-width: 1120px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 0 clamp(1.25rem, 5vw, 3.5rem);
 }

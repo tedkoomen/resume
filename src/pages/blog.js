@@ -10,11 +10,11 @@ const Blog = ({ data }) => {
 
   return (
     <Layout>
-      <Seo title="Archive" pathname="/blog/" />
+      <Seo title="Writing archive" pathname="/blog/" description="All essays by Ted Koomen on software engineering, low-latency systems, Zig, and AI-assisted optimization." />
       <section className="archive-header">
-        <p>~/writing/archive</p>
+        <p>Writing / archive</p>
         <h1>
-          The archive<span aria-hidden="true">_</span>
+          The archive
         </h1>
       </section>
       <CardContainer containerTitle="All Articles" data={posts} />

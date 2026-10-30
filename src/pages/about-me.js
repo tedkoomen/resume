@@ -8,7 +8,7 @@ import "./about-me.scss";
 const AboutMePage = ({ data, path }) => {
   return (
     <Layout path={path}>
-      <Seo title="About" />
+      <Seo title="About Ted Koomen" pathname="/about-me/" description="Ted Koomen writes about software engineering, low-latency systems, performance, and AI. Learn about the engineer behind Critical Section." />
       <section className="about-page">
         <div className="about-page__image">
           <Img fluid={data.file.childImageSharp.fluid} alt="Ted Koomen" />
@@ -27,7 +27,7 @@ const AboutMePage = ({ data, path }) => {
             engineering that survives contact with production constraints.
           </p>
           <p>
-            Screaming Into The Void is where I publish long-form notes on
+            Critical Section is where I publish long-form notes on
             software, systems, and the industry habits worth questioning.
           </p>
           <div className="about-page__links">
