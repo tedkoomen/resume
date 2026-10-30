@@ -44,6 +44,20 @@ def card(filename, title, subtitle, issue, art):
         text(790,334,'local compute',19)
         box(790,370,796,390,FG,FG)
         text(790,464,'schematic / not to scale',15,MUTED)
+    elif art == 'mutex':
+        text(770,165,'THREAD A',19,ACCENT)
+        text(1000,165,'THREAD B',19,RED)
+        line(814,206,814,266,ACCENT,3)
+        line(1050,206,1050,240,RED,3)
+        line(1035,240,1065,240,RED,3)
+        text(1000,251,'waiting',17,RED)
+        box(770,295,1136,428,outline=ACCENT)
+        text(790,311,'MUTEX OWNED BY A',18,ACCENT)
+        text(790,353,'++counter',35,FG)
+        line(814,266,814,295,ACCENT,3)
+        line(807,286,814,295,ACCENT,2)
+        line(821,286,814,295,ACCENT,2)
+        text(770,455,'B enters after A unlocks',17,MUTED)
     elif art == 'zig':
         box(770,155,1136,457)
         text(790,175,'ZAILS / PIPELINE',19,ACCENT)
@@ -62,7 +76,9 @@ def card(filename, title, subtitle, issue, art):
     im.resize((1200,630),Image.Resampling.LANCZOS).save(path,optimize=True)
     print(path.relative_to(ROOT))
 
-card('src/images/social-ai-illusion.png','AI and the\nIllusion of\nOptimization','Confidence is not correctness.','002 / AI','counter')
-card('src/images/social-wrong-thing.png','Optimizing the\nWrong Thing,\nFaster','Faster code. The same bottleneck.','003 / AI','latency')
-card('src/images/social-zig-framework.png',"Why I'm Building\na Server Framework\nin Zig",'Comptime. Event loops. Explicit memory.','001 / ZIG','zig')
+card('src/images/social-ai-illusion-v2.png','AI and the\nIllusion of\nOptimization','When an optimization breaks the counter.','002 / AI','counter')
+card('src/images/social-wrong-thing-v2.png','Optimizing the\nWrong Thing,\nFaster','Finding where the time actually goes.','003 / AI','latency')
+card('src/images/social-zig-framework-v2.png',"Why I'm Building\na Server Framework\nin Zig",'From incoming bytes to published events.','001 / ZIG','zig')
 card('static/social/site.png','Critical\nSection','Notes on software, systems, and tradeoffs.','JOURNAL','site')
+
+card('src/images/social-threads-mutexes-atomics.png','Threads, Mutexes,\nand Atomics','Start with what can go wrong.','004 / C++','mutex')
