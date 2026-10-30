@@ -55,3 +55,25 @@ test("fixed network delay dilutes processing speedup without changing time saved
   assert.ok(near.totalSpeedup < 1.014)
   assert.ok(far.totalSpeedup < near.totalSpeedup)
 })
+
+test("latency story separates network arrival, first result, and full journey", () => {
+  const { latencyFrame } = require("../src/utils/article-animation-models")
+  for (const network of [10, 50]) {
+    assert.equal(latencyFrame(0, network).elapsed, 0)
+    assert.equal(latencyFrame(3, network).processing, 0)
+    assert.equal(latencyFrame(4, network).elapsed, network * 1000)
+    const arrival = latencyFrame(5, network),
+      fast = latencyFrame(6, network)
+    assert.equal(arrival.phase, 1)
+    assert.equal(arrival.processing, 0)
+    assert.equal(fast.elapsed, fast.revised)
+    assert.equal(fast.processing, 7.5)
+    assert.ok(fast.elapsed < fast.original)
+    assert.equal(latencyFrame(14, network).elapsed, fast.original)
+    assert.equal(latencyFrame(15, network).phase, 2)
+    for (let s = 1; s <= 15; s++)
+      assert.ok(
+        latencyFrame(s, network).elapsed >= latencyFrame(s - 1, network).elapsed
+      )
+  }
+})
