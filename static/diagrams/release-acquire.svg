@@ -40,7 +40,7 @@
     <text x="514" y="473" font-size="13">sequenced before</text>
     <text x="36" y="490" font-size="16" fill="#4d5735">release → acquire</text>
     <text x="36" y="518" font-size="14">synchronizes with</text>
-    <text x="36" y="552" font-size="13">No lock. No payload copy.</text>
+    <text x="36" y="552" font-size="13">The payload stays in shared memory.</text>
     <path d="M36 598 H864" stroke="#b8bbaa"/>
     <text x="36" y="624" font-size="15">Therefore: payload write happens before payload read.</text>
   </g>

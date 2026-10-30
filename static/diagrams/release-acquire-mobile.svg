@@ -25,6 +25,6 @@
     <text x="44" y="603">Read payload → 42</text>
     <text x="44" y="633" font-size="15">No later producer writes</text>
     <text x="24" y="698" font-size="17">Payload write happens before read.</text>
-    <text x="24" y="732" font-size="15">No lock. No payload copy.</text>
+    <text x="24" y="732" font-size="15">The payload stays in shared memory.</text>
   </g>
 </svg>

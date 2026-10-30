@@ -56,7 +56,7 @@ function CppExample({ id, original }) {
   const modified = source !== original
   return (
     <section className="cpp-example" aria-label={example.title + " compiler"}>
-      <p className="cpp-example__title">Run it. Read the assembly.</p>
+      <p className="cpp-example__title">Run the example and inspect its assembly</p>
       <p className="cpp-example__provider">Powered by <a href="https://godbolt.org/" target="_blank" rel="noreferrer">Compiler Explorer</a>. Code is sent there only when you compile, run, or open the example.</p>
       {example.note && <p className="cpp-example__notice">{example.note}</p>}
       <div className="cpp-example__settings">

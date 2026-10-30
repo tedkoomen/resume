@@ -10,14 +10,14 @@ import "./concept-animation.scss"
 
 const definitions = {
   mutex: {
-    title: "One mutex. Two threads. One owner.",
+    title: "How two threads take turns with a mutex",
     lead: "Follow the lock, the waiting thread, and the value each owner writes.",
     steps: 7,
     duration: 1800,
   },
   counter: {
     title: "Watch an increment disappear",
-    lead: "Two requests. One row. Change who performs the arithmetic.",
+    lead: "See what happens when two requests update the same row.",
     steps: 6,
     duration: 1050,
   },
@@ -30,7 +30,7 @@ const definitions = {
   layout: {
     title: "What did that cache line actually buy you?",
     lead:
-      "Same 16 price/quantity pairs. Same 4-byte fields. Different placement.",
+      "Compare two ways to arrange the same 16 price/quantity pairs in memory.",
     steps: 2,
     duration: 1600,
   },

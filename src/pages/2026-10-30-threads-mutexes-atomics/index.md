@@ -9,9 +9,9 @@ tag: ['cpp', 'concurrency', 'linux', 'performance', 'atomics']
 image: '../../images/engineering-post.png'
 featuredImage: '../../images/engineering-post.png'
 featured: true
-snippet: 'Adding threads is easy. Making them cooperate correctly, and proving that they made anything faster, takes more work.'
+snippet: 'Adding threads is easy, but making them cooperate correctly and proving they made anything faster takes more work.'
 takeaways:
-  - 'Shared memory makes communication convenient. It also makes correctness your problem.'
+  - 'Shared memory makes communication convenient while leaving you responsible for coordinating access.'
   - 'Mutexes protect critical sections; atomics need a protocol around them.'
   - 'Contention and cache traffic do not disappear when you remove a lock.'
 ---
@@ -156,7 +156,7 @@ Now only one worker can execute the increment at a time. Unlocking the mutex als
 This makes the critical section exclusive relative to other code taking the same mutex. It does not turn the whole function into one CPU instruction. After all ten workers have joined, the count is `10`.
 
 <div data-concept-animation="mutex">
-  <p><strong>One mutex, two threads.</strong> A locks the mutex. B attempts to lock it and waits. A increments the counter from 0 to 1, then unlocks. B can acquire the mutex, increment from 1 to 2, and unlock. Unlocking makes acquisition possible; it does not guarantee an immediate handoff.</p>
+  <p><strong>How two threads take turns with a mutex.</strong> A locks the mutex. B attempts to lock it and waits. A increments the counter from 0 to 1, then unlocks. B can acquire the mutex, increment from 1 to 2, and unlock. Unlocking makes acquisition possible; it does not guarantee an immediate handoff.</p>
 </div>
 
 ## Mutexes can still get you into trouble
@@ -258,9 +258,7 @@ int main() {
 
 `fetch_add` is an atomic read-modify-write operation: read the old value, add one, and replace it as one indivisible operation on that atomic object. Another increment cannot slip between its read and write and cause a lost update.
 
-Great. All done. That is everything we need to know about atomics.
-
-Unfortunately, no.
+That fixes our counter, but there is considerably more to using atomics correctly.
 
 An atomic variable does not make an entire algorithm atomic. Loading an atomic, computing a replacement, and storing it are still separate operations unless you use an appropriate read-modify-write operation or another protocol. Likewise, making two fields atomic does not guarantee that a reader gets a consistent snapshot of both.
 
@@ -405,7 +403,7 @@ CAS is a building block for lock-free algorithms, not a certificate that the sur
 
 ## ABA: the value changed and came back
 
-CAS compares the current value. It does not tell you its history.
+CAS compares the current value without telling you whether it changed in the meantime.
 
 Suppose a thread reads A. Another thread changes the value from A to B and then back to A. The first thread's CAS can succeed because the current value matches, even though something important happened in between.
 
@@ -474,9 +472,7 @@ That is already considerably more design work than “just replace the mutex.”
 
 ## False sharing: different variables, the same cache line
 
-Now suppose each worker has its own counter. Nobody is updating anybody else's variable. We should be fine, right?
-
-For correctness, maybe. For performance, placement matters.
+Now suppose each worker has its own counter and never updates another worker's variable. That can address the data race, but the counters' placement in memory can still hurt performance.
 
 Cache coherence generally operates on cache lines, not individual C++ variables. If two cores repeatedly write different variables on the same line, the line can move between their caches even though the variables are logically independent. That is false sharing.
 
@@ -534,7 +530,7 @@ A mutex gives you a relatively straightforward ownership boundary. Atomics can b
 
 Before changing the primitive, I would look at why the state is shared in the first place. Can one thread own it? Can updates be batched? Can workers accumulate local results instead of fighting over one cache line? Those choices can matter more than the instruction used to update the counter.
 
-That is where the next post will go: actual implementations, contention, and measurements. We will write down what must stay true, make the code satisfy it, and then see whether it is faster. Removing a mutex is a code change. Calling it an optimization requires evidence.
+That is where the next post will go: actual implementations, contention, and measurements. We will write down what must stay true, make the code satisfy it, and then see whether it is faster. Before calling the removal of a mutex an optimization, we need evidence that it actually improved performance.
 
 ## References
 
