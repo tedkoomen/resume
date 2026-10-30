@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="760" viewBox="0 0 440 760" role="img" aria-labelledby="title desc">
+  <title id="title">Release and acquire: one handoff</title>
+  <desc id="desc">Producer writes the payload, then stores true to ready with release. Consumer repeats acquire loads until it reads that true, then reads the payload. The release store synchronizes with the load that observes it. The payload write happens before the payload read.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#606744"/></marker></defs>
+  <rect width="440" height="760" fill="#f1eee6"/>
+  <text x="24" y="42" font-family="Georgia, serif" font-size="25" fill="#292d25">The flag publishes the payload</text>
+  <g font-family="monospace" font-size="18" fill="#292d25">
+    <text x="24" y="73" font-size="15">ONE PRODUCER · ONE CONSUMER</text>
+    <rect x="24" y="100" width="392" height="212" fill="#e4e6d8" stroke="#606744"/>
+    <text x="44" y="131" font-size="16">PRODUCER</text>
+    <text x="44" y="168">payload = 42;</text>
+    <path d="M62 181 V214" stroke="#606744" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="83" y="204" font-size="15">sequenced before</text>
+    <text x="44" y="246">ready.store(true,</text>
+    <text x="44" y="276">  memory_order_release);</text>
+    <path d="M62 314 V419" stroke="#606744" stroke-width="3" marker-end="url(#arrow)"/>
+    <text x="85" y="354" font-size="17">synchronizes with</text>
+    <text x="85" y="384" font-size="15">when this true is read</text>
+    <rect x="24" y="426" width="392" height="230" fill="#e4e6d8" stroke="#606744"/>
+    <text x="44" y="457" font-size="16">CONSUMER</text>
+    <text x="44" y="494" font-size="17">ready.load(acquire) → true</text>
+    <text x="44" y="522" font-size="15">Repeat while false; no payload read</text>
+    <path d="M62 535 V572" stroke="#606744" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="83" y="558" font-size="15">sequenced before</text>
+    <text x="44" y="603">Read payload → 42</text>
+    <text x="44" y="633" font-size="15">No later producer writes</text>
+    <text x="24" y="698" font-size="17">Payload write happens before read.</text>
+    <text x="24" y="732" font-size="15">No lock. No payload copy.</text>
+  </g>
+</svg>

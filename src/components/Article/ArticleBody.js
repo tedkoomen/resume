@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useRef } from "react";
 import ArticleAnimations from "./ArticleAnimations";
+import CppExamples from "./CppExamples";
 import { responsiveDiagram } from "../../utils/article-sections";
 
 // Mermaid has a shared configuration; serialize renders across route/theme changes.
@@ -136,6 +137,6 @@ function ArticleBody({ html }) {
     };
   }, [html]);
 
-  return <><div className="dispatch-body" ref={root} dangerouslySetInnerHTML={{ __html: html }} /><ArticleAnimations bodyRef={root} html={html} /></>;
+  return <><div className="dispatch-body" ref={root} dangerouslySetInnerHTML={{ __html: html }} /><ArticleAnimations bodyRef={root} html={html} /><CppExamples bodyRef={root} html={html} /></>;
 }
 export default memo(ArticleBody);
