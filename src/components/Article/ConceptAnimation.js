@@ -123,7 +123,7 @@ function IO({ step, mode }) {
           >
             <b>{j.name}</b>
             <span>{j.done ? "COMPLETE" : j.ready ? "READY" : "NO DATA"}</span>
-            <i aria-hidden="true">{j.done ? "✓" : j.ready ? "●" : "◷"}</i>
+
           </div>
         ))}
       </div>
@@ -213,7 +213,6 @@ function Layout({ step, mode }) {
                 </span>
               </div>
               <span className="concept-schema-direction">
-                ↓{" "}
                 {layout === "aos"
                   ? "Each object keeps its two fields together in memory"
                   : "Each array keeps one field from all 16 records together"}
@@ -341,14 +340,12 @@ function Latency({ step, networkMs, jump }) {
               <i
                 style={{ left: `${f.networkProgress * 100}%` }}
                 aria-hidden="true"
-              >
-                ◆
-              </i>
+              />
             </div>
             <div className="concept-route-labels">
               <span>Update sent</span>
               <span>
-                {step === 4 ? "Bytes received ✓" : "Waiting for bytes…"}
+                {step === 4 ? "Bytes received" : "Waiting for bytes…"}
               </span>
             </div>
             <div className="concept-waiting-pair">
@@ -375,7 +372,7 @@ function Latency({ step, networkMs, jump }) {
                   <b>{name} code</b>
                   <span>
                     {f.processing >= duration
-                      ? "RESULT READY ✓"
+                      ? "RESULT READY"
                       : `PROCESSING · ${(duration - f.processing).toFixed(
                           1
                         )} µs left`}
@@ -477,7 +474,7 @@ const notes = {
         target="_blank"
         rel="noreferrer"
       >
-        Transaction isolation ↗
+        Transaction isolation
       </a>
     </>
   ),
@@ -492,7 +489,7 @@ const notes = {
         target="_blank"
         rel="noreferrer"
       >
-        epoll reference ↗
+        epoll reference
       </a>
     </>
   ),
@@ -507,7 +504,7 @@ const notes = {
         target="_blank"
         rel="noreferrer"
       >
-        Memory layouts ↗
+        Memory layouts
       </a>
     </>
   ),
@@ -675,7 +672,7 @@ export default function ConceptAnimation({ type }) {
             setStep(s => Math.min(d.steps, s + 1))
           }}
         >
-          Step →
+          Step
         </button>
         <button type="button" onClick={reset}>
           Reset

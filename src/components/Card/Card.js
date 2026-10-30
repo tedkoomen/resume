@@ -21,12 +21,7 @@ export default function Card({ data, issue }) {
           {issueNumber}
         </span>
         <div className="dispatch-card__body">
-          <h2>
-            {title || description}{" "}
-            <span className="dispatch-card__arrow" aria-hidden="true">
-              ↗
-            </span>
-          </h2>
+          <h2>{title || description}</h2>
           {description && (
             <p className="dispatch-card__description">{description}</p>
           )}
