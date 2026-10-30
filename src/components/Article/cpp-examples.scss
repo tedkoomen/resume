@@ -1,0 +1,31 @@
+.dispatch-body .cpp-example {
+  margin: -0.5rem 0 2.5rem;
+  padding: 1.2rem;
+  border: 1px solid var(--void-line-strong);
+  background: var(--void-panel);
+  color: var(--void-cream);
+  font-size: 0.78rem;
+  line-height: 1.65;
+  min-width: 0;
+  &, *, *::before, *::after { box-sizing: border-box; }
+  select { max-width: 100%; }
+  .cpp-example__title { font-family: var(--font-serif); font-size: 1.4rem; margin: 0 0 0.5rem; }
+  p { font-size: inherit; margin: 0.65rem 0; }
+  h3 { font-size: 1rem; margin: 1rem 0 0.5rem; }
+  .cpp-example__provider, .cpp-example__flags { color: var(--void-cream-muted); font-size: 0.65rem; }
+  .cpp-example__settings, .cpp-example__actions { display: flex; gap: 0.7rem; flex-wrap: wrap; align-items: end; margin: 1rem 0; }
+  label { display: flex; flex-direction: column; gap: 0.3rem; max-width: 100%; }
+  button, select { font: inherit; padding: 0.55rem 0.65rem; min-height: 44px; border: 1px solid var(--void-line-strong); background: var(--void-black); color: var(--void-cream); border-radius: 0; }
+  button { cursor: pointer; }
+  button:hover:not(:disabled) { border-color: var(--void-accent); color: var(--void-accent); }
+  button:disabled { opacity: 0.5; cursor: wait; }
+  button:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible, pre:focus-visible { outline: 2px solid var(--void-accent); outline-offset: 3px; }
+  summary { padding: 0.6rem 0; cursor: pointer; }
+  textarea { width: 100%; min-height: 300px; padding: 0.8rem; font: 0.75rem/1.6 var(--font-mono, monospace); color: var(--void-cream); background: var(--void-black); border: 1px solid var(--void-line-strong); resize: vertical; tab-size: 4; }
+  pre { max-height: 420px; overflow: auto; padding: 1rem; margin: 0.5rem 0; background: var(--void-black); border: 1px solid var(--void-line); font-size: 0.72rem; white-space: pre; }
+  .cpp-example__notice { border-left: 3px solid var(--void-accent); padding-left: 0.8rem; }
+  .cpp-example__summary { border-block: 1px solid var(--void-line); padding: 0.7rem 0; margin: 1rem 0; }
+  .cpp-example__status { min-height: 1.6em; }
+  .cpp-example__flags { overflow-wrap: anywhere; }
+  .cpp-example__external a { overflow-wrap: anywhere; }
+}

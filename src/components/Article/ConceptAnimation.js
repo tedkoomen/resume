@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
+import MutexAnimation from "./MutexAnimation"
 import {
   counterFrame,
   ioFrame,
@@ -8,9 +9,15 @@ import {
 import "./concept-animation.scss"
 
 const definitions = {
+  mutex: {
+    title: "How two threads take turns with a mutex",
+    lead: "Follow the lock, the waiting thread, and the value each owner writes.",
+    steps: 7,
+    duration: 1800,
+  },
   counter: {
     title: "Watch an increment disappear",
-    lead: "Two requests. One row. Change who performs the arithmetic.",
+    lead: "See what happens when two requests update the same row.",
     steps: 6,
     duration: 1050,
   },
@@ -23,7 +30,7 @@ const definitions = {
   layout: {
     title: "What did that cache line actually buy you?",
     lead:
-      "Same 16 price/quantity pairs. Same 4-byte fields. Different placement.",
+      "Compare two ways to arrange the same 16 price/quantity pairs in memory.",
     steps: 2,
     duration: 1600,
   },
@@ -463,6 +470,15 @@ function Latency({ step, networkMs, jump }) {
   )
 }
 const notes = {
+  mutex: (
+    <>
+      One legal schedule for two threads taking the same std::mutex. A waiting
+      thread cannot enter the critical section until it acquires the mutex.
+      Unlocking permits acquisition; waking a waiter does not grant ownership.
+      This does not promise FIFO ordering, show a particular futex implementation,
+      or measure elapsed time. Both threads follow the same locking rule.
+    </>
+  ),
   counter: (
     <>
       Illustrative interleaving. The safe trace assumes a successful
@@ -639,6 +655,7 @@ export default function ConceptAnimation({ type }) {
         </label>
       )}
       <div className="concept-scene" aria-label={d.title}>
+        {type === "mutex" && <MutexAnimation step={step} />}
         {type === "counter" && <Counter step={step} mode={mode} />}
         {type === "io" && <IO step={step} mode={mode} />}
         {type === "layout" && <Layout step={step} mode={mode} />}
