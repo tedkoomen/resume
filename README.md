@@ -97,3 +97,13 @@ Looking for more guidance? Full documentation for Gatsby lives [on the website](
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/gatsbyjs/gatsby-starter-default)
 
 <!-- AUTO-GENERATED-CONTENT:END -->
+
+## Interactive resume
+
+`/resume/` is a standalone document built from `src/resume-experience/` during Gatsby bootstrap. It uses the site's `tedkoomen-theme` preference and local fonts. Blog navigation uses ordinary links for this route so leaving it destroys its animation loops and WebGL contexts; Three.js is never loaded by blog articles.
+
+`node scripts/build-resume.mjs` bundles the resume into ignored `static/resume/` with a content-hashed script. Gatsby's `onPostBuild` copies it into `public/resume/` after stale React-page cleanup. Do not restore a conflicting `src/pages/resume.js` route. The HTML contains the complete resume for search engines and no-JavaScript readers; print expands experience and omits the lab.
+
+The lab includes cache hierarchy, batching, tail latency, NUMA, false sharing, TLB/page walks, SIMD, and packet replay. Every value is illustrative. False sharing uses a disclosed alternating-writer schedule, while SIMD compares arithmetic instruction counts rather than promising a runtime speedup. Calm/reduced-motion modes stop automatic animation and leave explicit stepping available.
+
+Run `npm test` for queue, translation, cache-path, coherence-progress and SIMD invariants alongside the article/theme tests; `npm run build` verifies the complete site. Browser QA covers desktop and 375px layouts, both themes, resume/blog navigation, and the Canvas compatibility renderer. WebGL is disabled in the available QA browser, so GPU rendering was not visually tested.

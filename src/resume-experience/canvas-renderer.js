@@ -1,0 +1,16 @@
+import * as THREE from 'three';
+// Project the same scene graph when the browser cannot create a WebGL context.
+export class CanvasRenderer {
+ constructor(){this.domElement=document.createElement('canvas');this.ctx=this.domElement.getContext('2d');if(!this.ctx)throw Error('Canvas unavailable');this.ratio=1;this.handle=0;this.callback=null;this.cache=new WeakMap();this.a=new THREE.Vector3();this.b=new THREE.Vector3();this.matrix=new THREE.Matrix4();this.local=new THREE.Matrix4();}
+ setPixelRatio(n){this.ratio=n}
+ setSize(w,h){this.w=w;this.h=h;this.domElement.width=w*this.ratio;this.domElement.height=h*this.ratio;this.domElement.style.width=w+'px';this.domElement.style.height=h+'px';}
+ setAnimationLoop(cb){this.callback=cb;cancelAnimationFrame(this.handle);if(!cb)return;const loop=t=>{if(!this.callback)return;this.callback(t);if(this.callback)this.handle=requestAnimationFrame(loop)};this.handle=requestAnimationFrame(loop)}
+ render(scene,camera){const c=this.ctx; c.setTransform(this.ratio,0,0,this.ratio,0,0);c.fillStyle=scene.background?.isColor?'#'+scene.background.getHexString():'#171817';c.fillRect(0,0,this.w,this.h);scene.updateMatrixWorld();camera.updateMatrixWorld();const light=document.documentElement.dataset.theme==='light';c.lineWidth=light?.8:1;c.shadowBlur=light?0:5;
+ const project=(v,m)=>{v.applyMatrix4(m).project(camera);return v.z>-1&&v.z<1};const x=v=>(v.x*.5+.5)*this.w,y=v=>(-.5*v.y+.5)*this.h;
+ scene.traverse(o=>{if(!o.visible||!o.geometry||!o.material)return;const mat=o.material;if(mat.opacity===0)return;let color=mat.color||mat.uniforms?.uColor?.value||new THREE.Color('#d8b878');c.strokeStyle=c.fillStyle='#'+color.getHexString();c.shadowColor=c.strokeStyle;c.globalAlpha=(mat.opacity??.6)*(light?.75:.85);
+ if(o.isPoints){c.shadowBlur=0;const pos=o.geometry.attributes.position;for(let i=0;i<pos.count;i+=2){this.a.fromBufferAttribute(pos,i);if(mat.uniforms){this.a.z=((this.a.z+mat.uniforms.uTime.value*.22+mat.uniforms.uWarp.value*7+45)%60)-45}if(project(this.a,o.matrixWorld)){c.globalAlpha=light?.25:.4;const size=Math.max(.5,1.5*(1-this.a.z));c.fillRect(x(this.a),y(this.a),size,size)}}return}
+ if(o.isInstancedMesh){c.shadowBlur=light?0:7;for(let i=0;i<o.count;i++){o.getMatrixAt(i,this.local);this.matrix.multiplyMatrices(o.matrixWorld,this.local);this.a.set(0,0,0);if(project(this.a,this.matrix)){let size=o.count>80?2:3;c.fillRect(x(this.a)-size/2,y(this.a)-size/2,size,size)}}return}
+ let geom=o.geometry;if(o.isMesh){let cached=this.cache.get(geom);if(!cached){if(geom.type==='TorusGeometry'){const r=geom.parameters.radius,pts=[];for(let i=0;i<90;i++){let a=i/90*Math.PI*2,b=(i+1)/90*Math.PI*2;pts.push(r*Math.cos(a),r*Math.sin(a),0,r*Math.cos(b),r*Math.sin(b),0)}cached=new THREE.BufferGeometry();cached.setAttribute('position',new THREE.Float32BufferAttribute(pts,3))}else cached=new THREE.WireframeGeometry(geom);this.cache.set(geom,cached)}geom=cached}
+ const pos=geom.attributes.position;c.beginPath();for(let i=0;i<pos.count-1;i+=(o.isLine&&!o.isLineSegments?1:2)){this.a.fromBufferAttribute(pos,i);this.b.fromBufferAttribute(pos,i+1);if(project(this.a,o.matrixWorld)&&project(this.b,o.matrixWorld)){c.moveTo(x(this.a),y(this.a));c.lineTo(x(this.b),y(this.b))}}c.stroke();});c.globalAlpha=1;c.shadowBlur=0;
+ }
+}

@@ -67,3 +67,6 @@ yarn-error.log
 .pnp.js
 # Yarn Integrity file
 .yarn-integrity
+
+# Generated standalone resume (rebuilt by Gatsby bootstrap)
+static/resume/
