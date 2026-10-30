@@ -11,18 +11,11 @@ const IndexPage = ({ data }) => {
   return (
     <Layout>
       <SEO title="Critical Section — Ted Koomen" pathname="/" />
-      <section className="home-masthead">
-        <p className="home-masthead__eyebrow">An engineering journal</p>
-        <h1>
-          Below the abstraction.
-        </h1>
-        <p className="home-masthead__dek">
-          Essays on performance, concurrency, and the tradeoffs that show up
-          in production.
-        </p>
-      </section>
+      <header className="writing-header">
+        <h1>Writing</h1>
+      </header>
 
-      <CardContainer containerTitle="Writing" data={posts} />
+      <CardContainer data={posts} />
     </Layout>
   )
 }
