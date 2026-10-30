@@ -114,4 +114,25 @@ function latencyBudget(networkMs = 10) {
     totalSpeedup: (network + 146.8) / (network + 7.5),
   }
 }
-module.exports = { counterFrame, ioFrame, layoutFrame, latencyBudget }
+function latencyFrame(step, networkMs = 10) {
+  const s = clampStep(step, 15),
+    budget = latencyBudget(networkMs)
+  const phase = s < 5 ? 0 : s < 15 ? 1 : 2
+  const processing =
+    s <= 5 ? 0 : s === 6 ? 7.5 : Math.min(146.8, 7.5 + ((s - 6) / 8) * 139.3)
+  const networkProgress = Math.min(s / 4, 1)
+  return {
+    ...budget,
+    phase,
+    processing,
+    networkProgress,
+    elapsed: budget.network * networkProgress + processing,
+  }
+}
+module.exports = {
+  counterFrame,
+  ioFrame,
+  layoutFrame,
+  latencyBudget,
+  latencyFrame,
+}

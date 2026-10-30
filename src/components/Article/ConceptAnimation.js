@@ -3,7 +3,7 @@ import {
   counterFrame,
   ioFrame,
   layoutFrame,
-  latencyBudget,
+  latencyFrame,
 } from "../../utils/article-animation-models"
 import "./concept-animation.scss"
 
@@ -29,9 +29,10 @@ const definitions = {
   },
   latency: {
     title: "Fast code inside a slow journey",
-    lead: "Replay both paths on the same end-to-end time scale.",
-    steps: 40,
-    duration: 110,
+    lead:
+      "Follow the same market update through the network and two versions of your code.",
+    steps: 15,
+    duration: 1150,
   },
 }
 function Choice({ value, setValue, options, label }) {
@@ -154,8 +155,25 @@ function IO({ step, mode }) {
 }
 function Layout({ step, mode }) {
   const f = layoutFrame(step, mode === "both")
+  const [record, setRecord] = useState(0)
   return (
     <>
+      <label className="concept-slider concept-record-picker">
+        Trace record <strong>index {record}</strong>
+        <input
+          type="range"
+          min="0"
+          max="15"
+          step="1"
+          value={record}
+          aria-label="Record index to trace in memory"
+          onChange={e => setRecord(Number(e.target.value))}
+        />
+      </label>
+      <p className="concept-schema-key">
+        P = price · Q = quantity · each field is 4 bytes. Outlined cells belong
+        to the selected record.
+      </p>
       <div className="concept-layouts">
         {["aos", "soa"].map(layout => (
           <div key={layout} className="concept-memory-layout">
@@ -165,6 +183,40 @@ function Layout({ step, mode }) {
               </b>
               <span>
                 {f[layout].useful} / {f[layout].bytes} fetched bytes useful
+              </span>
+            </div>
+            <div className="concept-schema">
+              <span className="concept-line-label">
+                {layout === "aos"
+                  ? "16 Level objects · 8 bytes per object"
+                  : "One Book object · two 64-byte arrays"}
+              </span>
+              <pre className="concept-schema-code">
+                <code>
+                  {layout === "aos"
+                    ? "struct Level {\n  uint32_t price;\n  uint32_t quantity;\n};\nLevel levels[16];"
+                    : "struct Book {\n  uint32_t prices[16];\n  uint32_t quantities[16];\n};\nBook book;"}
+                </code>
+              </pre>
+              <div className="concept-field-map">
+                <span>
+                  {layout === "aos"
+                    ? `levels[${record}].price`
+                    : `book.prices[${record}]`}{" "}
+                  <b>→ P{record}</b>
+                </span>
+                <span>
+                  {layout === "aos"
+                    ? `levels[${record}].quantity`
+                    : `book.quantities[${record}]`}{" "}
+                  <b>→ Q{record}</b>
+                </span>
+              </div>
+              <span className="concept-schema-direction">
+                ↓{" "}
+                {layout === "aos"
+                  ? "Each object keeps its two fields together in memory"
+                  : "Each array keeps one field from all 16 records together"}
               </span>
             </div>
             {[0, 1].map(line => (
@@ -186,7 +238,14 @@ function Layout({ step, mode }) {
                     <span
                       key={c.label}
                       className={
-                        c.loaded ? (c.useful ? "is-useful" : "is-unused") : ""
+                        (c.loaded
+                          ? c.useful
+                            ? "is-useful"
+                            : "is-unused"
+                          : "") +
+                        (Number(c.label.slice(1)) === record
+                          ? " is-selected-record"
+                          : "")
                       }
                     >
                       {c.label}
@@ -210,79 +269,198 @@ function Layout({ step, mode }) {
     </>
   )
 }
-function Latency({ step, networkMs }) {
-  const f = latencyBudget(networkMs),
-    elapsed = (step / 40) * f.original
+function Latency({ step, networkMs, jump }) {
+  const f = latencyFrame(step, networkMs)
+  const stories = [
+    step === 0
+      ? "The feed emits an update. Neither implementation can process bytes it has not received. Press Play to follow it."
+      : step < 4
+      ? `Both versions are waiting on the same ${networkMs} ms network journey. Faster processing cannot shorten this wait.`
+      : "The bytes have arrived. Now, and only now, can either version start processing.",
+    step === 5
+      ? "Zoom in on the server. The network wait is over. Both versions start processing the same data at the same instant."
+      : step === 6
+      ? "At 7.5 µs, the revised code has a result. The original still needs another 139.3 µs. Watch its remaining work."
+      : step < 14
+      ? "The revised result is already available while the original keeps processing. This is where the code optimization saves time."
+      : "Both results are ready. Processing fell from 146.8 µs to 7.5 µs: 19.6× faster for this part of the journey.",
+    `Zoom back out: both paths still paid ${networkMs} ms for the network. Saving 139.3 µs cuts the total wait by only ${(
+      (1 - f.revised / f.original) *
+      100
+    ).toFixed(
+      2
+    )}%. The code improvement is real; it does not remove the upstream delay.`,
+  ]
   return (
     <>
-      <div className="concept-journeys">
+      <div
+        className="concept-story-nav"
+        role="group"
+        aria-label="Journey chapter"
+      >
         {[
-          ["Original", 146.8, f.original],
-          ["Revised", 7.5, f.revised],
-        ].map(([name, process, total]) => (
-          <div className="concept-journey" key={name}>
-            <div className="concept-row-label">
-              <b>{name}</b>
-              <span>{(total / 1000).toFixed(4)} ms total</span>
+          ["1 · Network", 0],
+          ["2 · Processing", 5],
+          ["3 · Whole journey", 15],
+        ].map(([label, target], i) => (
+          <button
+            type="button"
+            key={target}
+            aria-pressed={f.phase === i}
+            onClick={() => jump(target)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      <div className="concept-story" data-phase={f.phase}>
+        <div className="concept-clock">
+          <span>
+            {f.phase === 1
+              ? "TIME SINCE BYTES ARRIVED"
+              : "TIME SINCE UPDATE WAS SENT"}
+          </span>
+          <strong>
+            {f.phase === 1
+              ? `${f.processing.toFixed(1)} µs`
+              : `${(f.elapsed / 1000).toFixed(4)} ms`}
+          </strong>
+          <small>
+            {f.phase === 1
+              ? `Network time already spent: ${networkMs} ms`
+              : "Illustrative clock · playback is slowed for explanation"}
+          </small>
+        </div>
+        {f.phase === 0 && (
+          <div className="concept-network-scene">
+            <div className="concept-route-labels">
+              <b>Market feed</b>
+              <b>Your server</b>
             </div>
-            <div
-              className="concept-time-track"
-              aria-label={`${name}: ${networkMs} milliseconds network plus ${process} microseconds processing`}
-            >
-              <span
-                className="network"
-                style={{ width: `${(f.network / f.original) * 100}%` }}
-              />
-              <span
-                className="processing"
-                style={{ width: `${(process / f.original) * 100}%` }}
-              />
+            <div className="concept-transit-track">
               <i
-                className="concept-packet"
-                style={{
-                  left: `${(Math.min(elapsed, total) / f.original) * 100}%`,
-                }}
-              />
+                style={{ left: `${f.networkProgress * 100}%` }}
+                aria-hidden="true"
+              >
+                ◆
+              </i>
             </div>
-            <span className="concept-track-caption">
-              {elapsed >= total
-                ? "COMPLETE"
-                : elapsed < f.network
-                ? "IN TRANSIT"
-                : "PROCESSING"}{" "}
-              · same linear scale
-            </span>
-          </div>
-        ))}
-      </div>
-      <div className="concept-zoom">
-        <span>PROCESSING ONLY / MAGNIFIED TO A SEPARATE SCALE</span>
-        {[
-          ["Original", 146.8],
-          ["Revised", 7.5],
-        ].map(([name, v]) => (
-          <div key={name}>
-            <b>{name}</b>
-            <div>
-              <i style={{ width: `${(v / 146.8) * 100}%` }} />
+            <div className="concept-route-labels">
+              <span>Update sent</span>
+              <span>
+                {step === 4 ? "Bytes received ✓" : "Waiting for bytes…"}
+              </span>
             </div>
-            <em>{v} µs</em>
+            <div className="concept-waiting-pair">
+              <span>
+                Original code <b>{step === 4 ? "Ready to start" : "Waiting"}</b>
+              </span>
+              <span>
+                Revised code <b>{step === 4 ? "Ready to start" : "Waiting"}</b>
+              </span>
+            </div>
           </div>
-        ))}
+        )}
+        {f.phase === 1 && (
+          <div className="concept-processing-scene">
+            <div className="concept-scale-label">
+              PROCESSING ZOOM · both bars use 0–146.8 µs · network excluded
+            </div>
+            {[
+              ["Original", 146.8],
+              ["Revised", 7.5],
+            ].map(([name, duration]) => (
+              <div className="concept-process-row" key={name}>
+                <div className="concept-row-label">
+                  <b>{name} code</b>
+                  <span>
+                    {f.processing >= duration
+                      ? "RESULT READY ✓"
+                      : `PROCESSING · ${(duration - f.processing).toFixed(
+                          1
+                        )} µs left`}
+                  </span>
+                </div>
+                <div className="concept-processing-track">
+                  <div
+                    className="concept-process-budget"
+                    style={{ width: `${(duration / 146.8) * 100}%` }}
+                  >
+                    <i
+                      style={{
+                        width: `${Math.min(f.processing / duration, 1) * 100}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+                <span className="concept-track-caption">
+                  {duration} µs of processing required
+                </span>
+              </div>
+            ))}
+            <p className="concept-scale-note">
+              Playback slows again at the server so you can see microseconds.
+              Screen time is not proportional to network time.
+            </p>
+          </div>
+        )}
+        {f.phase === 2 && (
+          <div className="concept-journeys">
+            <div className="concept-scale-label">
+              FULL JOURNEY · both bars use the same linear time scale
+            </div>
+            {[
+              ["Original", 146.8, f.original],
+              ["Revised", 7.5, f.revised],
+            ].map(([name, process, total]) => (
+              <div className="concept-journey" key={name}>
+                <div className="concept-row-label">
+                  <b>{name}</b>
+                  <span>{(total / 1000).toFixed(4)} ms total</span>
+                </div>
+                <div
+                  className="concept-time-track"
+                  aria-label={`${networkMs} ms network plus ${process} µs processing`}
+                >
+                  <span
+                    className="network"
+                    style={{ width: `${(f.network / f.original) * 100}%` }}
+                  />
+                  <span
+                    className="processing"
+                    style={{ width: `${(process / f.original) * 100}%` }}
+                  />
+                </div>
+                <span className="concept-track-caption">
+                  {networkMs} ms network + {process} µs processing
+                </span>
+              </div>
+            ))}
+            <p className="concept-scale-note">
+              Muted = network · gold = processing. The gold segments are tiny
+              because the network dominates this example.
+            </p>
+            <dl className="concept-metrics">
+              <Metric label="Processing alone">19.6× faster</Metric>
+              <Metric label="Whole journey">
+                {((1 - f.revised / f.original) * 100).toFixed(2)}% less time
+              </Metric>
+              <Metric label="Actual saving">139.3 µs</Metric>
+            </dl>
+          </div>
+        )}
       </div>
-      <dl className="concept-metrics">
-        <Metric label="Processing speedup">
-          {f.processingSpeedup.toFixed(1)}×
-        </Metric>
-        <Metric label="Whole journey speedup">
-          {f.totalSpeedup.toFixed(4)}×
-        </Metric>
-        <Metric label="Time saved">139.3 µs</Metric>
-      </dl>
-      <p className="concept-event">
-        The code is much faster. With {networkMs} ms of assumed network delay,
-        the whole journey improves by{" "}
-        {((1 - f.revised / f.original) * 100).toFixed(2)}%.
+      <p className="concept-event concept-narration">
+        <strong>
+          {
+            [
+              "01 / Wait for data",
+              "02 / Do the work",
+              "03 / Compare the total",
+            ][f.phase]
+          }
+        </strong>
+        {stories[f.phase]}
       </p>
     </>
   )
@@ -337,8 +515,11 @@ const notes = {
     <>
       Processing times come from the full-pipeline comparison in this article.
       The slider adds an assumed fixed network delay to both paths; it is not a
-      live measurement or a model of jitter. The processing inset uses its own
-      explicitly enlarged scale.
+      live measurement or a model of jitter. The network chapter and processing
+      chapter play at different speeds so both are visible. Processing bars
+      share a microsecond scale; the final comparison restores one common
+      end-to-end scale. The clock, not playback duration, represents elapsed
+      time.
     </>
   ),
 }
@@ -464,7 +645,16 @@ export default function ConceptAnimation({ type }) {
         {type === "counter" && <Counter step={step} mode={mode} />}
         {type === "io" && <IO step={step} mode={mode} />}
         {type === "layout" && <Layout step={step} mode={mode} />}
-        {type === "latency" && <Latency step={step} networkMs={networkMs} />}
+        {type === "latency" && (
+          <Latency
+            step={step}
+            networkMs={networkMs}
+            jump={s => {
+              setStep(s)
+              setPlaying(false)
+            }}
+          />
+        )}
       </div>
       <div className="concept-controls">
         <button
