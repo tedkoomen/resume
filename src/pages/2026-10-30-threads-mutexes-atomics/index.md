@@ -6,8 +6,8 @@ author: 'Ted Koomen'
 description: 'How threads share memory, what a mutex actually does on Linux, and why replacing locks with atomics is not automatically an optimization.'
 posttype: 'engineering'
 tag: ['cpp', 'concurrency', 'linux', 'performance', 'atomics']
-image: '../../images/engineering-post.png'
-featuredImage: '../../images/engineering-post.png'
+image: '../../images/social-threads-mutexes-atomics.png'
+featuredImage: '../../images/social-threads-mutexes-atomics.png'
 featured: true
 snippet: 'Adding threads is easy, but making them cooperate correctly and proving they made anything faster takes more work.'
 takeaways:
