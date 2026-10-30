@@ -10,18 +10,15 @@ const IndexPage = ({ data }) => {
 
   return (
     <Layout>
-      <SEO title="Screaming Into The Void" pathname="/" />
+      <SEO title="Critical Section — Ted Koomen" pathname="/" />
       <section className="home-masthead">
-        <p className="home-masthead__eyebrow">Ted Koomen / Engineering notes</p>
+        <p className="home-masthead__eyebrow">An engineering journal</p>
         <h1>
-          Screaming
-          <br />
-          into the void
-          <span className="home-masthead__cursor" aria-hidden="true" />
+          Below the abstraction.
         </h1>
         <p className="home-masthead__dek">
-          Software, systems, and the cost of getting it wrong. Notes from below
-          the abstraction.
+          Essays on performance, concurrency, and the tradeoffs that show up
+          in production.
         </p>
       </section>
 

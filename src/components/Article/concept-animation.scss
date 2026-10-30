@@ -1,8 +1,8 @@
 .dispatch-body .concept-animation {
   margin: 2.5rem 0;
-  padding: 1.25rem;
-  border: 1px solid var(--void-line-strong);
-  background: var(--void-panel);
+  padding: 1.8rem 0;
+  border-block: 1px solid var(--void-line);
+  background: transparent;
   color: var(--void-cream);
   font-size: 0.78rem;
   line-height: 1.6;
@@ -18,8 +18,10 @@
     margin-bottom: 1.25rem;
   }
   figcaption > strong {
-    font-size: 1.15rem;
-    line-height: 1.4;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.8rem;
+    line-height: 1.2;
   }
   figcaption > span:last-child {
     color: var(--void-cream-muted);
@@ -277,7 +279,7 @@
     height: 28px;
     background: var(--void-cream);
     transform: translateX(-50%);
-    box-shadow: 0 0 10px var(--void-accent);
+
   }
   .concept-track-caption {
     font-size: 0.55rem;
@@ -371,10 +373,10 @@
 }
 @media (max-width: 600px) {
   .dispatch-body .concept-animation {
-    padding: 0.85rem;
+    padding: 1.5rem 0;
     margin: 2rem 0;
     figcaption > strong {
-      font-size: 1rem;
+      font-size: 1.6rem;
     }
     .concept-counter {
       grid-template-columns: 1fr 1fr;
@@ -604,4 +606,28 @@
       min-height: 0;
     }
   }
+}
+
+/* Flat visual encodings, without nested panels. */
+.dispatch-body .concept-animation {
+  .concept-eyebrow { font-size: .7rem; letter-spacing: .03em; }
+  .concept-schema, .concept-story { background: none; border: 0; padding-inline: 0; }
+  .concept-story-nav button { font-size: .72rem; }
+  .concept-schema-code { border: 0; }
+  .concept-line-label, .concept-row-label > span, .concept-track-caption { font-size: .65rem; }
+  .concept-row-label > b { font: 500 1.55rem/1.25 var(--font-serif); color: var(--void-accent); }
+  .concept-cache-line { background: none; border: 0; border-top: 1px dashed var(--void-line-strong); padding: .5rem 0; }
+  .concept-cache-line.is-loaded { border-color: var(--void-accent); }
+  .concept-cells span { background: var(--void-panel); color: var(--void-cream); }
+  .concept-cells .is-useful { background: var(--void-panel-strong); color: var(--void-cream); border-color: var(--void-accent); }
+  .concept-cells .is-unused { color: var(--void-cream-muted); border-color: var(--void-line-strong); }
+  .concept-controls > button:first-child { background: var(--void-accent); color: var(--void-black); border-color: var(--void-accent); }
+  .concept-controls > button:first-child:hover:not(:disabled) { background: var(--void-cream); color: var(--void-black); }
+}
+@media (min-width: 760px) {
+  .dispatch-body .concept-animation .concept-memory-layout { display: grid; grid-template-columns: 245px minmax(0, 1fr); gap: 0 1.4rem; align-items: start; }
+  .dispatch-body .concept-animation .concept-memory-layout > .concept-row-label { grid-column: 1 / -1; margin-bottom: 1rem; }
+  .dispatch-body .concept-animation .concept-schema { grid-column: 1; grid-row: 2 / 4; margin: 0; padding: 0; }
+  .dispatch-body .concept-animation .concept-cache-line { grid-column: 2; min-width: 0; }
+  .dispatch-body .concept-animation .concept-memory-layout .concept-cells { grid-template-columns: repeat(8, minmax(0, 1fr)); }
 }

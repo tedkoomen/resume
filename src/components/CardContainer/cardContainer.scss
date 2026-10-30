@@ -13,14 +13,14 @@
 .dispatch-list__title {
   margin: 0;
   color: var(--void-cream-muted);
-  font-size: 0.7rem;
+  font-size: 0.85rem;
   font-weight: 400;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .dispatch-list__count {
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   color: var(--void-cream-muted);
   letter-spacing: 0.05em;
-  text-transform: uppercase;
+  text-transform: none;
 }

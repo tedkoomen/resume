@@ -1,9 +1,5 @@
 import './lab.js';
 import * as THREE from 'three';
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { CanvasRenderer } from './canvas-renderer';
 import { PipelineSimulation } from './pipeline.mjs';
 import gsap from 'gsap';
@@ -16,7 +12,7 @@ function init(){
  try{renderer=new THREE.WebGLRenderer({antialias:false,alpha:false,powerPreference:'high-performance'})}catch{renderer=new CanvasRenderer();fallback=true}
  renderer.setPixelRatio(Math.min(devicePixelRatio,innerWidth<700?1.35:1.75));renderer.setSize(innerWidth,innerHeight);mount.appendChild(renderer.domElement);mount.dataset.renderer=fallback?'canvas-3d':'webgl';
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.1,80);camera.position.z=10;
- scene.background=new THREE.Color(root.dataset.theme==='light'?'#f1ede3':'#171817');
+ scene.background=new THREE.Color(root.dataset.theme==='light'?'#eeece5':'#242720');
  const board=new THREE.Group();scene.add(board);
  const gold=new THREE.Color(),teal=new THREE.Color(),ink=new THREE.Color(),bg=new THREE.Color();
  const materials=[],traces=[];
@@ -43,10 +39,10 @@ function init(){
  function packet(from,to,duration,kind='teal',delay=0){const p=particlePool.find(p=>!p.active);if(!p)return;p.active=true;p.start=elapsed+delay;p.duration=duration;p.from.copy(from);p.to.copy(to);p.via.copy(from).lerp(to,.5);p.via.z+=.5;p.mesh.visible=true;p.mesh.material.color.copy(kind==='gold'?gold:teal)}
  const labels=[];function label(text,position,name){const el=document.createElement('div');el.className='pipeline-label';el.textContent=text;if(name)el.id=name;mount.appendChild(el);labels.push({el,position:new THREE.Vector3(...position)})}
  label('01 / NIC · RECEIVE',[-.85,2.33,0]);label('02 / SPSC RING',[0,1.05,0]);label('03 / SINGLE WRITER',[.35,-1.1,0]);label('04 / PUBLISH',[-.85,-3.25,0]);label('H',[-1.35,.56,.5],'head-label');label('T',[-1.35,.56,.5],'tail-label');
- const backdrop=new THREE.Group();scene.add(backdrop);const grid=new THREE.GridHelper(50,50);grid.position.set(0,-4.1,-14);grid.material.transparent=true;grid.material.opacity=.08;backdrop.add(grid);
+ const backdrop=new THREE.Group();const grid=new THREE.GridHelper(50,50);grid.position.set(0,-4.1,-14);grid.material.transparent=true;grid.material.opacity=.08;backdrop.add(grid);
  const starPositions=new Float32Array(300*3);for(let i=0;i<300;i++){starPositions[i*3]=(Math.random()-.5)*40;starPositions[i*3+1]=(Math.random()-.5)*25;starPositions[i*3+2]=-8-Math.random()*25}
- const starGeo=new THREE.BufferGeometry();starGeo.setAttribute('position',new THREE.BufferAttribute(starPositions,3));const starMat=new THREE.PointsMaterial({size:.028,transparent:true,opacity:.35});const stars=new THREE.Points(starGeo,starMat);scene.add(stars);
- let bloom={strength:.6};if(fallback){composer={render:()=>renderer.render(scene,camera),setSize:()=>{}}}else{composer=new EffectComposer(renderer);composer.addPass(new RenderPass(scene,camera));bloom=new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),.65,.5,.4);composer.addPass(bloom);composer.addPass(new OutputPass())}
+ const starGeo=new THREE.BufferGeometry();starGeo.setAttribute('position',new THREE.BufferAttribute(starPositions,3));const starMat=new THREE.PointsMaterial({size:.028,transparent:true,opacity:.35});const stars=new THREE.Points(starGeo,starMat);
+ composer={render:()=>renderer.render(scene,camera),setSize:()=>{}};
  const state={intro:0,scroll:0,pointerX:0,pointerY:0,kick:0};let running=false,targetX=0,targetY=0,elapsed=0,last=0,workerPulse=0;
  const simulation=new PipelineSimulation();
  function active(){return root.dataset.motion==='overdrive'&&!reduced.matches&&!document.hidden}
@@ -70,7 +66,7 @@ function init(){
  for(const l of labels){if(l.el.id==='head-label')l.position.copy(headPointer.position).add(new THREE.Vector3(-.14,.22,.1));if(l.el.id==='tail-label')l.position.copy(tailPointer.position).add(new THREE.Vector3(.14,-.22,.1));projected.copy(l.position).applyMatrix4(board.matrixWorld).project(camera);l.el.style.transform=`translate(-50%,-50%) translate(${(projected.x*.5+.5)*innerWidth}px,${(-projected.y*.5+.5)*innerHeight}px)`;l.el.style.opacity=String(state.intro*fade)}
  }
  function renderOnce(){if(!composer)return;update(0);composer.render()}
- function syncTheme(){const light=root.dataset.theme==='light';gold.set(light?'#826020':'#edc77f');teal.set(light?'#37694a':'#8cd4c0');ink.set(light?'#9a9079':'#666958');bg.set(light?'#f1ede3':'#171817');scene.background=bg;scene.fog=new THREE.FogExp2(bg,.022);for(const m of materials)m.color.copy(m.userData.kind==='gold'?gold:teal);traces.forEach(m=>m.color.copy(gold));grid.material.color.copy(gold);starMat.color.copy(gold);bloom.strength=light?.1:.65;renderOnce()}
+ function syncTheme(){const light=root.dataset.theme==='light';gold.set(light?'#626b43':'#b1bc91');teal.set(light?'#7b714e':'#d0d2b8');ink.set(light?'#9a9079':'#666958');bg.set(light?'#eeece5':'#242720');scene.background=bg;scene.fog=new THREE.FogExp2(bg,.022);for(const m of materials)m.color.copy(m.userData.kind==='gold'?gold:teal);traces.forEach(m=>m.color.copy(gold));grid.material.color.copy(gold);starMat.color.copy(gold);renderOnce()}
  function tick(time){if(!active())return syncRunning();const interval=fallback?40:(innerWidth<700?33:20);if(last&&time-last<interval)return;const dt=Math.min((time-(last||time))/1000,.07);last=time;update(dt);composer.render();mount.dataset.frames=String((Number(mount.dataset.frames)||0)+1)}
  function syncRunning(){document.querySelector('#warp').disabled=!active();if(active()){running=true;last=0;renderer.setAnimationLoop(tick)}else{running=false;renderer.setAnimationLoop(null);status.textContent=reduced.matches?'REDUCED MOTION':`${String(simulation.count).padStart(2,'0')} / 32 SLOTS · PAUSED`;renderOnce()}}
  function resize(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setPixelRatio(Math.min(devicePixelRatio,innerWidth<700?1.35:1.75));renderer.setSize(innerWidth,innerHeight);composer.setSize(innerWidth,innerHeight);renderOnce()}

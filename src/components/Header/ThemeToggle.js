@@ -8,7 +8,7 @@ export default function ThemeToggle() {
     document.documentElement.dataset.theme = next
     document.documentElement.style.colorScheme = next
     const meta = document.querySelector('meta[name="theme-color"]')
-    if (meta) meta.content = next === "light" ? "#f1ede3" : "#171817"
+    if (meta) meta.content = next === "light" ? "#eeece5" : "#242720"
     setTheme(next)
   }
 
@@ -50,8 +50,7 @@ export default function ThemeToggle() {
           : "Switch color theme"
       }
     >
-      <span aria-hidden="true">◐ </span>
-      {theme ? `${theme === "dark" ? "light" : "dark"} mode` : "theme"}
+      <span aria-hidden="true">{theme === "dark" ? "☼" : "☾"}</span>
     </button>
   )
 }

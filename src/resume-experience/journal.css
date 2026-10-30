@@ -1,0 +1,34 @@
+/* The same stone / olive journal system as the writing pages. */
+:root{--dock:var(--bg);--wash:#b1bc9110;--halo:transparent}
+html[data-theme=light]{--dock:var(--bg);--wash:#626b430c;--halo:transparent}
+body{transition:none}
+.topbar{height:auto;min-height:116px;gap:24px;padding:24px 0 18px;border-color:var(--line)}
+.brand{font:500 clamp(28px,3.4vw,42px)/1.1 Newsreader,Georgia,serif;letter-spacing:-.035em;color:var(--ink)}
+.brand small{display:block;font:13px/1.5 Plex,monospace;letter-spacing:0;color:var(--muted);margin-top:5px}
+.topbar nav{font-size:13px;gap:28px}
+.site-tagline{font-size:13px;color:var(--muted);margin:14px 0 0}
+h1,.job h3,.lab-heading h2,.lab-sidebar h3,.metrics strong{font-family:Newsreader,Georgia,serif;font-weight:500;letter-spacing:-.025em}
+.hero h1{letter-spacing:-.035em}
+h1 span{animation:none!important;filter:none}
+.hero p{max-width:42ch;line-height:1.8}
+.section-title{font-size:14px;text-transform:none;letter-spacing:0}
+.job h3{font-size:30px}
+.scan,.readability,.warp-flash:after{display:none}
+.layout{background:var(--bg)}
+#three-stage[data-renderer=fallback]{background:none}
+.timeline-progress,.job.active:before,.terminal-panel:hover,.dot,.reading-progress,.dock,dialog{box-shadow:none}
+.flash{animation:none}
+.dock,dialog::backdrop{backdrop-filter:none}
+.terminal-panel{border:0;border-top:1px solid var(--line);padding:25px 0}
+.terminal-panel:before,.terminal-panel:after{display:none}
+.terminal-panel h2{position:static;padding:0;margin:0 0 20px;font-size:14px}
+.tool-group h3{font-size:11px}
+.school h3{font-size:15px}
+.lab-visual{border:0;background:var(--panel)}
+.lab-heading h2{font-size:34px;letter-spacing:-.025em}
+.lab-sidebar h3{font-size:26px;letter-spacing:-.02em}
+.lab-sidebar p{font-size:12px}
+.lab-tabs button,.lab-readouts span,.lab-action{font-size:11px}
+.pipeline-label{border:0;padding:4px;font-size:10px;letter-spacing:0}
+@media(max-width:640px){.topbar{flex-wrap:wrap;gap:16px}.topbar nav{width:100%;justify-content:space-between;gap:16px}.site-tagline{font-size:11px;max-width:36ch}.hero h1{font-size:50px}.pipeline-label{font-size:9px}}
+@media print{.topbar{min-height:0;padding:10px 0}.site-tagline{display:none}}

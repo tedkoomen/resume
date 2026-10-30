@@ -22,6 +22,7 @@ const Layout = ({ children }) => (
           tedkoomen.com <span aria-hidden="true">│</span> engineering notes
         </span>
         <nav className="site-footer__links" aria-label="Footer navigation">
+          <Link to="/blog/">Archive</Link>
           <Link to="/about-me/">About</Link>
           <a href="/resume/">Resume</a>
           <a
@@ -42,7 +43,7 @@ const Layout = ({ children }) => (
       </div>
       <div className="site-footer__meta">
         <span>© {new Date().getFullYear()} Ted Koomen</span>
-        <span>UTF-8 / Screaming Into The Void</span>
+        <span>Notes on software, systems, and tradeoffs.</span>
       </div>
     </footer>
   </div>

@@ -1,32 +1,32 @@
 """Regenerate the committed 1200x630 social cards: python3 -m pip install Pillow.
 Run from any directory with python3 scripts/generate-social-cards.py.
-Font source: google/fonts ofl/ibmplexmono (SIL OFL, included with the fonts).
+Font sources: google/fonts ofl/ibmplexmono and ofl/newsreader (SIL OFL, included).
+Newsreader is a static instance at optical size 48, weight 500.
 """
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[1]
-BG, FG, MUTED, LINE, ACCENT, RED = '#171817', '#e7e5dc', '#acada3', '#41443b', '#d8b878', '#efaa9c'
+BG, FG, MUTED, LINE, ACCENT, RED = '#242720', '#e6e6da', '#aeb0a0', '#4b5142', '#b1bc91', '#c99380'
 SCALE = 2
 
 def card(filename, title, subtitle, issue, art):
     im = Image.new('RGB', (1200*SCALE, 630*SCALE), BG)
     d = ImageDraw.Draw(im)
     def text(x,y,value,size=22,color=FG,medium=False):
-        font=ImageFont.truetype(str(ROOT/'static/fonts'/('IBMPlexMono-Medium.ttf' if medium else 'IBMPlexMono-Regular.ttf')),size*SCALE)
+        font=ImageFont.truetype(str(ROOT/'static/fonts'/('Newsreader-Medium.ttf' if medium else 'IBMPlexMono-Regular.ttf')),size*SCALE)
         d.text((x*SCALE,y*SCALE),value,font=font,fill=color)
     def line(x,y,x2,y2,color=LINE,width=1):
         d.line((x*SCALE,y*SCALE,x2*SCALE,y2*SCALE),fill=color,width=width*SCALE)
     def box(x,y,x2,y2,fill=None,outline=LINE):
         d.rectangle((x*SCALE,y*SCALE,x2*SCALE,y2*SCALE),fill=fill,outline=outline,width=SCALE)
-    box(28,28,1172,602)
-    text(64,58,'SCREAMING INTO THE VOID',19,MUTED)
+    text(64,58,'Critical Section',32,FG,True)
     text(986,58,issue,19,ACCENT)
     line(64,108,1136,108)
     title_lines=title.split('\n')
     y=200 if len(title_lines)<4 else 168
     for row in title_lines:
-        text(64,y,row,46,FG,True);y+=62
+        text(64,y,row,59,FG,True);y+=62
     text(64,y+22,subtitle,19,MUTED)
     if art == 'counter':
         box(770,185,1136,438)
@@ -53,7 +53,7 @@ def card(filename, title, subtitle, issue, art):
             text(850,yy,name,22)
             if i<3:line(790,yy+39,1116,yy+39)
     else:
-        text(840,220,'>_',100,ACCENT,True)
+        text(850,210,'§',130,ACCENT,True)
         text(790,370,'ENGINEERING NOTES',20,MUTED)
     line(64,520,1136,520)
     text(64,550,'TED KOOMEN',20,MUTED)
@@ -65,4 +65,4 @@ def card(filename, title, subtitle, issue, art):
 card('src/images/social-ai-illusion.png','AI and the\nIllusion of\nOptimization','Confidence is not correctness.','002 / AI','counter')
 card('src/images/social-wrong-thing.png','Optimizing the\nWrong Thing,\nFaster','Faster code. The same bottleneck.','003 / AI','latency')
 card('src/images/social-zig-framework.png',"Why I'm Building\na Server Framework\nin Zig",'Comptime. Event loops. Explicit memory.','001 / ZIG','zig')
-card('static/social/site.png','Screaming\ninto the void','Software, systems, and the cost of getting it wrong.','~/ NOTES','site')
+card('static/social/site.png','Critical\nSection','Notes on software, systems, and tradeoffs.','JOURNAL','site')

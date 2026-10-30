@@ -4,30 +4,20 @@ import ThemeToggle from "./ThemeToggle"
 import "./header.scss"
 
 const Header = () => (
-  <header className="site-header">
-    <Link
-      className="site-header__brand"
-      to="/"
-      aria-label="Ted Koomen — Screaming Into The Void home"
-    >
-      <span className="site-header__prompt" aria-hidden="true">
-        ~/{" "}
-      </span>
-      tedkoomen
-    </Link>
-    <nav className="site-header__nav" aria-label="Primary navigation">
-      <Link to="/" activeClassName="is-active">
-        [ writing ]
+  <>
+    <header className="site-header">
+      <Link className="site-header__brand" to="/" aria-label="Critical Section — Ted Koomen home">
+        <span>Critical Section</span>
+        <small>by Ted Koomen</small>
       </Link>
-      <Link to="/about-me/" activeClassName="is-active">
-        about
-      </Link>
-      <a href="/resume/">resume</a>
-      <Link to="/blog/" activeClassName="is-active">
-        archive
-      </Link>
-      <ThemeToggle />
-    </nav>
-  </header>
+      <nav className="site-header__nav" aria-label="Primary navigation">
+        <Link to="/" activeClassName="is-active">Writing</Link>
+        <Link to="/about-me/" activeClassName="is-active">About</Link>
+        <a href="/resume/">Resume</a>
+        <ThemeToggle />
+      </nav>
+    </header>
+    <p className="site-tagline">Notes on software, systems, and tradeoffs.</p>
+  </>
 )
 export default Header
