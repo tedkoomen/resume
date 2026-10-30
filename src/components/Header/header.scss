@@ -5,7 +5,7 @@
 .site-header__nav { display: flex; align-items: center; gap: 1.8rem; font-size: .85rem; }
 .site-header__nav a { display: inline-flex; align-items: center; min-height: 44px; color: var(--void-cream-muted); }
 .site-header__nav a.is-active, .site-header__nav a:hover { color: var(--void-accent); text-decoration: underline; text-underline-offset: .4em; }
-.theme-toggle { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: var(--void-cream); font-size: 1.7rem; line-height: 1; }
+.theme-toggle { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: var(--void-cream); font-size: .8rem; line-height: 1; }
 .theme-toggle:hover { color: var(--void-accent); }
 .site-tagline { margin: .85rem 0 0; color: var(--void-cream-muted); font-size: .85rem; }
 @media (max-width: 640px) {

@@ -16,10 +16,7 @@ const Layout = ({ children }) => (
     <footer className="site-footer" aria-label="Site footer">
       <div className="site-footer__status">
         <span>
-          <span className="site-footer__prompt" aria-hidden="true">
-            ●{" "}
-          </span>
-          tedkoomen.com <span aria-hidden="true">│</span> engineering notes
+          tedkoomen.com / engineering notes
         </span>
         <nav className="site-footer__links" aria-label="Footer navigation">
           <Link to="/blog/">Archive</Link>
@@ -30,14 +27,14 @@ const Layout = ({ children }) => (
             rel="noreferrer"
             target="_blank"
           >
-            GitHub ↗
+            GitHub
           </a>
           <a
             href="https://www.linkedin.com/in/tedkoomen/"
             rel="noreferrer"
             target="_blank"
           >
-            LinkedIn ↗
+            LinkedIn
           </a>
         </nav>
       </div>

@@ -50,7 +50,7 @@ export default function ThemeToggle() {
           : "Switch color theme"
       }
     >
-      <span aria-hidden="true">{theme === "dark" ? "☼" : "☾"}</span>
+      {theme === "dark" ? "Light" : theme === "light" ? "Dark" : "Theme"}
     </button>
   )
 }

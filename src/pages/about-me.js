@@ -31,12 +31,12 @@ const AboutMePage = ({ data, path }) => {
             software, systems, and the industry habits worth questioning.
           </p>
           <div className="about-page__links">
-            <a href="/resume/">Resume →</a>
+            <a href="/resume/">Resume</a>
             <a href="https://github.com/tedkoomen" rel="noreferrer" target="_blank">
-              GitHub →
+              GitHub
             </a>
             <a href="https://www.linkedin.com/in/tedkoomen/" rel="noreferrer" target="_blank">
-              LinkedIn →
+              LinkedIn
             </a>
           </div>
         </div>

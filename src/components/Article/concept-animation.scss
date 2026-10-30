@@ -523,9 +523,9 @@
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
-    font-size: 1.4rem;
-    font-style: normal;
-    color: var(--void-accent);
+    width: 10px;
+    height: 10px;
+    background: var(--void-accent);
   }
   .concept-waiting-pair {
     display: grid;

@@ -40,7 +40,7 @@ export default ({ data, location, pageContext }) => {
       <article className="dispatch-page">
         <header className="dispatch-hero">
           <Link className="dispatch-hero__back" to="/">
-            ← All writing
+            All writing
           </Link>
           <div className="dispatch-hero__grid">
             <div className="dispatch-hero__main">
@@ -71,10 +71,10 @@ export default ({ data, location, pageContext }) => {
 
         {pageContext.relatedPosts?.length > 0 && <nav className="related-writing" aria-label="Related writing">
           <h2>Keep reading</h2>
-          <ul>{pageContext.relatedPosts.map(post => <li key={post.path}><Link to={post.path}>{post.title} →</Link></li>)}</ul>
+          <ul>{pageContext.relatedPosts.map(post => <li key={post.path}><Link to={post.path}>{post.title}</Link></li>)}</ul>
         </nav>}
         <nav className="dispatch-after" aria-label="Article navigation">
-          <Link to="/blog/">View archive →</Link>
+          <Link to="/blog/">View archive</Link>
         </nav>
       </article>
     </Layout>
