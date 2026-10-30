@@ -23,7 +23,7 @@ const Layout = ({ children }) => (
         </span>
         <nav className="site-footer__links" aria-label="Footer navigation">
           <Link to="/about-me/">About</Link>
-          <Link to="/resume/">Resume</Link>
+          <a href="/resume/">Resume</a>
           <a
             href="https://github.com/tedkoomen"
             rel="noreferrer"

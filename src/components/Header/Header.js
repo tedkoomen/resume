@@ -22,9 +22,7 @@ const Header = () => (
       <Link to="/about-me/" activeClassName="is-active">
         about
       </Link>
-      <Link to="/resume/" activeClassName="is-active">
-        resume
-      </Link>
+      <a href="/resume/">resume</a>
       <Link to="/blog/" activeClassName="is-active">
         archive
       </Link>
