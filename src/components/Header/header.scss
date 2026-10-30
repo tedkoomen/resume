@@ -2,73 +2,60 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
-  padding: clamp(1.5rem, 4vw, 3rem) 0;
-  color: var(--void-cream);
+  gap: 1.2rem;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--void-line);
 }
-
 .site-header__brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 1rem;
-  min-width: 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+  white-space: nowrap;
 }
-
-.site-header__mark {
-  flex: 0 0 auto;
-  width: 2.3rem;
-  height: 2.3rem;
-  border: 1px solid var(--void-accent);
-  border-radius: 50%;
-  box-shadow: 0 0 26px rgba(245, 231, 200, 0.12);
+.site-header__prompt {
+  color: var(--void-accent);
 }
-
-.site-header__wordmark {
-  display: none;
-  font-family: var(--font-script);
-  font-size: clamp(1.5rem, 2vw, 2.2rem);
-  line-height: 1;
-  color: var(--void-cream);
-}
-
 .site-header__nav {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: clamp(1rem, 3vw, 2.75rem);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  font-size: 0.75rem;
 }
-
 .site-header__nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--void-cream-muted);
-  transition: color 160ms ease, opacity 160ms ease;
 }
-
-.site-header__nav a:hover,
-.site-header__nav a:focus,
-.site-header__nav a.is-active {
+.site-header__nav a.is-active,
+.site-header__nav a:hover {
+  color: var(--void-accent);
+}
+.theme-toggle {
+  min-height: 44px;
+  padding: 0.5rem 0.8rem;
+  background: transparent;
+  border: 1px solid var(--void-line);
   color: var(--void-cream);
+  font-size: 0.72rem;
+  white-space: nowrap;
 }
-
-@media (max-width: 760px) {
+.theme-toggle:hover {
+  background: var(--void-panel);
+  border-color: var(--void-line-strong);
+}
+@media (max-width: 680px) {
   .site-header {
-    align-items: flex-start;
-    gap: 1.25rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
   }
-
   .site-header__nav {
-    display: grid;
-    grid-template-columns: repeat(2, max-content);
-    gap: 0.7rem 1.2rem;
-    font-size: 0.72rem;
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.3rem 0.5rem;
+    font-size: 0.7rem;
   }
-}
-
-@media (min-width: 1120px) {
-  .site-header__wordmark {
-    display: inline;
+  .theme-toggle {
+    font-size: 0.7rem;
   }
 }

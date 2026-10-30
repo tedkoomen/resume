@@ -79,8 +79,8 @@ module.exports = {
         name: `Screaming Into The Void`,
         short_name: `S/V`,
         start_url: `/`,
-        background_color: `#050505`,
-        theme_color: `#050505`,
+        background_color: `#171817`,
+        theme_color: `#171817`,
         display: `minimal-ui`,
         icons: [
           {

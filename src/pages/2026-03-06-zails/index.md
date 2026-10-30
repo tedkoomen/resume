@@ -7,8 +7,8 @@ dispatch: 17
 description: 'F1 telemetry, low-latency trading, and choosing Zig over C++ and Rust'
 posttype: 'engineering'
 tag: ["zig", "systems-programming", "low-latency", "server"]
-image: '../../images/engineering-post.png'
-featuredImage: '../../images/engineering-post.png'
+image: '../../images/social-zig-framework.png'
+featuredImage: '../../images/social-zig-framework.png'
 featured: true
 snippet: "I've spent the last few months building a server framework in Zig. Not because the world needs another server framework, but because I wanted to understand how F1 telemetry and low-latency trading systems actually work. I chose Zig over C++ and Rust for specific reasons — comptime reflection, no CRTP, and freedom to prototype without fighting a borrow checker."
 ---
