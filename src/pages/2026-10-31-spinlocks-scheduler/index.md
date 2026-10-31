@@ -5,6 +5,7 @@ title: 'A Spinlock Cannot Schedule Its Owner'
 author: 'Ted Koomen'
 description: 'How lock-holder preemption, CPU affinity, and producer condition-variable waits change the behavior of bounded queues.'
 posttype: 'engineering'
+hideRelatedLinks: true
 tag: ['cpp', 'linux', 'concurrency', 'performance']
 image: '../../images/social-spin-scheduler.png'
 featuredImage: '../../images/social-spin-scheduler.png'
@@ -20,7 +21,7 @@ A spinlock looks attractive around a tiny queue operation. Check an index, copy 
 
 The missing variable is whether the thread holding the lock is running. A short critical section in source code does not impose a short upper bound on elapsed lock ownership. The owner can be preempted, its vCPU can stop running on the host, or the containing cgroup can exhaust its CPU budget.
 
-This is the third queue post, after [topology](/blog/engineering/queue-types-and-topology) and [padding and backoff](/blog/engineering/cache-lines-and-pause). Here I want to separate three kinds of waiting: waiting to acquire a lock, waiting for queue capacity, and waiting to receive CPU time.
+There are three kinds of waiting to separate here: waiting to acquire a lock, waiting for queue capacity, and waiting to receive CPU time.
 
 ## Spin on a read, then try to acquire
 
@@ -205,4 +206,4 @@ Aligned SPSC throughput with this pinning divided by its unpinned counterpart wa
 
 No `isolcpus`, tick suppression, RCU callback offload, or IRQ routing changes were applied here: the controls were unavailable. A future dedicated-host experiment can reserve housekeeping CPUs and move eligible background work away, following the [kernel's OS-jitter guidance](https://docs.kernel.org/admin-guide/kernel-per-CPU-kthreads.html). RCU remains enabled; offloading callbacks is the relevant control. Device IRQ routing is also different from disabling every interrupt.
 
-I would choose a waiting strategy together with CPU placement, expected idle time, and the progress requirements of the application. A spinlock is a dependency on another thread running soon. The [last post in this group](/blog/engineering/queue-benchmarks) puts those decisions back into the complete benchmark and its limits.
+I would choose a waiting strategy together with CPU placement, expected idle time, and the progress requirements of the application. A spinlock is a dependency on another thread running soon.
