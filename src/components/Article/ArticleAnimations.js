@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 import ConceptAnimation from "./ConceptAnimation"
-const supported = new Set(["counter", "io", "layout", "latency", "mutex"])
+const supported = new Set(["counter", "io", "layout", "latency", "mutex", "queue-topology", "queue-cache", "queue-scheduler"])
 export default function ArticleAnimations({ bodyRef, html }) {
   const [mounts, setMounts] = useState([])
   useEffect(() => {
