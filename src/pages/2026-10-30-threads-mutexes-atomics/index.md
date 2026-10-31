@@ -530,7 +530,7 @@ A mutex gives you a relatively straightforward ownership boundary. Atomics can b
 
 Before changing the primitive, I would look at why the state is shared in the first place. Can one thread own it? Can updates be batched? Can workers accumulate local results instead of fighting over one cache line? Those choices can matter more than the instruction used to update the counter.
 
-That is where the next post will go: actual implementations, contention, and measurements. We will write down what must stay true, make the code satisfy it, and then see whether it is faster. Before calling the removal of a mutex an optimization, we need evidence that it actually improved performance.
+The next post, [Queues: Who Owns the Next Slot?](/blog/engineering/queue-types-and-topology), moves into actual implementations, contention, and measurements. We will write down what must stay true, make the code satisfy it, and then see whether it is faster. Before calling the removal of a mutex an optimization, we need evidence that it actually improved performance.
 
 ## References
 
