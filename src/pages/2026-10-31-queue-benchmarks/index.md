@@ -5,6 +5,7 @@ title: 'Benchmarking Queues Without Giving One Side a Head Start'
 author: 'Ted Koomen'
 description: 'The reproducible SPSC fan-in versus MPSC experiment: matched capacity, validated messages, shuffled trials, uncertainty, and VM profiling limits.'
 posttype: 'engineering'
+hideRelatedLinks: true
 tag: ['cpp', 'benchmarks', 'concurrency', 'linux', 'performance']
 image: '../../images/social-queue-benchmarks.png'
 featuredImage: '../../images/social-queue-benchmarks.png'
@@ -18,7 +19,7 @@ takeaways:
 
 The primary result is straightforward: **SPSC fan-in delivered more messages per second than the shared atomic MPSC queue in this balanced workload**, even after giving MPSC equal total capacity and the best tested backoff policy. The harder part is describing exactly which workload that sentence covers.
 
-The previous posts explain [queue topology](/blog/engineering/queue-types-and-topology), [padding and retry behavior](/blog/engineering/cache-lines-and-pause), and [waiting under the scheduler](/blog/engineering/spinlocks-and-the-scheduler). This post collects the evidence. Every chart comes from the committed VM data; the animations earlier in the series are explanatory models, not measurements.
+This experiment compares queue topology, padding and retry behavior, and waiting strategies under the scheduler. Every chart comes from the committed VM data.
 
 ## Define the comparison before collecting numbers
 
@@ -40,7 +41,7 @@ All topology pairs match payload size and messages per producer within the same 
 
 ## A timer is part of the harness
 
-This standalone example shows a smaller version of the measurement structure: construct the queue, start two workers, release a barrier, validate a fixed number of messages, and stop the clock in the consumer. It reports seven runs and their median. The queue class is the same teaching SPSC ring from the first queue post.
+This standalone example shows a smaller version of the measurement structure: construct the queue, start two workers, release a barrier, validate a fixed number of messages, and stop the clock in the consumer. It reports seven runs and their median. The queue is a small SPSC ring with eight usable slots and acquire/release handoffs.
 
 Compile with `g++ -std=c++20 -O2 -pthread measured-handoff.cpp -o measured-handoff`, or run below. **Compiler Explorer output is a demonstration of the harness, not a reproduction of the VM chart.** It has one producer, no affinity controls, yielding waits, and a different compiler environment.
 
