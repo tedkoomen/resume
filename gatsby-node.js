@@ -13,6 +13,7 @@ exports.createPages = ({ actions, graphql }) => {
             frontmatter {
               path
               title
+              hideRelatedLinks
             }
           }
         }
@@ -32,7 +33,8 @@ exports.createPages = ({ actions, graphql }) => {
         context: {
           pathSlug: node.frontmatter.path,
           issueNumber: posts.length - index,
-          relatedPosts: posts.filter(post => post.node.frontmatter.path !== node.frontmatter.path).map(post => post.node.frontmatter),
+          // Draft series entries should neither suggest nor be suggested by other articles.
+          relatedPosts: node.frontmatter.hideRelatedLinks ? [] : posts.filter(post => !post.node.frontmatter.hideRelatedLinks && post.node.frontmatter.path !== node.frontmatter.path).map(post => post.node.frontmatter),
         },
       });
     });
