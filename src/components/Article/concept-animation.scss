@@ -5,14 +5,6 @@
 }
 
 .dispatch-body .concept-animation {
-  .queue-demo__actors { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.7rem; padding: 0.8rem 0; color: var(--void-cream-muted); }
-  .queue-demo__lane, .queue-demo__line { padding: 1rem; border: 1px solid var(--void-line-strong); margin: 0.6rem 0; }
-  .queue-demo__slots { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
-  .queue-demo__slots > span { flex: 1 1 70px; border: 1px dashed var(--void-line-strong); padding: 0.6rem; text-align: center; color: var(--void-cream-muted); }
-  .queue-demo__slots > .is-filled { border-style: solid; border-color: var(--void-accent); color: var(--void-cream); background: var(--void-panel-strong); }
-  .queue-demo__line.is-active { border-color: var(--void-accent); }
-  .queue-demo__threads { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .queue-demo .concept-event { min-height: 5.5em; }
   .mutex-thread--A { grid-column: 1; grid-row: 1; }
   .mutex-thread--B { grid-column: 3; grid-row: 1; }
   .mutex-shared { grid-column: 2; grid-row: 1; }

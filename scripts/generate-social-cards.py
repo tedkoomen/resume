@@ -58,32 +58,6 @@ def card(filename, title, subtitle, issue, art):
         line(807,286,814,295,ACCENT,2)
         line(821,286,814,295,ACCENT,2)
         text(770,455,'B enters after A unlocks',17,MUTED)
-    elif art == 'queues':
-        text(770,165,'SPSC FAN-IN',19,ACCENT)
-        for i in range(3):
-            text(770,210+i*48,chr(65+i),18)
-            for j in range(4): box(815+j*38,209+i*48,844+j*38,236+i*48,ACCENT if j<i+1 else None)
-        text(770,390,'SHARED MPSC',19,ACCENT)
-        for j in range(12): box(770+j*30,435,794+j*30,468,ACCENT if j<6 else None)
-    elif art == 'cache':
-        text(770,165,'ONE LINE / TWO WRITERS',18,ACCENT)
-        box(770,210,1136,275)
-        text(790,227,'head     tail',23)
-        text(770,330,'SEPARATE LINES',18,ACCENT)
-        box(770,370,940,435);box(966,370,1136,435)
-        text(790,386,'head',23);text(987,386,'tail',23)
-        text(770,465,'PAUSE ≠ scheduler yield',16,MUTED)
-    elif art == 'scheduler':
-        text(770,165,'ONE LOGICAL CPU',19,ACCENT)
-        for i,(label,color) in enumerate([('A owns lock',ACCENT),('B spins / A waits',RED),('A resumes + unlocks',ACCENT)]):
-            box(770,215+i*75,1136,270+i*75,outline=color)
-            text(790,230+i*75,label,18,color)
-    elif art == 'benchmark':
-        text(770,165,'4 PRODUCERS / 32 SLOTS',18,ACCENT)
-        text(770,220,'SPSC',20);box(770,260,1110,284,ACCENT,ACCENT)
-        text(770,318,'MPSC + BACKOFF',20);box(770,358,988,382,ACCENT,ACCENT)
-        text(770,424,'14.731 vs 9.435 M msg/s',17)
-        text(770,461,'VM medians / 30 rounds',16,MUTED)
     elif art == 'zig':
         box(770,155,1136,457)
         text(790,175,'ZAILS / PIPELINE',19,ACCENT)
@@ -108,7 +82,3 @@ card('src/images/social-zig-framework-v2.png',"Why I'm Building\na Server Framew
 card('static/social/site.png','Critical\nSection','Notes on software, systems, and tradeoffs.','JOURNAL','site')
 
 card('src/images/social-threads-mutexes-atomics.png','Threads, Mutexes,\nand Atomics','Start with what can go wrong.','004 / C++','mutex')
-card('src/images/social-queue-topology.png','Queues: Who Owns\nthe Next Slot?','Topology, ownership, and capacity.','005 / C++','queues')
-card('src/images/social-cache-pause.png','Cache Lines, Padding,\nand the Cost of\nTrying Again','Measure the layout and retry policy.','006 / C++','cache')
-card('src/images/social-spin-scheduler.png','A Spinlock Cannot\nSchedule Its Owner','Waiting for a thread to run.','007 / C++','scheduler')
-card('src/images/social-queue-benchmarks.png','Benchmarking\nQueues Fairly','The data, the harness, and the limits.','008 / C++','benchmark')
