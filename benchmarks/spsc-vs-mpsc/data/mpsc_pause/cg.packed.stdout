@@ -1,0 +1,4 @@
+fan-in: 8 producers -> 1 consumer, MPSC capacity 64, backoff mode 1, 20000 msgs/producer, consumer cpu 0, producer cpus [1,2,3,1,2,3,1,2], sizeof(Queue)=1040 alignof(Queue)=8
+run 1: 90.586 s, 1766 msg/s, received 160000/160000, full-spins 1124240361 (max/producer 249880064), empty-polls 249840058, cas-retries 0, errors 0 [PASS]
+throughput msg/s: min 1766, avg 1766, max 1766
+PASSED

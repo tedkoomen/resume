@@ -1,0 +1,40 @@
+calibrate lockfree_spsc_unpinned 3 200000
+calibrate lockfree_spsc_unpinned 8 193180
+calibrate lockfree_spsc 3 200000
+calibrate lockfree_spsc 8 200000
+calibrate lockfree_spsc_packed 3 200000
+calibrate lockfree_spsc_packed 8 200000
+calibrate lockfree_mpsc_b0 3 200000
+calibrate lockfree_mpsc_b0 8 106418
+calibrate lockfree_mpsc_b1 3 200000
+calibrate lockfree_mpsc_b1 8 143473
+calibrate lockfree_mpsc_b2 3 200000
+calibrate lockfree_mpsc_b2 8 200000
+calibrate lockfree_mpsc_b0_packed 3 200000
+calibrate lockfree_mpsc_b0_packed 8 145840
+calibrate lockfree_mpsc_b1_packed 3 200000
+calibrate lockfree_mpsc_b1_packed 8 95054
+calibrate lockfree_mpsc_b2_packed 3 200000
+calibrate lockfree_mpsc_b2_packed 8 118296
+calibrate lockfree_mpsc_b0_stats 3 200000
+calibrate lockfree_mpsc_b0_stats 8 164885
+calibrate lockfree_mpsc_b1_stats 3 200000
+calibrate lockfree_mpsc_b1_stats 8 43267
+calibrate lockfree_mpsc_b2_stats 3 200000
+calibrate lockfree_mpsc_b2_stats 8 195644
+calibrate mutex_spsc 3 113996
+calibrate mutex_spsc 8 3182
+calibrate mutex_mpsc 3 124906
+calibrate mutex_mpsc 8 42207
+calibrate spin_spsc 3 169831
+Traceback (most recent call last):
+  File "/workspace/scratch/610eee2737a0/benchmark_work/analysis/run_vm.py", line 68, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/scratch/610eee2737a0/benchmark_work/analysis/run_vm.py", line 50, in main
+    r=once(scenario,v,p,n)
+      ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/610eee2737a0/benchmark_work/analysis/run_vm.py", line 30, in once
+    if r.returncode or len(lines)!=1:raise RuntimeError(f'{scenario} {v} p{p}: exit {r.returncode} {r.stdout} {r.stderr}')
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: legacy spin_spsc p8: exit 247  

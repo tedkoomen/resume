@@ -1,0 +1,11 @@
+/build/
+/.venv/
+__pycache__/
+*.pyc
+core
+core.*
+/data/v3/metrics_tmp.json
+/data/v3/flamegraphs/*.data
+/data/v3/flamegraphs/*.data.old
+# Keep raw benchmark diagnostics even when the site ignores *.log globally.
+!/data/**/*.log

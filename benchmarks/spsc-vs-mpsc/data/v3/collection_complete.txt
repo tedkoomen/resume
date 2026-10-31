@@ -1,0 +1,1 @@
+Full native matrices and profiling attempts complete; all measured native rows validated.

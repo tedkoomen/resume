@@ -1,3 +1,7 @@
+## Benchmark experiments
+
+[The SPSC versus MPSC benchmark](benchmarks/spsc-vs-mpsc/README.md) contains standalone C++20 source, correctness tests, raw VM measurements, charts, and the code review. It lives outside the Gatsby build inputs.
+
 <!-- AUTO-GENERATED-CONTENT:START (STARTER) -->
 <p align="center">
   <a href="https://www.gatsbyjs.com">

@@ -1,0 +1,16 @@
+fanin_lockfree_;__GI___clone;start_thread;[libstdc++.so.6.0.25] 3277137750
+fanin_lockfree_;__GI___clone;start_thread;[libstdc++.so.6.0.25];asm_sysvec_apic_timer_interrupt_[k];irqentry_exit_to_user_mode_[k];exit_to_user_mode_prepare_[k];exit_to_user_mode_loop_[k] 5002500
+fanin_lockfree_;__GI___clone;start_thread;[libstdc++.so.6.0.25];asm_sysvec_apic_timer_interrupt_[k];irqentry_exit_to_user_mode_[k];exit_to_user_mode_prepare_[k];exit_to_user_mode_loop_[k];schedule_[k];__schedule_[k];finish_task_switch.isra.0_[k] 3501750
+fanin_lockfree_;__GI___clone;start_thread;[libstdc++.so.6.0.25];asm_sysvec_apic_timer_interrupt_[k];sysvec_apic_timer_interrupt_[k];__irq_exit_rcu_[k];handle_softirqs_[k] 3001500
+fanin_lockfree_;__GI___clone;start_thread;[libstdc++.so.6.0.25];asm_sysvec_apic_timer_interrupt_[k];sysvec_apic_timer_interrupt_[k];__irq_exit_rcu_[k];handle_softirqs_[k];rcu_core_[k];_raw_spin_unlock_irqrestore_[k] 500250
+fanin_lockfree_;__GI___clone;start_thread;[libstdc++.so.6.0.25];asm_sysvec_apic_timer_interrupt_[k];sysvec_apic_timer_interrupt_[k];__irq_exit_rcu_[k];handle_softirqs_[k];rcu_core_[k];note_gp_changes_[k];_raw_spin_unlock_irqrestore_[k] 500250
+fanin_lockfree_;__GI___clone;start_thread;[libstdc++.so.6.0.25];asm_sysvec_apic_timer_interrupt_[k];sysvec_apic_timer_interrupt_[k];__irq_exit_rcu_[k];handle_softirqs_[k];rcu_core_[k];rcu_do_batch_[k];delayed_free_vfsmnt_[k];kfree_[k];__memcg_slab_free_hook_[k] 500250
+fanin_lockfree_;__GI___clone;start_thread;[libstdc++.so.6.0.25];asm_sysvec_apic_timer_interrupt_[k];sysvec_apic_timer_interrupt_[k];__irq_exit_rcu_[k];handle_softirqs_[k];rcu_core_[k];rcu_do_batch_[k];kmem_cache_free_[k] 500250
+fanin_lockfree_;__GI___clone;start_thread;[libstdc++.so.6.0.25];asm_sysvec_apic_timer_interrupt_[k];sysvec_apic_timer_interrupt_[k];__irq_exit_rcu_[k];handle_softirqs_[k];run_timer_softirq_[k];__run_timers.part.0_[k];_raw_spin_unlock_irq_[k] 500250
+fanin_lockfree_;__GI___clone;start_thread;[libstdc++.so.6.0.25];asm_sysvec_apic_timer_interrupt_[k];sysvec_apic_timer_interrupt_[k];__irq_exit_rcu_[k];handle_softirqs_[k];sched_balance_softirq_[k];sched_balance_update_blocked_averages_[k] 500250
+fanin_lockfree_;__GI___clone;start_thread;[libstdc++.so.6.0.25];asm_sysvec_call_function_single_[k];irqentry_exit_to_user_mode_[k];exit_to_user_mode_prepare_[k];exit_to_user_mode_loop_[k] 7003500
+fanin_lockfree_;__GI___clone;start_thread;[libstdc++.so.6.0.25];asm_sysvec_call_function_single_[k];irqentry_exit_to_user_mode_[k];exit_to_user_mode_prepare_[k];exit_to_user_mode_loop_[k];schedule_[k];__schedule_[k];finish_task_switch.isra.0_[k] 5002500
+fanin_lockfree_;_start;__libc_start_main;main 13506750
+fanin_lockfree_;_start;_dl_start;_dl_start_final;_dl_sysdep_start;dl_main;_dl_relocate_object;_dl_lookup_symbol_x 500250
+fanin_lockfree_;_start;_dl_start;_dl_start_final;_dl_sysdep_start;dl_main;_dl_relocate_object;_dl_lookup_symbol_x;do_lookup_x 500250
+fanin_lockfree_;entry_SYSCALL_64_after_hwframe_[k];do_syscall_64_[k];__x64_sys_exit_group_[k];do_group_exit_[k];do_exit_[k];exit_mm_[k];mmput_[k];exit_mmap_[k];unmap_vmas_[k];unmap_page_range_[k];zap_pmd_range.isra.0_[k];zap_pte_range_[k];page_remove_rmap_[k] 500250

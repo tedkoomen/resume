@@ -1,0 +1,4 @@
+fan-in: 8 producers -> 1 consumer, SPSC capacity 8 (std::mutex), 2000 msgs/producer, consumer cpu 0, producer cpus [1,2,3,1,2,3,1,2], sizeof(Queue)=128 alignof(Queue)=64
+run 1: 1063.257 s, 15 msg/s, received 16000/16000, full-spins 2628252474 (max/producer 344597954), empty-polls 0, errors 0 [PASS]
+throughput msg/s: min 15, avg 15, max 15
+PASSED

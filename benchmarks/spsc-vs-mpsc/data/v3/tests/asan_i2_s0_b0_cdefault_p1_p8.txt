@@ -1,0 +1,5 @@
+fan-in: 8 producers -> 1 consumer, spinlock per-producer queues, capacity 8, payload 1 words, backoff -1, 200 msgs/producer, consumer cpu 0, producer cpus [1,2,3,4,5,6,7,8], sizeof(Queue)=128
+run 1: 0.001 s, 1549961 msg/s, received 1600/1600, full-spins 576672 (max/producer 80618), empty-polls 0, cas-retries 0, errors 0 [PASS]
+csv,spinlock,0,8,8,1,-1,200,1,0.001032,1549961,576672,0,0,0,1
+throughput msg/s: min 1549961, avg 1549961, max 1549961
+PASSED

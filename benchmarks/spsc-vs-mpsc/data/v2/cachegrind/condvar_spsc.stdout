@@ -1,0 +1,5 @@
+fan-in: 3 producers -> 1 consumer, condvar per-producer queues, capacity 8, payload 1 words, backoff -1, 13507 msgs/producer, consumer cpu 0, producer cpus [1,2,3], sizeof(Queue)=192
+run 1: 2.795 s, 14496 msg/s, received 40521/40521, full-spins 0 (max/producer 0), empty-polls 3707418, cas-retries 0, errors 0 [PASS]
+csv,condvar,0,3,8,1,-1,13507,1,2.795332,14496,0,3707418,0,0,1
+throughput msg/s: min 14496, avg 14496, max 14496
+PASSED

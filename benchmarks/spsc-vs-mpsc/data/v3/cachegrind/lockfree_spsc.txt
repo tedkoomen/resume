@@ -1,0 +1,33 @@
+fan-in: 3 producers -> 1 consumer, lockfree per-producer queues, capacity 8, payload 1 words, backoff -1, 1000 msgs/producer, consumer cpu 0, producer cpus [1,2,3], sizeof(Queue)=192
+run 1: 2.421 s, 1239 msg/s, received 3000/3000, full-spins 74394412 (max/producer 24798140), empty-polls 12496020, cas-retries 0, errors 0 [PASS]
+csv,lockfree,0,3,8,1,-1,1000,1,2.420806,1239,74394412,12496020,0,0,1
+throughput msg/s: min 1239, avg 1239, max 1239
+PASSED
+==911== Cachegrind, a high-precision tracing profiler
+==911== Copyright (C) 2002-2017, and GNU GPL'd, by Nicholas Nethercote et al.
+==911== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==911== Command: /workspace/scratch/610eee2737a0/benchmark_work/build/v3/fanin_lockfree_spsc 1000 1 0 3
+==911== 
+--911-- warning: L3 cache found, using its data for the LL simulation.
+--911-- warning: specified LL cache: line_size 64  assoc 20  total_size 272,629,760
+--911-- warning: simulated LL cache: line_size 64  assoc 33  total_size 276,824,064
+==911== 
+==911== I refs:        755,154,875
+==911== I1  misses:          3,429
+==911== LLi misses:          2,897
+==911== I1  miss rate:        0.00%
+==911== LLi miss rate:        0.00%
+==911== 
+==911== D refs:        203,547,074  (203,346,406 rd   + 200,668 wr)
+==911== D1  misses:         15,581  (     13,092 rd   +   2,489 wr)
+==911== LLd misses:          9,481  (      7,780 rd   +   1,701 wr)
+==911== D1  miss rate:         0.0% (        0.0%     +     1.2%  )
+==911== LLd miss rate:         0.0% (        0.0%     +     0.8%  )
+==911== 
+==911== LL refs:            19,010  (     16,521 rd   +   2,489 wr)
+==911== LL misses:          12,378  (     10,677 rd   +   1,701 wr)
+==911== LL miss rate:          0.0% (        0.0%     +     0.8%  )
+==911== 
+==911== Branches:      112,067,279  (112,061,200 cond +   6,079 ind)
+==911== Mispredicts:        20,792  (     19,349 cond +   1,443 ind)
+==911== Mispred rate:          0.0% (        0.0%     +    23.7%   )

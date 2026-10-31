@@ -1,0 +1,28 @@
+legacy matrix finished: []
+START run_long_confirmation.py
+long confirmation round 1
+long confirmation round 2
+long confirmation round 3
+long confirmation round 4
+long confirmation round 5
+long confirmation round 6
+long confirmation round 7
+long confirmation round 8
+long confirmation round 9
+long confirmation round 10
+START collect_vm_profiles.py sweep
+Traceback (most recent call last):
+  File "/workspace/scratch/610eee2737a0/benchmark_work/analysis/collect_vm_profiles.py", line 60, in <module>
+    {'sweep':sweep,'cachegrind':cachegrind,'profiles':profiles}[sys.argv[1]]()
+  File "/workspace/scratch/610eee2737a0/benchmark_work/analysis/collect_vm_profiles.py", line 19, in sweep
+    r=subprocess.run(['taskset','-c','0-7',str(ROOT/'build/v3/lock_contention'),l,str(t),str(k),str(n)],capture_output=True,text=True,check=True,timeout=60)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['taskset', '-c', '0-7', '/workspace/scratch/610eee2737a0/benchmark_work/build/v3/lock_contention', 'spin', '1', '10000', '1000']' returned non-zero exit status 126.
+Traceback (most recent call last):
+  File "/workspace/scratch/610eee2737a0/benchmark_work/analysis/finish_collection.py", line 13, in <module>
+    subprocess.run([sys.executable,str(ROOT/'analysis'/script),*args],cwd=ROOT,check=True)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python', '/workspace/scratch/610eee2737a0/benchmark_work/analysis/collect_vm_profiles.py', 'sweep']' returned non-zero exit status 1.

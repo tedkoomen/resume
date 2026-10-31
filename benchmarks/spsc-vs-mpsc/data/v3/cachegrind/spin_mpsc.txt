@@ -1,0 +1,8 @@
+==946== Cachegrind, a high-precision tracing profiler
+==946== Copyright (C) 2002-2017, and GNU GPL'd, by Nicholas Nethercote et al.
+==946== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==946== Command: /workspace/scratch/610eee2737a0/benchmark_work/build/v3/fanin_spin_mpsc 1000 1 0 3
+==946== 
+--946-- warning: L3 cache found, using its data for the LL simulation.
+--946-- warning: specified LL cache: line_size 64  assoc 20  total_size 272,629,760
+--946-- warning: simulated LL cache: line_size 64  assoc 33  total_size 276,824,064

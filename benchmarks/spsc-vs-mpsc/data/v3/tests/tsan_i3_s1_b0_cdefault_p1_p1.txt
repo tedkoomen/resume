@@ -1,0 +1,5 @@
+fan-in: 1 producers -> 1 consumer, condvar shared queue, capacity 64, payload 1 words, backoff -1, 5000 msgs/producer, consumer cpu 0, producer cpus [1], sizeof(Queue)=640
+run 1: 0.015 s, 335159 msg/s, received 5000/5000, full-spins 0 (max/producer 0), empty-polls 793, cas-retries 0, errors 0 [PASS]
+csv,condvar,1,1,64,1,-1,5000,1,0.014918,335159,0,793,0,0,1
+throughput msg/s: min 335159, avg 335159, max 335159
+PASSED

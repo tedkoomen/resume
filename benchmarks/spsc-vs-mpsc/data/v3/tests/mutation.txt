@@ -1,0 +1,38 @@
+==================
+WARNING: ThreadSanitizer: data race (pid=12)
+  Read of size 8 at 0x726400000000 by thread T1:
+    #0 pop build/mutation/./spsc.h:53 (relaxed+0x42dd) (BuildId: 9fe9c7988afc11237095534cc3f1d9b30a46152d)
+    #1 consumer_main build/mutation/fanin_test.cpp:234 (relaxed+0x42dd)
+    #2 __invoke_impl<void, void (*)(unsigned int, long unsigned int, SpscQueue<(anonymous namespace)::Message, 8>*, (anonymous namespace)::StartLine&, (anonymous namespace)::ConsumerResult&, int), unsigned int, long unsigned int, SpscQueue<(anonymous namespace)::Message, 8>*, std::reference_wrapper<(anonymous namespace)::StartLine>, std::reference_wrapper<(anonymous namespace)::ConsumerResult>, int> /usr/include/c++/13/bits/invoke.h:61 (relaxed+0x3b94) (BuildId: 9fe9c7988afc11237095534cc3f1d9b30a46152d)
+    #3 __invoke<void (*)(unsigned int, long unsigned int, SpscQueue<(anonymous namespace)::Message, 8>*, (anonymous namespace)::StartLine&, (anonymous namespace)::ConsumerResult&, int), unsigned int, long unsigned int, SpscQueue<(anonymous namespace)::Message, 8>*, std::reference_wrapper<(anonymous namespace)::StartLine>, std::reference_wrapper<(anonymous namespace)::ConsumerResult>, int> /usr/include/c++/13/bits/invoke.h:96 (relaxed+0x3b94)
+    #4 _M_invoke<0, 1, 2, 3, 4, 5, 6> /usr/include/c++/13/bits/std_thread.h:292 (relaxed+0x3b94)
+    #5 operator() /usr/include/c++/13/bits/std_thread.h:299 (relaxed+0x3b94)
+    #6 _M_run /usr/include/c++/13/bits/std_thread.h:244 (relaxed+0x3b94)
+    #7 <null> <null> (libstdc++.so.6+0xecdb3) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+
+  Previous write of size 8 at 0x726400000000 by thread T2:
+    #0 push build/mutation/./spsc.h:38 (relaxed+0x3fc3) (BuildId: 9fe9c7988afc11237095534cc3f1d9b30a46152d)
+    #1 producer_main build/mutation/fanin_test.cpp:200 (relaxed+0x3fc3)
+    #2 __invoke_impl<void, void (*)(unsigned int, long unsigned int, SpscQueue<(anonymous namespace)::Message, 8>&, (anonymous namespace)::StartLine&, (anonymous namespace)::ProducerResult&, int), unsigned int, long unsigned int, std::reference_wrapper<SpscQueue<(anonymous namespace)::Message, 8> >, std::reference_wrapper<(anonymous namespace)::StartLine>, std::reference_wrapper<(anonymous namespace)::ProducerResult>, int> /usr/include/c++/13/bits/invoke.h:61 (relaxed+0x3ada) (BuildId: 9fe9c7988afc11237095534cc3f1d9b30a46152d)
+    #3 __invoke<void (*)(unsigned int, long unsigned int, SpscQueue<(anonymous namespace)::Message, 8>&, (anonymous namespace)::StartLine&, (anonymous namespace)::ProducerResult&, int), unsigned int, long unsigned int, std::reference_wrapper<SpscQueue<(anonymous namespace)::Message, 8> >, std::reference_wrapper<(anonymous namespace)::StartLine>, std::reference_wrapper<(anonymous namespace)::ProducerResult>, int> /usr/include/c++/13/bits/invoke.h:96 (relaxed+0x3ada)
+    #4 _M_invoke<0, 1, 2, 3, 4, 5, 6> /usr/include/c++/13/bits/std_thread.h:292 (relaxed+0x3ada)
+    #5 operator() /usr/include/c++/13/bits/std_thread.h:299 (relaxed+0x3ada)
+    #6 _M_run /usr/include/c++/13/bits/std_thread.h:244 (relaxed+0x3ada)
+    #7 <null> <null> (libstdc++.so.6+0xecdb3) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+
+  Location is heap block of size 1152 at 0x726400000000 allocated by main thread:
+    #0 operator new[](unsigned long, std::align_val_t) ../../../../src/libsanitizer/tsan/tsan_new_delete.cpp:94 (libtsan.so.2+0xa73b4) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 main build/mutation/fanin_test.cpp:314 (relaxed+0x4b12) (BuildId: 9fe9c7988afc11237095534cc3f1d9b30a46152d)
+
+  Thread T1 (tid=14, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+    #2 <null> <null> (libc.so.6+0x2a1c9) (BuildId: 274eec488d230825a136fa9c4d85370fed7a0a5e)
+
+  Thread T2 (tid=15, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+    #2 <null> <null> (libc.so.6+0x2a1c9) (BuildId: 274eec488d230825a136fa9c4d85370fed7a0a5e)
+
+SUMMARY: ThreadSanitizer: data race build/mutation/./spsc.h:53 in pop
+==================

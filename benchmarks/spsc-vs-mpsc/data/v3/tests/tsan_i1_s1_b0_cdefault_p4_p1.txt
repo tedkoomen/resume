@@ -1,0 +1,5 @@
+fan-in: 1 producers -> 1 consumer, mutex shared queue, capacity 64, payload 4 words, backoff -1, 5000 msgs/producer, consumer cpu 0, producer cpus [1], sizeof(Queue)=2112
+run 1: 0.016 s, 312122 msg/s, received 5000/5000, full-spins 150 (max/producer 150), empty-polls 1454, cas-retries 0, errors 0 [PASS]
+csv,mutex,1,1,64,4,-1,5000,1,0.016019,312122,150,1454,0,0,1
+throughput msg/s: min 312122, avg 312122, max 312122
+PASSED

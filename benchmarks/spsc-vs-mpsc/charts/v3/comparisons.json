@@ -1,0 +1,98 @@
+[
+  {
+    "producers": 4,
+    "numerator": "lockfree_mpsc_b0",
+    "denominator": "lockfree_spsc",
+    "ratio": 0.477146437184048,
+    "lo": 0.3981946343064379,
+    "hi": 0.5149069015192013
+  },
+  {
+    "producers": 4,
+    "numerator": "lockfree_mpsc_b1",
+    "denominator": "lockfree_spsc",
+    "ratio": 0.40424846424611816,
+    "lo": 0.3400011013873511,
+    "hi": 0.4382635889125908
+  },
+  {
+    "producers": 4,
+    "numerator": "lockfree_mpsc_b2",
+    "denominator": "lockfree_spsc",
+    "ratio": 0.6405251459587332,
+    "lo": 0.5634748815002991,
+    "hi": 0.6917900888594302
+  },
+  {
+    "producers": 4,
+    "numerator": "lockfree_mpsc_b2",
+    "denominator": "lockfree_mpsc_b0",
+    "ratio": 1.3424078983778847,
+    "lo": 1.2268188692194208,
+    "hi": 1.4998799130888976
+  },
+  {
+    "producers": 4,
+    "numerator": "lockfree_spsc",
+    "denominator": "lockfree_spsc_unpinned",
+    "ratio": 1.101164335415641,
+    "lo": 1.011589313441415,
+    "hi": 1.3369340342232559
+  },
+  {
+    "producers": 4,
+    "numerator": "lockfree_spsc",
+    "denominator": "lockfree_spsc_packed",
+    "ratio": 0.8775282838604802,
+    "lo": 0.8083542464854044,
+    "hi": 1.0059050131504514
+  },
+  {
+    "producers": 8,
+    "numerator": "lockfree_mpsc_b0",
+    "denominator": "lockfree_spsc",
+    "ratio": 0.273609257652597,
+    "lo": 0.2609332710770855,
+    "hi": 0.2941298460070463
+  },
+  {
+    "producers": 8,
+    "numerator": "lockfree_mpsc_b1",
+    "denominator": "lockfree_spsc",
+    "ratio": 0.22738401375305206,
+    "lo": 0.21202942102361458,
+    "hi": 0.24467202661045073
+  },
+  {
+    "producers": 8,
+    "numerator": "lockfree_mpsc_b2",
+    "denominator": "lockfree_spsc",
+    "ratio": 0.30193388116108594,
+    "lo": 0.28561068665014205,
+    "hi": 0.33640105563070466
+  },
+  {
+    "producers": 8,
+    "numerator": "lockfree_mpsc_b2",
+    "denominator": "lockfree_mpsc_b0",
+    "ratio": 1.1035221678955498,
+    "lo": 1.0363121880242263,
+    "hi": 1.1971727964263812
+  },
+  {
+    "producers": 8,
+    "numerator": "lockfree_spsc",
+    "denominator": "lockfree_spsc_unpinned",
+    "ratio": 1.1249362805490704,
+    "lo": 1.0481664362111554,
+    "hi": 1.1761857154192807
+  },
+  {
+    "producers": 8,
+    "numerator": "lockfree_spsc",
+    "denominator": "lockfree_spsc_packed",
+    "ratio": 0.9145458195413436,
+    "lo": 0.8145101346386676,
+    "hi": 1.0187341532614549
+  }
+]

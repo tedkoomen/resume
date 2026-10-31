@@ -1,0 +1,33 @@
+==386825== Cachegrind, a high-precision tracing profiler
+==386825== Copyright (C) 2002-2017, and GNU GPL'd, by Nicholas Nethercote et al.
+==386825== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==386825== Command: build/v2/fanin_spin_spsc 3435 1 0 3
+==386825== Parent PID: 386821
+==386825== 
+--386825-- warning: L3 cache found, using its data for the LL simulation.
+==386825== 
+==386825== Process terminating with default action of signal 15 (SIGTERM)
+==386825==    at 0x10BB2D: (anonymous namespace)::producer_main(unsigned int, unsigned long, LockedQueue<(anonymous namespace)::Message, 8ul, SpinLock>&, (anonymous namespace)::StartLine&, (anonymous namespace)::ProducerResult&, int) (locked_queue.h:55)
+==386825==    by 0x4CF6B22: ??? (in /usr/lib64/libstdc++.so.6.0.25)
+==386825==    by 0x556B1C9: start_thread (pthread_create.c:479)
+==386825==    by 0x57BC8D2: clone (clone.S:95)
+==386825== 
+==386825== I refs:        300,904,670,724
+==386825== I1  misses:              2,871
+==386825== LLi misses:              2,313
+==386825== I1  miss rate:            0.00%
+==386825== LLi miss rate:            0.00%
+==386825== 
+==386825== D refs:        125,367,997,334  (100,297,519,795 rd   + 25,070,477,539 wr)
+==386825== D1  misses:             22,770  (         20,014 rd   +          2,756 wr)
+==386825== LLd misses:             11,208  (          9,317 rd   +          1,891 wr)
+==386825== D1  miss rate:             0.0% (            0.0%     +            0.0%  )
+==386825== LLd miss rate:             0.0% (            0.0%     +            0.0%  )
+==386825== 
+==386825== LL refs:                25,641  (         22,885 rd   +          2,756 wr)
+==386825== LL misses:              13,521  (         11,630 rd   +          1,891 wr)
+==386825== LL miss rate:              0.0% (            0.0%     +            0.0%  )
+==386825== 
+==386825== Branches:       75,226,548,816  ( 75,226,542,089 cond +          6,727 ind)
+==386825== Mispredicts:            22,120  (         21,272 cond +            848 ind)
+==386825== Mispred rate:              0.0% (            0.0%     +           12.6%   )

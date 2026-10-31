@@ -1,0 +1,4 @@
+fan-in: 8 producers -> 1 consumer, SPSC capacity 8, 20000 msgs/producer, consumer cpu 0, producer cpus [1,2,3,1,2,3,1,2], sizeof(Queue)=80 alignof(Queue)=8
+run 1: 311.165 s, 514 msg/s, received 160000/160000, full-spins 7996100208 (max/producer 999512535), empty-polls 1999679920, errors 0 [PASS]
+throughput msg/s: min 514, avg 514, max 514
+PASSED

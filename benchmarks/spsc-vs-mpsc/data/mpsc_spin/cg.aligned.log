@@ -1,0 +1,32 @@
+==262934== Cachegrind, a high-precision tracing profiler
+==262934== Copyright (C) 2002-2017, and GNU GPL'd, by Nicholas Nethercote et al.
+==262934== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==262934== Command: build/mpsc_spin_g 2000 1
+==262934== Parent PID: 262931
+==262934== 
+--262934-- warning: L3 cache found, using its data for the LL simulation.
+==262934== 
+==262934== Process terminating with default action of signal 15 (SIGTERM)
+==262934==    at 0x556C6BD: __pthread_timedjoin_ex (pthread_join_common.c:89)
+==262934==    by 0x4CF6DA6: std::thread::join() (in /usr/lib64/libstdc++.so.6.0.25)
+==262934==    by 0x10A947: main (fanin_mpsc_test.cpp:216)
+==262934== 
+==262934== I refs:        211,077,418,160
+==262934== I1  misses:              2,474
+==262934== LLi misses:              2,248
+==262934== I1  miss rate:            0.00%
+==262934== LLi miss rate:            0.00%
+==262934== 
+==262934== D refs:         87,805,291,041  (70,288,214,234 rd   + 17,517,076,807 wr)
+==262934== D1  misses:             22,839  (        19,983 rd   +          2,856 wr)
+==262934== LLd misses:             11,270  (         9,278 rd   +          1,992 wr)
+==262934== D1  miss rate:             0.0% (           0.0%     +            0.0%  )
+==262934== LLd miss rate:             0.0% (           0.0%     +            0.0%  )
+==262934== 
+==262934== LL refs:                25,313  (        22,457 rd   +          2,856 wr)
+==262934== LL misses:              13,518  (        11,526 rd   +          1,992 wr)
+==262934== LL miss rate:              0.0% (           0.0%     +            0.0%  )
+==262934== 
+==262934== Branches:       70,287,917,677  (70,287,911,052 cond +          6,625 ind)
+==262934== Mispredicts:            21,795  (        21,016 cond +            779 ind)
+==262934== Mispred rate:              0.0% (           0.0%     +           11.8%   )

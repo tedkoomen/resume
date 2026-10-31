@@ -1,0 +1,21 @@
+mkdir -p build/fair4
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=0 fanin_test.cpp -o build/fair4/fanin_lockfree_spsc
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=0 -DSPSC_CACHE_LINE=8 fanin_test.cpp -o build/fair4/fanin_lockfree_spsc_packed
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=0 -DQUEUE_SHARED=1 -DMPSC_BACKOFF=0 fanin_test.cpp -o build/fair4/fanin_lockfree_mpsc_b0
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=0 -DQUEUE_SHARED=1 -DMPSC_BACKOFF=1 fanin_test.cpp -o build/fair4/fanin_lockfree_mpsc_b1
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=0 -DQUEUE_SHARED=1 -DMPSC_BACKOFF=2 fanin_test.cpp -o build/fair4/fanin_lockfree_mpsc_b2
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=0 -DQUEUE_SHARED=1 -DMPSC_BACKOFF=0 -DMPSC_CACHE_LINE=8 fanin_test.cpp -o build/fair4/fanin_lockfree_mpsc_b0_packed
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=0 -DQUEUE_SHARED=1 -DMPSC_BACKOFF=1 -DMPSC_CACHE_LINE=8 fanin_test.cpp -o build/fair4/fanin_lockfree_mpsc_b1_packed
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=0 -DQUEUE_SHARED=1 -DMPSC_BACKOFF=2 -DMPSC_CACHE_LINE=8 fanin_test.cpp -o build/fair4/fanin_lockfree_mpsc_b2_packed
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=0 -DQUEUE_SHARED=1 -DMPSC_BACKOFF=0 -DMPSC_STATS fanin_test.cpp -o build/fair4/fanin_lockfree_mpsc_b0_stats
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=0 -DQUEUE_SHARED=1 -DMPSC_BACKOFF=1 -DMPSC_STATS fanin_test.cpp -o build/fair4/fanin_lockfree_mpsc_b1_stats
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=0 -DQUEUE_SHARED=1 -DMPSC_BACKOFF=2 -DMPSC_STATS fanin_test.cpp -o build/fair4/fanin_lockfree_mpsc_b2_stats
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=1 fanin_test.cpp -o build/fair4/fanin_mutex_spsc
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=1 -DQUEUE_SHARED=1 fanin_test.cpp -o build/fair4/fanin_mutex_mpsc
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=2 fanin_test.cpp -o build/fair4/fanin_spin_spsc
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=2 -DQUEUE_SHARED=1 fanin_test.cpp -o build/fair4/fanin_spin_mpsc
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=3 fanin_test.cpp -o build/fair4/fanin_condvar_spsc
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 -DQUEUE_IMPL=3 -DQUEUE_SHARED=1 fanin_test.cpp -o build/fair4/fanin_condvar_mpsc
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 lock_contention.cpp -o build/fair4/lock_contention
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 canary.cpp -o build/fair4/canary
+g++ -std=c++20 -O3 -g -fno-omit-frame-pointer -Wall -Wextra -Werror -pthread -DSHARED_CAPACITY=32 main.cpp -o build/fair4/main

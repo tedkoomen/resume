@@ -1,0 +1,33 @@
+fan-in: 3 producers -> 1 consumer, mutex per-producer queues, capacity 8, payload 1 words, backoff -1, 1000 msgs/producer, consumer cpu 0, producer cpus [1,2,3], sizeof(Queue)=128
+run 1: 8.683 s, 345 msg/s, received 3000/3000, full-spins 12980189 (max/producer 5482181), empty-polls 11546652, cas-retries 0, errors 0 [PASS]
+csv,mutex,0,3,8,1,-1,1000,1,8.683134,345,12980189,11546652,0,0,1
+throughput msg/s: min 345, avg 345, max 345
+PASSED
+==931== Cachegrind, a high-precision tracing profiler
+==931== Copyright (C) 2002-2017, and GNU GPL'd, by Nicholas Nethercote et al.
+==931== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==931== Command: /workspace/scratch/610eee2737a0/benchmark_work/build/v3/fanin_mutex_spsc 1000 1 0 3
+==931== 
+--931-- warning: L3 cache found, using its data for the LL simulation.
+--931-- warning: specified LL cache: line_size 64  assoc 20  total_size 272,629,760
+--931-- warning: simulated LL cache: line_size 64  assoc 33  total_size 276,824,064
+==931== 
+==931== I refs:        1,990,771,530
+==931== I1  misses:            3,422
+==931== LLi misses:            2,900
+==931== I1  miss rate:          0.00%
+==931== LLi miss rate:          0.00%
+==931== 
+==931== D refs:          763,851,940  (591,918,585 rd   + 171,933,355 wr)
+==931== D1  misses:           15,588  (     13,102 rd   +       2,486 wr)
+==931== LLd misses:            9,483  (      7,785 rd   +       1,698 wr)
+==931== D1  miss rate:           0.0% (        0.0%     +         0.0%  )
+==931== LLd miss rate:           0.0% (        0.0%     +         0.0%  )
+==931== 
+==931== LL refs:              19,010  (     16,524 rd   +       2,486 wr)
+==931== LL misses:            12,383  (     10,685 rd   +       1,698 wr)
+==931== LL miss rate:            0.0% (        0.0%     +         0.0%  )
+==931== 
+==931== Branches:        440,649,919  (391,578,140 cond +  49,071,779 ind)
+==931== Mispredicts:       3,872,288  (  3,870,865 cond +       1,423 ind)
+==931== Mispred rate:            0.9% (        1.0%     +         0.0%   )

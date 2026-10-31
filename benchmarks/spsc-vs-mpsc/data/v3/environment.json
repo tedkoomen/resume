@@ -1,0 +1,84 @@
+{
+  "uname": {
+    "system": "Linux",
+    "node": "ca29bfb1fbb9",
+    "release": "6.18.57",
+    "version": "#1 SMP Tue Oct 20 21:56:04 UTC 2026",
+    "machine": "x86_64",
+    "processor": "x86_64"
+  },
+  "lscpu": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           46 bits physical, 57 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  9\nOn-line CPU(s) list:                     0-8\nVendor ID:                               GenuineIntel\nModel name:                              INTEL(R) XEON(R) PLATINUM 8573C\nBIOS Model name:                           CPU @ 0.0GHz\nBIOS CPU family:                         0\nCPU family:                              6\nModel:                                   207\nThread(s) per core:                      1\nCore(s) per socket:                      9\nSocket(s):                               1\nStepping:                                2\nBogoMIPS:                                4600.00\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch cpuid_fault fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves avx_vnni avx512_bf16 arat avx512vbmi umip waitpkg avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid cldemote movdiri movdir64b fsrm serialize tsxldtrk avx512_fp16 arch_capabilities\nHypervisor vendor:                       KVM\nVirtualization type:                     full\nL1d cache:                               240 KiB (5 instances)\nL1i cache:                               160 KiB (5 instances)\nL2 cache:                                10 MiB (5 instances)\nL3 cache:                                260 MiB (1 instance)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-8\nVulnerability Gather data sampling:      Not affected\nVulnerability Ghostwrite:                Not affected\nVulnerability Indirect target selection: Vulnerable\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Old microcode:             Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Vulnerable\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Vulnerable\nVulnerability Spectre v1:                Vulnerable: __user pointer sanitization and usercopy barriers only; no swapgs barriers\nVulnerability Spectre v2:                Vulnerable; STIBP: disabled; PBRSB-eIBRS: Not affected; BHI: Vulnerable\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Not affected\n",
+  "affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "event_sources": [
+    "software",
+    "breakpoint",
+    "msr"
+  ],
+  "perf_probes": [
+    {
+      "event": "cycles",
+      "fd": -1,
+      "error": "No such file or directory"
+    },
+    {
+      "event": "instructions",
+      "fd": -1,
+      "error": "No such file or directory"
+    },
+    {
+      "event": "cache-references",
+      "fd": -1,
+      "error": "No such file or directory"
+    },
+    {
+      "event": "cache-misses",
+      "fd": -1,
+      "error": "No such file or directory"
+    },
+    {
+      "event": "branches",
+      "fd": -1,
+      "error": "No such file or directory"
+    },
+    {
+      "event": "branch-misses",
+      "fd": -1,
+      "error": "No such file or directory"
+    },
+    {
+      "event": "task-clock",
+      "fd": 3,
+      "error": null
+    },
+    {
+      "event": "context-switches",
+      "fd": 3,
+      "error": null
+    },
+    {
+      "event": "cpu-migrations",
+      "fd": 3,
+      "error": null
+    }
+  ],
+  "/proc/cmdline": "reboot=k panic=1 systemd.unit=kata-containers.target systemd.mask=systemd-networkd.service quiet root=/dev/pmem0p1 rootflags=dax,data=ordered,errors=remount-ro ro rootfstype=ext4 no_timer_check noreplace-smp systemd.log_target=console agent.container_pipe_size=1 agent.disable_erofs_overlay_volatile=true agent.erofs_overlay_reuse_upper=true cgroup_no_v1=all systemd.unified_cgroup_hierarchy=1 sysctl.vm.dirty_expire_centisecs=12000 sysctl.vm.dirty_writeback_centisecs=3000 agent.hotplug_timeout=25 agent.passfd_listener_port=1027\n",
+  "/proc/self/status": "Name:\tpython\nUmask:\t0022\nState:\tR (running)\nTgid:\t13588\nNgid:\t0\nPid:\t13588\nPPid:\t13587\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t \nNStgid:\t13588\t2\nNSpid:\t13588\t2\nNSpgid:\t13587\t1\nNSsid:\t13587\t1\nKthread:\t0\nVmPeak:\t   40452 kB\nVmSize:\t   40420 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t   10148 kB\nVmRSS:\t   10148 kB\nRssAnon:\t    6064 kB\nRssFile:\t    4084 kB\nRssShmem:\t       0 kB\nVmData:\t    8008 kB\nVmStk:\t     136 kB\nVmExe:\t   21452 kB\nVmLib:\t       0 kB\nVmPTE:\t     108 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t1\nSigQ:\t0/39792\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000001001000\nSigCgt:\t0000000000000002\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t0000000000000000\nCapAmb:\t0000000000000000\nNoNewPrivs:\t1\nSeccomp:\t2\nSeccomp_filters:\t1\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\talways enabled\nCpus_allowed:\t1ff\nCpus_allowed_list:\t0-8\nMems_allowed:\t00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t9\nnonvoluntary_ctxt_switches:\t2\n",
+  "/proc/sys/kernel/perf_event_paranoid": "2\n",
+  "/proc/mounts": "overlay / overlay rw,nosuid,nodev,relatime,lowerdir=/run/kata-containers/erofs-multi-layer/ca29bfb1fbb94864928e9f0d85ca49d5/lower-0,upperdir=/run/kata-containers/erofs-multi-layer/ca29bfb1fbb94864928e9f0d85ca49d5/upper/upper,workdir=/run/kata-containers/erofs-multi-layer/ca29bfb1fbb94864928e9f0d85ca49d5/upper/work,index=off,metacopy=off 0 0\nproc /proc proc rw,nosuid,nodev,noexec,relatime 0 0\ntmpfs /proc/keys tmpfs rw,nosuid,nodev,size=65536k,mode=755 0 0\ntmpfs /proc/timer_list tmpfs rw,nosuid,nodev,size=65536k,mode=755 0 0\nproc /proc/bus proc ro,nosuid,nodev,relatime 0 0\nproc /proc/fs proc ro,nosuid,nodev,relatime 0 0\nproc /proc/irq proc ro,nosuid,nodev,relatime 0 0\nproc /proc/sys proc ro,nosuid,nodev,relatime 0 0\ntmpfs /dev tmpfs rw,nosuid,nodev,size=65536k,mode=755 0 0\ndevpts /dev/pts devpts rw,nosuid,nodev,noexec,relatime,gid=5,mode=620,ptmxmode=666 0 0\nshm /dev/shm tmpfs rw,nosuid,nodev,relatime 0 0\nmqueue /dev/mqueue mqueue rw,nosuid,nodev,noexec,relatime 0 0\nsysfs /sys sysfs ro,nosuid,nodev,noexec,relatime 0 0\ncgroup2 /sys/fs/cgroup cgroup2 ro,nosuid,nodev,noexec,relatime,nsdelegate 0 0\ntmpfs /dev tmpfs rw,nosuid,nodev,relatime,mode=755 0 0\ntmpfs /dev/null tmpfs rw,nosuid,size=65536k,mode=755 0 0\ntmpfs /dev/zero tmpfs rw,nosuid,size=65536k,mode=755 0 0\ntmpfs /dev/full tmpfs rw,nosuid,size=65536k,mode=755 0 0\ntmpfs /dev/random tmpfs rw,nosuid,size=65536k,mode=755 0 0\ntmpfs /dev/urandom tmpfs rw,nosuid,size=65536k,mode=755 0 0\ntmpfs /dev/tty tmpfs rw,nosuid,size=65536k,mode=755 0 0\ndevpts /dev/pts devpts rw,nosuid,noexec,relatime,mode=620,ptmxmode=666 0 0\nshm /dev/shm tmpfs rw,nosuid,nodev,relatime 0 0\n",
+  "/sys/fs/cgroup/cpu.max": "800000 100000\n",
+  "/sys/fs/cgroup/cpu.stat": "usage_usec 3164774922\nuser_usec 2422752155\nsystem_usec 742022766\nnice_usec 0\nnr_periods 112638\nnr_throttled 1405\nthrottled_usec 117402155\nnr_bursts 0\nburst_usec 0\n",
+  "/sys/devices/system/cpu/isolated": "\n",
+  "/sys/devices/system/cpu/nohz_full": "\n",
+  "/proc/interrupts": "           CPU0       CPU1       CPU2       CPU3       CPU4       CPU5       CPU6       CPU7       CPU8       \n 25:          0          0          0          0          0          0          0          0          0  IO-APIC  13-edge      ACPI:Ged\n 26:          0          0          0          0          0          0          0          0          0 PCI-MSIX-0000:00:07.0   0-edge      virtio6-config\n 27:          0          0          0          0          0          0          0          0          0 PCI-MSIX-0000:00:07.0   1-edge      virtio6-inflate\n 28:          0          0          0          0          0          0          0          0          0 PCI-MSIX-0000:00:07.0   2-edge      virtio6-deflate\n 29:          0          0          0          0        563          0          0          0          0 PCI-MSIX-0000:00:07.0   3-edge      virtio6-reporting_vq\n 30:          0          0          0          0          0          0          0          0          0 PCI-MSIX-0000:00:04.0   0-edge      virtio3-config\n 31:          0          0          0          0          0          0        511          0          0 PCI-MSIX-0000:00:04.0   1-edge      virtio3-input\n 32:          0          0          0          0          0          0          0          0          0 PCI-MSIX-0000:00:01.0   0-edge      virtio0-config\n 33:          0          0          0          0          0          0          0          0     107285 PCI-MSIX-0000:00:01.0   1-edge      virtio0-req.0\n 34:          0          0          0          0          0          0          0          0          0 PCI-MSIX-0000:00:05.0   0-edge      virtio4-config\n 35:          0          0          0          0          0          0          0          0          0 PCI-MSIX-0000:00:05.0   1-edge      virtio4-flush_queue\n 36:          0          0          0          0          0          0          0          0          0 PCI-MSIX-0000:00:02.0   0-edge      virtio1-config\n 37:          0          0      56586          0          0          0          0          0          0 PCI-MSIX-0000:00:02.0   1-edge      virtio1-input.0\n 38:          0          0          0      35692          0          0          0          0          0 PCI-MSIX-0000:00:02.0   2-edge      virtio1-output.0\n 39:          0          0          0          0          0          0          0          0          0 PCI-MSIX-0000:00:03.0   0-edge      virtio2-config\n 40:          0          0          0          0          0     116269          0          0          0 PCI-MSIX-0000:00:03.0   1-edge      virtio2-input.0\n 41:          0          0          0          0          0          0      92965          0          0 PCI-MSIX-0000:00:03.0   2-edge      virtio2-output.0\n 42:          0          0          0          0          0          0          0          0          0 PCI-MSIX-0000:00:06.0   0-edge      virtio5-config\n 43:          0          0          0          0          0          0          0          0       7374 PCI-MSIX-0000:00:06.0   1-edge      virtio5-rx\n 44:      15772          0          0          0          0          0          0          0          0 PCI-MSIX-0000:00:06.0   2-edge      virtio5-tx\n 45:          0          0          0          0          0          0          0          0          0 PCI-MSIX-0000:00:06.0   3-edge      virtio5-event\nNMI:          0          0          0          0          0          0          0          0          0   Non-maskable interrupts\nLOC:     348980     478188     477697     409122     278909     358690     336335     292356     352174   Local timer interrupts\nSPU:          0          0          0          0          0          0          0          0          0   Spurious interrupts\nPMI:          0          0          0          0          0          0          0          0          0   Performance monitoring interrupts\nIWI:          0          0          0          0          0          0          0          0          0   IRQ work interrupts\nRTR:          0          0          0          0          0          0          0          0          0   APIC ICR read retries\nRES:       3401       4383       4336       4219       4632       4119       3246       3594       3750   Rescheduling interrupts\nCAL:     491497     668317     843394     759868    1001231     680117     367092     306707     633534   Function call interrupts\nTLB:      13303      13924      13151      14720      14987      13926      12176      14350      13861   TLB shootdowns\nTRM:          0          0          0          0          0          0          0          0          0   Thermal event interrupts\nHYP:          1          1          1          1          1          1          1          1          1   Hypervisor callback interrupts\nERR:          0\nMIS:          0\n",
+  "/proc/softirqs": "                    CPU0       CPU1       CPU2       CPU3       CPU4       CPU5       CPU6       CPU7       CPU8       \n          HI:          0          0          0          0          0          0          0          0          0\n       TIMER:     103779      70538      75577      59715      45882      61933      60068      48863      58772\n      NET_TX:         97        134         62         34         63         53        139         59        151\n      NET_RX:       2822       5043      60343      35413       5776     114798      87646       3609       3651\n       BLOCK:       1190       4840       3191      88198       2028       1213       2399       2665       1354\n    IRQ_POLL:          0          0          0          0          0          0          0          0          0\n     TASKLET:          4          6       1010      10600          1       3741      20495          5          1\n       SCHED:     230496     213357     194903     168465     112477     141993     132837     123297     147363\n     HRTIMER:       2462       1760      27671       7368       2361      20702      27708       1640       2202\n         RCU:      70546      75878      74210      72279      72479      75009      71891      65989      68561\n"
+}

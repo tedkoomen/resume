@@ -1,0 +1,99 @@
+#include <array>
+#include <cstdint>
+#include <atomic>
+#include <utility>
+#include "./concepts.h"
+
+// Every hot atomic gets its own cache line: producers CAS head_, the consumer
+// owns tail_, and each slot's sequence number is written by one producer and
+// read by the consumer, so adjacent slots must not false-share either. Build
+// with -DMPSC_CACHE_LINE=8 to get the natural (packed) layout.
+#ifndef MPSC_CACHE_LINE
+#define MPSC_CACHE_LINE 64
+#endif
+
+// Bounded multi-producer / single-consumer queue (Vyukov-style). Producers
+// claim a slot by CAS on head_, spinning on the CAS with no pause/backoff.
+// Each slot carries a sequence number: seq == pos means the slot is free for
+// the producer claiming position pos; seq == pos + 1 means it holds that
+// producer's value and is ready for the consumer.
+template <typename T, std::size_t BufferSize>
+  requires IsPositivePowerOfTwo<BufferSize>
+class MpscQueue
+{
+  public:
+    MpscQueue()
+    {
+        for (std::size_t i = 0; i < BufferSize; ++i)
+        {
+            buffer_[i].seq.store(i, std::memory_order_relaxed);
+        }
+        head_.store(0, std::memory_order_relaxed);
+        tail_.store(0, std::memory_order_relaxed);
+    }
+
+    bool push(T&& val)
+    {
+        size_t head = head_.load(std::memory_order_relaxed);
+        Slot* slot;
+
+        for (;;)
+        {
+            slot = &buffer_[head & kMask];
+            const size_t seq = slot->seq.load(std::memory_order_acquire);
+            const auto diff = static_cast<std::intptr_t>(seq) - static_cast<std::intptr_t>(head);
+
+            if (diff == 0)
+            {
+                // On failure compare_exchange_weak reloads head; retry at once.
+                if (head_.compare_exchange_weak(head, head + 1, std::memory_order_relaxed))
+                {
+                    break;
+                }
+            }
+            else if (diff < 0)
+            {
+                // The consumer hasn't freed this slot from the previous lap.
+                return false;
+            }
+            else
+            {
+                // Another producer already claimed this position.
+                head = head_.load(std::memory_order_relaxed);
+            }
+        }
+
+        slot->value = std::move(val);
+        slot->seq.store(head + 1, std::memory_order_release);
+        return true;
+    }
+
+    bool pop(T& outVal)
+    {
+        const size_t tail = tail_.load(std::memory_order_relaxed);
+        Slot& slot = buffer_[tail & kMask];
+
+        if (slot.seq.load(std::memory_order_acquire) != tail + 1)
+        {
+            return false;
+        }
+
+        outVal = std::move(slot.value);
+        slot.seq.store(tail + BufferSize, std::memory_order_release);
+        tail_.store(tail + 1, std::memory_order_relaxed);
+        return true;
+    }
+
+  private:
+    static constexpr size_t kMask = BufferSize - 1;
+
+    struct alignas(MPSC_CACHE_LINE) Slot
+    {
+        std::atomic<size_t> seq;
+        T value;
+    };
+
+    std::array<Slot, BufferSize> buffer_;
+    alignas(MPSC_CACHE_LINE) std::atomic<size_t> head_;
+    alignas(MPSC_CACHE_LINE) std::atomic<size_t> tail_;
+};

@@ -1,0 +1,1 @@
+{"returncode": 0, "wall_s": 0.14855045600052108, "user_s": 0.0, "system_s": 0.044569, "task_clock_ns": 13872333, "context_switches": 0, "cpu_migrations": 0, "page_faults": 504, "rusage_context_switches": 37, "voluntary_context_switches": 5, "involuntary_context_switches": 32, "counter_errors": {}}

@@ -1,0 +1,10 @@
+cachegrind lockfree_spsc complete
+cachegrind lockfree_mpsc_b0 complete
+cachegrind lockfree_mpsc_b1 complete
+cachegrind lockfree_mpsc_b2 complete
+cachegrind mutex_spsc complete
+cachegrind mutex_mpsc complete
+cachegrind spin_spsc timeout
+cachegrind spin_mpsc timeout
+cachegrind condvar_spsc complete
+cachegrind condvar_mpsc complete

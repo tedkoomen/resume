@@ -1,0 +1,27 @@
+==192867== Cachegrind, a high-precision tracing profiler
+==192867== Copyright (C) 2002-2017, and GNU GPL'd, by Nicholas Nethercote et al.
+==192867== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==192867== Command: ./fanin_aligned_g 20000 1
+==192867== Parent PID: 192863
+==192867== 
+--192867-- warning: L3 cache found, using its data for the LL simulation.
+==192867== 
+==192867== I refs:        66,523,580,181
+==192867== I1  misses:             2,980
+==192867== LLi misses:             2,608
+==192867== I1  miss rate:           0.00%
+==192867== LLi miss rate:           0.00%
+==192867== 
+==192867== D refs:        20,008,361,414  (20,007,559,621 rd   + 801,793 wr)
+==192867== D1  misses:            23,301  (        20,308 rd   +   2,993 wr)
+==192867== LLd misses:            11,370  (         9,304 rd   +   2,066 wr)
+==192867== D1  miss rate:            0.0% (           0.0%     +     0.4%  )
+==192867== LLd miss rate:            0.0% (           0.0%     +     0.3%  )
+==192867== 
+==192867== LL refs:               26,281  (        23,288 rd   +   2,993 wr)
+==192867== LL misses:             13,978  (        11,912 rd   +   2,066 wr)
+==192867== LL miss rate:             0.0% (           0.0%     +     0.3%  )
+==192867== 
+==192867== Branches:      10,261,261,166  (10,261,254,179 cond +   6,987 ind)
+==192867== Mispredicts:           62,600  (        61,739 cond +     861 ind)
+==192867== Mispred rate:             0.0% (           0.0%     +    12.3%   )

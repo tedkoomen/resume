@@ -1,0 +1,5 @@
+fan-in: 1 producers -> 1 consumer, lockfree shared queue, capacity 64, payload 4 words, backoff 1, 5000 msgs/producer, consumer cpu 0, producer cpus [1], sizeof(Queue)=4224
+run 1: 0.004 s, 1184155 msg/s, received 5000/5000, full-spins 0 (max/producer 0), empty-polls 18509, cas-retries 0, errors 0 [PASS]
+csv,lockfree,1,1,64,4,1,5000,1,0.004222,1184155,0,18509,0,0,1
+throughput msg/s: min 1184155, avg 1184155, max 1184155
+PASSED
