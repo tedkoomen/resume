@@ -5,6 +5,7 @@ title: 'Cache Lines, Padding, and the Cost of Trying Again'
 author: 'Ted Koomen'
 description: 'What padding and x86 PAUSE change in a bounded queue, and what the measured backoff and layout comparisons actually support.'
 posttype: 'engineering'
+hideRelatedLinks: true
 tag: ['cpp', 'concurrency', 'cache', 'performance']
 image: '../../images/social-cache-pause.png'
 featuredImage: '../../images/social-cache-pause.png'
@@ -18,7 +19,7 @@ takeaways:
 
 Once the queue is correct, a tempting next step is to put `alignas(64)` on everything and add `_mm_pause()` to every loop. Both have a reasonable explanation behind them. That does not tell us whether either change helps this program.
 
-In [the topology post](/blog/engineering/queue-types-and-topology), multiple producers either shared one MPSC queue or used separate SPSC queues feeding one consumer. Now I want to keep those arrangements visible while changing memory layout and retry behavior. A change to where data lives is different from a change to how often threads contend for it.
+In this experiment, multiple producers either share one MPSC queue or use separate SPSC queues feeding one consumer. Now I want to keep those arrangements visible while changing memory layout and retry behavior. A change to where data lives is different from a change to how often threads contend for it.
 
 ## A cache line contains more than your variable
 
@@ -148,6 +149,6 @@ BENCH_CONTROL_CPU=8 taskset -c 0-4,8 build/fair4/fanin_lockfree_mpsc_b1 100000 3
 BENCH_CONTROL_CPU=8 taskset -c 0-4,8 build/fair4/fanin_lockfree_mpsc_b2 100000 3 0 4
 ```
 
-These are quick smoke runs, not the shuffled 30-round collection. CPU IDs must exist in your allowed set and match the intended NUMA topology. The [benchmark post](/blog/engineering/queue-benchmarks) explains the runner and longer confirmation. Use the `_stats` binaries for retry counts separately: instrumentation adds work to the very path being studied.
+These are quick smoke runs, not the shuffled 30-round collection. CPU IDs must exist in your allowed set and match the intended NUMA topology. The project README explains the runner and longer confirmation. Use the `_stats` binaries for retry counts separately: instrumentation adds work to the very path being studied.
 
-Backoff improved the measured MPSC result, but it still depends on other threads getting CPU time. That becomes much more obvious when the waiting loop protects a lock. [Next: spinlocks and the scheduler.](/blog/engineering/spinlocks-and-the-scheduler)
+Backoff improved the measured MPSC result, but it still depends on other threads getting CPU time. That becomes much more obvious when the waiting loop protects a lock.
