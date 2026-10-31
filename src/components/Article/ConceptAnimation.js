@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import MutexAnimation from "./MutexAnimation"
+import QueueAnimation from "./QueueAnimation"
 import {
   counterFrame,
   ioFrame,
@@ -9,6 +10,9 @@ import {
 import "./concept-animation.scss"
 
 const definitions = {
+  "queue-topology": { title: "The same four slots, two different arrangements", lead: "Send the same burst into separate queues and one shared queue.", steps: 7, duration: 1600 },
+  "queue-cache": { title: "Two writers, one cache line", lead: "Follow write ownership when independent fields share a line.", steps: 4, duration: 1600 },
+  "queue-scheduler": { title: "The waiter needs the owner to run", lead: "Follow a preempted lock owner on one logical CPU.", steps: 7, duration: 1800 },
   mutex: {
     title: "How two threads take turns with a mutex",
     lead: "Follow the lock, the waiting thread, and the value each owner writes.",
@@ -470,6 +474,9 @@ function Latency({ step, networkMs, jump }) {
   )
 }
 const notes = {
+  "queue-topology": <>Two producers and four usable slots. These are illustrative arrivals and consumer choices, not rates. Fan-in preserves each producer's order; the shared queue follows the shown reservation order. Real workloads may have different skew and polling policies.</>,
+  "queue-cache": <>Simplified 64-byte coherence units with alternating independent writers. Initial ownership acquisitions are not counted as writer-to-writer transfers. Real queues also read remote indices and exchange payloads. This omits coherence states, shared reads, and timing; it is not hardware-counter data.</>,
+  "queue-scheduler": <>One possible schedule, not a Linux scheduler simulation. The blocking path abstracts a contended mutex's wait behavior; it is not the queue's not-full condition variable. Real implementations may spin before blocking, and wakeup does not transfer lock ownership.</>,
   mutex: (
     <>
       One legal schedule for two threads taking the same std::mutex. A waiting
@@ -545,7 +552,7 @@ export default function ConceptAnimation({ type }) {
     [reduced, setReduced] = useState(false),
     [tabVisible, setTabVisible] = useState(true)
   const [mode, setMode] = useState(
-    type === "counter" ? "naive" : type === "io" ? "blocking" : "prices"
+    type.startsWith("queue-") ? "a" : type === "counter" ? "naive" : type === "io" ? "blocking" : "prices"
   )
   const [networkMs, setNetworkMs] = useState(10)
   useEffect(() => {
@@ -604,6 +611,7 @@ export default function ConceptAnimation({ type }) {
         <strong>{d.title}</strong>
         <span>{d.lead}</span>
       </figcaption>
+      {type.startsWith("queue-") && <Choice label={d.title + " strategy"} value={mode} setValue={choose} options={type === "queue-topology" ? [["a", "SPSC fan-in"], ["b", "Shared MPSC"]] : type === "queue-cache" ? [["a", "Packed fields"], ["b", "Separate lines"]] : [["a", "Spin while held"], ["b", "Block while held"]]} />}
       {type === "counter" && (
         <Choice
           label="Counter update strategy"
@@ -655,6 +663,7 @@ export default function ConceptAnimation({ type }) {
         </label>
       )}
       <div className="concept-scene" aria-label={d.title}>
+        {type.startsWith("queue-") && <QueueAnimation type={type} step={step} mode={mode} />}
         {type === "mutex" && <MutexAnimation step={step} />}
         {type === "counter" && <Counter step={step} mode={mode} />}
         {type === "io" && <IO step={step} mode={mode} />}
