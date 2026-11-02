@@ -12,7 +12,7 @@ text=['# SPSC versus MPSC: VM rerun','',
 for v in ['lockfree_spsc','lockfree_mpsc_b0','lockfree_mpsc_b1','lockfree_mpsc_b2','mutex_spsc','mutex_mpsc','spin_spsc','spin_mpsc','condvar_spsc','condvar_mpsc']:
  vals=[next(float(x['median']) for x in S if x['variant']==v and x['producers']==str(p)) for p in [4,8]]
  text.append(f"| {v} | {vals[0]/1e6:.3f} M msg/s | {vals[1]/1e6:.3f} M msg/s |")
-text+=['','SPSC fan-in is faster in these balanced atomic-queue workloads. It also has weaker aggregate ordering and partitioned capacity, so this is not a universal ranking of interchangeable APIs. See [code/harness review](../../REVIEW.md).','',
+text+=['','SPSC fan-in is faster in these balanced atomic-queue workloads. It also has weaker aggregate ordering and partitioned capacity, so this is not a universal ranking of interchangeable APIs.','',
 '## Ratio uncertainty','',
 'Paired-round bootstrap of the ratio of medians; 10,000 resamples, 95% interval. These are within-session intervals, not bounds on results across different machines. A ratio above 1 favors the numerator.','',
 '| Producers | Numerator / denominator | Ratio | 95% interval |','|---:|---|---:|---:|']
@@ -42,7 +42,7 @@ f'{len(L)} measured runs reproduce the original 18 variants × 3/8 producers × 
 '| isolcpus / nohz_full / RCU offload / IRQ routing | Not changed; read-only control files and no effective administrative capabilities |',
 '| Improvement from kernel isolation | Unmeasured (N/A) |',
 '',
-'RCU should remain enabled; the relevant tuning is callback offload. Eligible device IRQs are redirected, rather than disabling all interrupts. See the [host-isolation procedure](../../ISOLATION.md).','']
+'RCU should remain enabled; the relevant tuning is callback offload. Eligible device IRQs are redirected, rather than disabling all interrupts.','']
 long=DATA/'long_confirmation.csv'
 if long.exists():
  Q=read(long);text+=['## Longer-run confirmation','',f'{len(Q)} runs use 1,000,000 messages per producer for all four atomic strategies and both producer counts, in ten shuffled rounds. Every row passed.','', '| Producers | SPSC M msg/s | MPSC backoff M msg/s | MPSC / SPSC |','|---:|---:|---:|---:|']

@@ -2,9 +2,9 @@
 
 This directory is a standalone C++20 benchmark project. It is outside the site's `src/`, `static/`, Gatsby source paths and npm build scripts. Nothing here is compiled into the website.
 
+The companion article, [SPSC vs MPSC queues in C++20](https://www.tedkoomen.com/blog/engineering/queue-types-and-topology/), explains the ownership protocols, runnable examples, and tradeoffs behind these measurements.
+
 - [New VM results and charts](charts/v3/REPORT.md)
-- [Code and harness review](REVIEW.md)
-- [CPU isolation follow-up and limits](ISOLATION.md)
 - [New raw data](data/v3/)
 - [Archived original report](charts/REPORT.md), [original source](historical/source/) and [original v2 data](data/v2/)
 
@@ -40,3 +40,31 @@ Run throughput collection sequentially, with no builds, sanitizer runs or profil
 `analysis/collect_vm_profiles.py` accepts a local tool installation root through `BENCH_TOOLS`; the checked-in artifacts record what worked in this VM. Machine-specific tool packages and compiled executables are not committed. Read the profiling limitations before interpreting simulated caches or user-only samples.
 
 Historical scripts under `historical/source/` preserve the prior experiment. The old `analysis/run_bench.py` and `analysis/make_charts.py` are retained for provenance; the v3 Makefile uses the new VM runner and renderer.
+
+## Harness options
+
+`./fanin [messages_per_producer=1000000] [runs=3] [consumer_cpu=0] [producers=8]`
+prints a summary and a CSV row per run. Use CPU `-1` to disable pinning.
+
+- `QUEUE_IMPL`: 0 selects the atomic queues, 1 a mutex, 2 a spinlock, and 3 a mutex with producers waiting on a condition variable.
+- `QUEUE_SHARED`: 0 gives each producer its own queue; 1 shares a queue.
+- `QUEUE_CAPACITY`: defaults to 8 per SPSC queue or 64 for shared MPSC. Override it to match aggregate capacity for other producer counts.
+- `PAYLOAD_WORDS`: word zero encodes producer ID and sequence; remaining words are derived from it. The consumer checks every word, per-producer ordering, counts, and the final drained state.
+- `MPSC_BACKOFF`: 0 retries immediately, 1 issues one PAUSE, and 2 uses exponential PAUSE up to `MPSC_MAX_BACKOFF` (default 16). `MPSC_STATS` enables thread-local contention counts.
+- `SPSC_CACHE_LINE` and `MPSC_CACHE_LINE`: default to 64; use 8 for packed-layout experiments.
+
+The harness retries without yielding and takes at most one message from each queue per polling pass. Pinned runs allocate on the consumer's NUMA node and distribute producers over other allowed CPUs on that node. `BENCH_CONTROL_CPU` can move the controller away from workers. A start barrier excludes thread startup; the consumer timestamps receipt of the final message.
+
+`./lock_contention <mutex|spin> <threads> <think_iters> <ops_per_thread>` compares protected counter updates with a private-work baseline. The elapsed-minus-baseline result includes contention and scheduling effects; it is not an isolated lock instruction latency. Count futex calls separately with `perf stat -e syscalls:sys_enter_futex ./lock_contention ...` when permitted.
+
+`./canary [iters=2000000]` runs a dependent multiply chain on each allowed CPU. It reports the slowest and fastest CPUs' best-of-five nanoseconds per iteration to help identify sustained machine slowdowns.
+
+## Planned follow-up: uneven producers and bursts
+
+This experiment is planned; no results are claimed yet.
+
+- Compare one busy producer with mostly idle peers, independent short bursts, and simultaneous bursts. Sweep burst size and offered load while matching arrival schedules, payloads, producer counts, and aggregate capacity between topologies.
+- Keep the one-pop-per-queue fan-in policy as the baseline; test bounded batching separately.
+- Report delivered throughput, full-queue retries, and per-producer latency distributions (p50, p95, p99, and maximum). Distinguish time waiting to enqueue from time between publication and consumption; include offered-to-consumed delay so producer backpressure is visible.
+- Use reproducible arrival schedules and report missed arrival deadlines. Measure timestamping overhead separately from the existing throughput-only runs.
+- Repeat on a documented bare-metal setup with separate physical cores and available hardware counters before attributing differences to cache-coherence traffic or generalizing beyond the VM.
