@@ -40,3 +40,21 @@ Run throughput collection sequentially, with no builds, sanitizer runs or profil
 `analysis/collect_vm_profiles.py` accepts a local tool installation root through `BENCH_TOOLS`; the checked-in artifacts record what worked in this VM. Machine-specific tool packages and compiled executables are not committed. Read the profiling limitations before interpreting simulated caches or user-only samples.
 
 Historical scripts under `historical/source/` preserve the prior experiment. The old `analysis/run_bench.py` and `analysis/make_charts.py` are retained for provenance; the v3 Makefile uses the new VM runner and renderer.
+
+## Harness options
+
+`./fanin [messages_per_producer=1000000] [runs=3] [consumer_cpu=0] [producers=8]`
+prints a summary and a CSV row per run. Use CPU `-1` to disable pinning.
+
+- `QUEUE_IMPL`: 0 selects the atomic queues, 1 a mutex, 2 a spinlock, and 3 a mutex with producers waiting on a condition variable.
+- `QUEUE_SHARED`: 0 gives each producer its own queue; 1 shares a queue.
+- `QUEUE_CAPACITY`: defaults to 8 per SPSC queue or 64 for shared MPSC. Override it to match aggregate capacity for other producer counts.
+- `PAYLOAD_WORDS`: word zero encodes producer ID and sequence; remaining words are derived from it. The consumer checks every word, per-producer ordering, counts, and the final drained state.
+- `MPSC_BACKOFF`: 0 retries immediately, 1 issues one PAUSE, and 2 uses exponential PAUSE up to `MPSC_MAX_BACKOFF` (default 16). `MPSC_STATS` enables thread-local contention counts.
+- `SPSC_CACHE_LINE` and `MPSC_CACHE_LINE`: default to 64; use 8 for packed-layout experiments.
+
+The harness retries without yielding and takes at most one message from each queue per polling pass. Pinned runs allocate on the consumer's NUMA node and distribute producers over other allowed CPUs on that node. `BENCH_CONTROL_CPU` can move the controller away from workers. A start barrier excludes thread startup; the consumer timestamps receipt of the final message.
+
+`./lock_contention <mutex|spin> <threads> <think_iters> <ops_per_thread>` compares protected counter updates with a private-work baseline. The elapsed-minus-baseline result includes contention and scheduling effects; it is not an isolated lock instruction latency. Count futex calls separately with `perf stat -e syscalls:sys_enter_futex ./lock_contention ...` when permitted.
+
+`./canary [iters=2000000]` runs a dependent multiply chain on each allowed CPU. It reports the slowest and fastest CPUs' best-of-five nanoseconds per iteration to help identify sustained machine slowdowns.

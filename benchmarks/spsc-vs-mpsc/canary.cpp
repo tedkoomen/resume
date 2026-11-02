@@ -1,13 +1,5 @@
-// Machine-speed canary: one thread pinned to each online CPU times a fixed
-// dependent-multiply chain, so a benchmark run can be flagged when the machine
-// was slow (e.g. a noisy neighbour on the host's sibling hyperthread, which the
-// guest cannot see as steal time). Each CPU takes the best of kReps timings,
-// so a single preemption by an unrelated task does not register as a slow
-// machine; a sustained slowdown raises even the best timing.
-//
-// Build:  see Makefile
-// Run:    ./canary [iters=2000000]
-// Output: one line "slowest_ns_per_iter,fastest_ns_per_iter"
+// Per-CPU speed canary; reports slowest/fastest best-of-five ns per iteration.
+// Run: ./canary [iters=2000000]
 
 #include <algorithm>
 #include <chrono>

@@ -17,9 +17,11 @@ takeaways:
   - 'Reservation, publication, and reuse are separate steps in a queue protocol.'
 ---
 
-A shared counter is a useful starting point for mutexes and atomics. A queue asks more of us. A producer needs somewhere to write, a consumer needs to know when that write is complete, and neither may reuse the storage too early.
+In [Threads, Mutexes, and Atomics: Start With What Can Go Wrong](/blog/engineering/threads-mutexes-and-atomics/), I used shared counters to explain synchronization. A queue asks more of us. A producer needs somewhere to write, a consumer needs to know when that write is complete, and neither may reuse the storage too early.
 
-My experiment has several producers sending small messages to one consumer. There are two useful ways to arrange that communication: give every producer its own queue, or let all producers share one. Both arrangements deliver work to the same consumer. They put the coordination in different places.
+Two names come up throughout this article. **SPSC means single producer, single consumer**: one thread pushes into a particular queue and one thread pops from it. **MPSC means multiple producers, single consumer**: several threads push into the same queue and one thread pops from it. A producer adds work; a consumer removes it. These names describe who can use each end, not whether the queue uses a mutex or atomics.
+
+My experiment has several producers sending small messages to one consumer. There are two useful ways to arrange that communication: give every producer its own SPSC queue, with the consumer polling all of them (**SPSC fan-in**), or let all producers share one MPSC queue. Both arrangements deliver work to the same consumer. They put the coordination in different places. I will show both implementations before comparing the measurements; neither arrangement is automatically better for every workload.
 
 The [source, tests, raw data, and chart scripts](https://github.com/tedkoomen/resume/tree/master/benchmarks/spsc-vs-mpsc) live together outside the website build.
 
@@ -35,9 +37,7 @@ The topology follows from who uses each end of the queue. “Producer” and “
 
 ## SPSC describes a relationship
 
-SPSC means single producer, single consumer. Only one thread may push into a particular SPSC queue, and only one may pop from it. The whole program can still have many producers. In **SPSC fan-in**, each producer owns a separate queue and one consumer polls all of them.
-
-MPSC means multiple producers, single consumer. Producers can push into the same queue, so the implementation needs a way to give each producer a distinct position. The consumer still has exclusive responsibility for removing items.
+The counts apply to each queue, not the whole program. Four producers with four separate queues can still use SPSC. Put those producers on one queue and the implementation must coordinate their pushes: it is now MPSC. The other two combinations, SPMC (single producer, multiple consumers) and MPMC (multiple producers, multiple consumers), add competition at the consumer end.
 
 | Queue relationship | Who pushes? | Who pops? | Example use |
 |---|---|---|---|
@@ -94,7 +94,6 @@ Here is a complete, deliberately small SPSC example. You can run it below, downl
 #include <iostream>
 #include <thread>
 
-// Exactly one producer and one consumer. Eight usable slots.
 class Ring {
     std::array<std::uint64_t, 8> slots{};
     alignas(64) std::atomic<std::uint64_t> head{0};
@@ -160,13 +159,133 @@ The example yields while waiting so it can run reasonably in a shared execution 
 
 ## Multiple producers need a reservation protocol
 
-The [measured MPSC implementation](https://github.com/tedkoomen/resume/blob/master/benchmarks/spsc-vs-mpsc/mpsc.h) adds a shared producer position and a sequence number for each slot. A producer checks that the position is free, attempts to reserve it with CAS, writes the payload, then publishes the slot's sequence number. The consumer checks that sequence before reading and changes it again when the storage is reusable.
+In the SPSC ring, only one producer advances `head`. With two producers, both could load the same position and overwrite the same slot. Making that load atomic does not reserve anything. We need an atomic **compare-and-exchange (CAS)** to let only one producer claim a position, plus a separate way to say its payload is ready.
 
-Reservation does not publish the payload. A successful CAS can be followed by preemption before the producer writes its message. The consumer must wait for that reserved position even if a later producer has already finished a later slot.
+The [measured MPSC implementation](https://github.com/tedkoomen/resume/blob/master/benchmarks/spsc-vs-mpsc/mpsc.h) uses a shared producer position and a sequence number per slot. Here is a small version of that protocol. It has 32 usable slots, matching the total storage of four eight-slot SPSC queues, and four producers sending 10,000 messages each. Compile it with `g++ -std=c++20 -O2 -pthread mpsc-handoff.cpp -o mpsc-handoff`, or run it below.
+
+<!-- EXAMPLE:mpsc-handoff -->
+
+```cpp
+#include <array>
+#include <atomic>
+#include <cstdint>
+#include <iostream>
+#include <thread>
+
+class MpscRing {
+    static constexpr std::uint64_t capacity = 32;
+    struct alignas(64) Slot {
+        std::atomic<std::uint64_t> sequence{0};
+        std::uint64_t value{0};
+    };
+    std::array<Slot, capacity> slots{};
+    alignas(64) std::atomic<std::uint64_t> head{0};
+    alignas(64) std::uint64_t tail{0};
+public:
+    MpscRing() {
+        for (std::uint64_t i = 0; i < capacity; ++i)
+            slots[i].sequence.store(i, std::memory_order_relaxed);
+    }
+
+    bool push(std::uint64_t value) {
+        auto position = head.load(std::memory_order_relaxed);
+        for (;;) {
+            auto& slot = slots[position & (capacity - 1)];
+            const auto sequence = slot.sequence.load(std::memory_order_acquire);
+            if (sequence == position) {
+                if (head.compare_exchange_weak(position, position + 1,
+                                               std::memory_order_relaxed)) {
+                    slot.value = value;
+                    slot.sequence.store(position + 1, std::memory_order_release);
+                    return true;
+                }
+            } else if (sequence < position) { // Assumes counters do not wrap.
+                return false;
+            } else {
+                position = head.load(std::memory_order_relaxed);
+            }
+        }
+    }
+
+    bool pop(std::uint64_t& value) {
+        auto& slot = slots[tail & (capacity - 1)];
+        if (slot.sequence.load(std::memory_order_acquire) != tail + 1)
+            return false;
+        value = slot.value;
+        slot.sequence.store(tail + capacity, std::memory_order_release);
+        ++tail;
+        return true;
+    }
+};
+
+int main() {
+    MpscRing queue;
+    constexpr std::uint64_t producer_count = 4, count = 10000;
+    constexpr auto total = producer_count * count;
+    std::array<std::uint64_t, producer_count> next{};
+    std::uint64_t errors = 0, sum = 0;
+    std::atomic<bool> start{false};
+    std::thread consumer([&] {
+        while (!start.load(std::memory_order_acquire)) std::this_thread::yield();
+        for (std::uint64_t received = 0; received < total; ++received) {
+            std::uint64_t value;
+            while (!queue.pop(value)) std::this_thread::yield();
+            const auto producer = value / count;
+            if (producer >= producer_count) ++errors;
+            else errors += value % count != next[producer]++;
+            sum += value;
+        }
+    });
+    std::array<std::thread, producer_count> producers;
+    for (std::uint64_t id = 0; id < producer_count; ++id) {
+        producers[id] = std::thread([&, id] {
+            while (!start.load(std::memory_order_acquire)) std::this_thread::yield();
+            for (std::uint64_t sequence = 0; sequence < count; ++sequence)
+                while (!queue.push(id * count + sequence)) std::this_thread::yield();
+        });
+    }
+    start.store(true, std::memory_order_release);
+    for (auto& producer : producers) producer.join();
+    consumer.join();
+    for (const auto received : next) errors += received != count;
+    std::uint64_t extra;
+    const bool empty = !queue.pop(extra);
+    std::cout << "Producers: " << producer_count << ", messages: " << total
+              << ", errors: " << errors << ", sum: " << sum
+              << ", drained: " << std::boolalpha << empty << '\n';
+    return errors || !empty || sum != total * (total - 1) / 2;
+}
+```
+
+<div data-cpp-example="mpsc-handoff">
+<p>Runnable C++20 example. Download the source or run it with Compiler Explorer.</p>
+</div>
+
+<!-- END-EXAMPLE:mpsc-handoff -->
+
+Each slot starts with its array index as its sequence number. For logical position `p`, the sequence moves through three states:
+
+| Sequence | Meaning | Who changes it next? |
+|---|---|---|
+| `p` | Storage is available for position `p`. | A producer wins CAS on `head`, then writes the payload. |
+| `p + 1` | The payload has been published. | The consumer reads the payload. |
+| `p + capacity` | The consumer has finished; the slot is available for the next lap. | A future producer can reuse it. |
+
+For example, slot zero starts at sequence `0`. A producer reserves position `0` by changing `head` from `0` to `1`, writes the value, then release-stores sequence `1`. The consumer acquire-loads `1`, reads the value, and release-stores `32`. That same physical slot can now serve logical position `32`. A sequence number distinguishes successive uses of a slot; a single ready flag would not identify which lap it belongs to.
+
+On a failed CAS, `compare_exchange_weak` updates `position` with the observed head, and the loop checks the corresponding slot again. If the slot sequence is behind the requested position, the consumer has not yet made that slot available. If it is ahead, the producer's position is stale and it reloads `head`. This teaching version uses ordinary unsigned comparisons and assumes the 64-bit counters never wrap; wrapping around the array is supported, wrapping the counters is not.
+
+The CAS is relaxed because it only assigns exclusive ownership of a position. The release/acquire operations on `sequence` carry the payload-publication and storage-reuse handoffs. `tail` can be ordinary data here: only the consumer touches it, and producers learn about reusable storage from slot sequences instead. The demo checks the final empty state from the main thread only after joining the consumer.
+
+Reservation does not publish the payload. Suppose producer A reserves position `0` and is paused before writing. Producer B can reserve and publish position `1`, but the consumer cannot skip position `0`. Its `pop` returns false until A publishes. Here, false means the next position is not ready; it does not prove that every slot is empty.
 
 This is why I call this implementation **atomic** or **mutex-free**, rather than promising formal lock-free progress. A stopped producer can obstruct the consumer; eventually the bounded queue fills. Historical filenames still say `lockfree_mpsc`, but the name is not a proof. Moving or assigning the payload must also be compatible with this protocol: an exception after reservation would leave an unfinished slot. The measurements use a trivial 64-bit payload.
 
+The runnable program validates each producer's sequence, its message count, the total sum, and the final drained state. Like the SPSC demo, it yields when a push or pop cannot complete. It omits the measured queue's configurable CAS backoff and statistics. These are examples of the ownership protocols, not the programs that produced the throughput table.
+
 Fan-in preserves order within each producer's stream. It does not create an identical global ordering across streams. The shared implementation makes the consumer follow reservation order, which is also not necessarily wall-clock arrival order at the producer. If an order book requires exchange sequence order, neither topology gets to invent that order from thread scheduling.
+
+This gives us a concrete cost to compare. In SPSC, each producer advances its own queue's head without competing with other producers. In this MPSC implementation, every producer competes to update the same head, and failed CAS attempts add work. Fan-in avoids that competition, but the consumer must poll several queues and each producer has a fixed share of the capacity. Those tradeoffs are why the workload matters when we get to the numbers.
 
 ## Atomics versus a protected queue
 

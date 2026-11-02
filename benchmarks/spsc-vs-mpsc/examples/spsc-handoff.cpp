@@ -4,7 +4,6 @@
 #include <iostream>
 #include <thread>
 
-// Exactly one producer and one consumer. Eight usable slots.
 class Ring {
     std::array<std::uint64_t, 8> slots{};
     alignas(64) std::atomic<std::uint64_t> head{0};

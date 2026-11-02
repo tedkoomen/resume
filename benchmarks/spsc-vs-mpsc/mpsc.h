@@ -8,18 +8,12 @@
 #include <immintrin.h>
 #include "./concepts.h"
 
-// Every hot atomic gets its own cache line: producers CAS head_, the consumer
-// owns tail_, and each slot's sequence number is written by one producer and
-// read by the consumer, so adjacent slots must not false-share either. Build
-// with -DMPSC_CACHE_LINE=8 to get the natural (packed) layout.
+// Set to 8 for the packed-layout experiment.
 #ifndef MPSC_CACHE_LINE
 #define MPSC_CACHE_LINE 64
 #endif
 
-// What a producer does after losing a race for head_:
-//   0 - retry immediately (pure spin)
-//   1 - one _mm_pause() per lost race
-//   2 - exponential backoff: 1, 2, 4, ... up to MPSC_MAX_BACKOFF pauses
+// Retry policy: 0 = immediate, 1 = PAUSE, 2 = capped exponential PAUSE.
 #ifndef MPSC_BACKOFF
 #define MPSC_BACKOFF 1
 #endif
@@ -27,23 +21,13 @@
 #define MPSC_MAX_BACKOFF 16
 #endif
 
-// With -DMPSC_STATS, each thread counts how many times it lost a race for
-// head_ (failed CAS or slot already claimed). Off by default: it adds a
-// thread-local increment to the contended path.
 #ifdef MPSC_STATS
 inline thread_local std::uint64_t mpsc_contended_retries = 0;
 #endif
 
-// Bounded multi-producer / single-consumer queue (Vyukov-style). Producers
-// claim a slot by CAS on head_; MPSC_BACKOFF selects the retry policy.
-// A preempted producer after reservation can stall the consumer: this is
-// mutex-free, but not a formal lock-free progress guarantee.
-// Each slot carries a sequence number: seq == pos means the slot is free for
-// the producer claiming position pos; seq == pos + 1 means it holds that
-// producer's value and is ready for the consumer.
-// BufferSize must be at least 2: with one slot, "full with position p"
-// (seq == p + 1) and "free for position p + 1" (seq == p + 1) are the same
-// value, so a producer would overwrite a value the consumer has not read yet.
+// Vyukov-style reservation: seq == pos is free; seq == pos + 1 is ready.
+// A producer stalled after reservation can block consumption.
+// Capacity >= 2 keeps the ready and next-lap free states distinct.
 template <typename T, std::size_t BufferSize>
   requires IsPositivePowerOfTwo<BufferSize> && (BufferSize >= 2)
 class MpscQueue
@@ -73,7 +57,6 @@ class MpscQueue
 
             if (diff == 0)
             {
-                // On failure compare_exchange_weak reloads head.
                 if (head_.compare_exchange_weak(head, head + 1, std::memory_order_relaxed))
                 {
                     break;
@@ -82,12 +65,10 @@ class MpscQueue
             }
             else if (diff < 0)
             {
-                // The consumer hasn't freed this slot from the previous lap.
                 return false;
             }
             else
             {
-                // Another producer already claimed this position.
                 contended(pauses);
                 head = head_.load(std::memory_order_relaxed);
             }
