@@ -1,16 +1,16 @@
 ---
 path: '/blog/engineering/queue-types-and-topology'
 date: '2026-11-02T09:00:00Z'
-title: 'Queues: Who Owns the Next Slot?'
+title: 'SPSC vs MPSC Queues: Who Owns the Next Slot?'
 author: 'Ted Koomen'
-description: 'SPSC fan-in, a shared MPSC queue, and the ownership and capacity rules behind a fair comparison.'
+description: 'Compare SPSC fan-in and MPSC queues in C++20 with runnable examples, acquire/release ordering, bounded capacity, and measured throughput tradeoffs.'
 posttype: 'engineering'
 hideRelatedLinks: true
 tag: ['cpp', 'concurrency', 'queues', 'performance']
 image: '../../images/social-queue-topology.png'
 featuredImage: '../../images/social-queue-topology.png'
 featured: true
-snippet: 'Before choosing between a mutex and atomics, decide which threads need to share a queue.'
+snippet: 'Several producers, one consumer: compare SPSC fan-in with a shared MPSC queue through runnable C++20 code and a capacity-matched benchmark.'
 takeaways:
   - 'SPSC describes each queue, not the total number of producers in the application.'
   - 'Shared MPSC capacity should match the sum of the SPSC capacities for this baseline.'
@@ -41,7 +41,7 @@ The same pattern appears in other places: a network reader hands received messag
 
 The topology follows from who uses each end of the queue. “Producer” and “consumer” describe those roles, not permanent names for threads. A worker consumes jobs from one queue and produces results into another.
 
-## SPSC describes a relationship
+## SPSC, MPSC, SPMC, and MPMC: who uses each queue?
 
 The counts apply to each queue, not the whole program. Four producers with four separate queues can still use SPSC. Put those producers on one queue and the implementation must coordinate their pushes: it is now MPSC. The other two combinations, SPMC (single producer, multiple consumers) and MPMC (multiple producers, multiple consumers), add competition at the consumer end.
 
@@ -54,7 +54,7 @@ The counts apply to each queue, not the whole program. Four producers with four 
 
 These names do not specify the implementation. An MPSC queue can use a mutex. An SPSC queue can use atomics. Bounded versus unbounded storage is another choice. Our queues are bounded rings: they reuse a fixed array and must handle full and empty states.
 
-## Follow a job through the system
+## SPSC fan-in vs a shared MPSC queue
 
 Imagine one dispatcher and four thumbnail workers. If the dispatcher puts every job into one shared queue, all four workers need permission to pop from that queue. That is **SPMC**, not SPSC. Each successfully removed job goes to one worker; a work queue does not broadcast a copy to every worker. Workers can finish jobs in a different order from the order in which they were removed, because the jobs may take different amounts of time.
 
@@ -74,6 +74,12 @@ In the illustration below, think of A and B as two workers sending completion me
 
 Fan-in removes producer-versus-producer reservation contention. It gives the consumer more queues to inspect and makes capacity less flexible. A producer with a burst cannot borrow its neighbor's empty slots. A shared queue can absorb that burst, but its producers now compete over shared state.
 
+### How the fan-in consumer polls
+
+The [benchmark consumer loop](https://github.com/tedkoomen/resume/blob/master/benchmarks/spsc-vs-mpsc/fanin_test.cpp) visits each producer queue in turn and attempts one pop before moving on. Empty queues are skipped. After the last queue, it starts another pass. The shared MPSC version checks only its one queue.
+
+That polling policy is part of the experiment. Draining one queue completely before visiting the next could delay other producers indefinitely if the first stays busy. Taking a bounded batch can reduce the cost of switching queues, but it also changes how long the others wait. This harness uses one message per visit. It gives each queue a polling opportunity on every pass, without promising a wall-clock latency bound.
+
 ## Should MPSC have more capacity?
 
 Yes, compared with **one** of the SPSC queues. For the baseline, I matched the total number of message slots:
@@ -87,7 +93,7 @@ Comparing eight independent eight-slot queues with a single eight-slot shared qu
 
 Equal slots do not mean equal bytes. Sequence numbers and padding add overhead. Equal slots also do not mean equal burst tolerance: the animation shows why. The old three-producer experiment used 24 total SPSC slots against 64 shared slots. I preserved that run matrix separately, but it is not the capacity-matched baseline.
 
-## A ring needs two handoffs
+## Implementing an SPSC ring buffer in C++20
 
 Here is a complete, deliberately small SPSC example. You can run it below, download it, or compile it locally with `g++ -std=c++20 -O2 -pthread spsc-handoff.cpp -o spsc-handoff`.
 
@@ -163,9 +169,9 @@ Loads of a thread's own index can be relaxed because the other thread never writ
 
 The example yields while waiting so it can run reasonably in a shared execution service. That is a teaching choice, not the busy-wait policy used to produce the charts. Its `64`-byte alignment is an explicit target assumption. Do not add a second producer to this class: two producers could select and write the same slot.
 
-## Multiple producers need a reservation protocol
+## Implementing an MPSC queue with CAS and sequence numbers
 
-In the SPSC ring, only one producer advances `head`. With two producers, both could load the same position and overwrite the same slot. Making that load atomic does not reserve anything. We need an atomic **compare-and-exchange (CAS)** to let only one producer claim a position, plus a separate way to say its payload is ready.
+In the SPSC ring, only one producer advances `head`. With two producers, both could load the same position and overwrite the same slot. Making that load atomic does not reserve anything. This implementation uses atomic **compare-and-exchange (CAS)** to let only one producer claim a position, plus a separate way to say its payload is ready.
 
 The [measured MPSC implementation](https://github.com/tedkoomen/resume/blob/master/benchmarks/spsc-vs-mpsc/mpsc.h) uses a shared producer position and a sequence number per slot. Here is a small version of that protocol. It has 32 usable slots, matching the total storage of four eight-slot SPSC queues, and four producers sending 10,000 messages each. Compile it with `g++ -std=c++20 -O2 -pthread mpsc-handoff.cpp -o mpsc-handoff`, or run it below.
 
@@ -293,7 +299,7 @@ Fan-in preserves order within each producer's stream. It does not create an iden
 
 This gives us a concrete cost to compare. In SPSC, each producer advances its own queue's head without competing with other producers. In this MPSC implementation, every producer competes to update the same head, and failed CAS attempts add work. Fan-in avoids that competition, but the consumer must poll several queues and each producer has a fixed share of the capacity. Those tradeoffs are why the workload matters when we get to the numbers.
 
-## Atomics versus a protected queue
+## SPSC vs MPSC throughput: atomics and mutexes
 
 For comparison, the harness wraps bounded queues with a mutex, a spinlock, or a condition-variable wait strategy. Their payload and index fields can be ordinary data when every relevant access follows the locking rule. The lock still relies on atomic synchronization. Calling this “atomic versus non-atomic” would hide the mechanism that makes the protected version correct.
 
@@ -307,6 +313,32 @@ Here is the first result, with four producers and 32 total slots. These are medi
 
 SPSC fan-in wins the atomic comparison in this balanced workload. The mutex pair is much closer. That is already a reason to keep **topology** and **synchronization** separate when discussing the result.
 
-The atomic runs send 100,000 messages per producer; the mutex runs send 10,000. Work is matched within each topology comparison, but the table is not a perfectly controlled cross-strategy latency experiment. The committed benchmark report records the full design and uncertainty.
+The atomic runs send 100,000 messages per producer; the mutex runs send 10,000. Work is matched within each topology comparison, but the table is not a perfectly controlled cross-strategy latency experiment. The [full benchmark report and uncertainty estimates](https://github.com/tedkoomen/resume/blob/master/benchmarks/spsc-vs-mpsc/charts/v3/REPORT.md) and [individual measured runs](https://github.com/tedkoomen/resume/blob/master/benchmarks/spsc-vs-mpsc/data/v3/fair_runs.csv) make the comparison reproducible.
+
+### What these measurements do not establish
+
+These are throughput results, not per-message latency measurements. Dividing elapsed time by the number of delivered messages does not tell us how long an individual message waited, or the p99 delay during a burst. The consumer also validates messages inside the timed region, so the rate includes that work.
+
+The runs used GCC 13.3 with C++20 and `-O3` in a KVM guest exposing nine vCPUs under an eight-CPU quota. In the four-producer case above, the consumer is pinned to CPU 0 and producers to CPUs 1–4. The CPUs are not isolated from host work; the eight-producer runs also place two producers on one logical CPU. There is no separate steady-state warmup. Hardware performance counters were unavailable, so the throughput difference alone cannot tell us how much time was lost to cache-line transfers.
+
+A useful next experiment would measure message latency under uneven arrival rates: one busy producer, several mostly idle producers, and short bursts. The current balanced workload does not establish which arrangement wins there. As in [Optimizing the Wrong Thing, Faster](/blog/engineering/optimizing-the-wrong-thing-faster/), a faster measured stage only helps the application when that stage matters to its overall performance.
+
+## When would I choose SPSC fan-in or MPSC?
+
+| Requirement | SPSC fan-in | Shared MPSC in this example |
+|---|---|---|
+| Producers should avoid competing for the same reservation index. | Each producer owns its queue head. | Producers compete on one head. |
+| One busy producer should use spare buffer capacity. | It can use only its own queue, even if others are empty. | It can claim any available slot in the shared capacity. |
+| The consumer should inspect one queue. | It polls every producer queue, including empty ones. | It checks one next position. |
+| An unfinished reservation should not stop unrelated streams. | The consumer can continue polling other queues. | It cannot pass the unfinished position. |
+| Messages need a defined order across producers. | Only per-producer order is preserved. | The consumer follows reservation order; application sequence order still needs a separate policy. |
+
+For a fixed group of workers with independent result streams, I would test fan-in first. For uneven bursts where producers need to share spare capacity, I would test a shared queue. Either choice still needs an explicit full-queue policy and a shutdown protocol: stop accepting work, let producers finish their final publications, and drain accepted messages before destroying the queues. The examples know the exact message count; a service needs its own completion signal.
 
 For a job system or feed handler, I would first ask who owns the state, whether independent producer streams are acceptable, and how bursts should consume capacity. Once those answers are clear, padding and retry behavior become useful implementation questions.
+
+## Sources and runnable code
+
+- [C++ acquire/release memory-ordering rules](https://eel.is/c++draft/atomics.order) define the synchronization used to publish payloads and reuse slots.
+- [Boost.Lockfree queue examples](https://www.boost.org/latest/doc/html/lockfree/examples.html) provide a separate library implementation to study, including an SPSC queue. Boost is not the implementation measured here.
+- [Benchmark build instructions and configuration](https://github.com/tedkoomen/resume/tree/master/benchmarks/spsc-vs-mpsc) describe the harness, capacity settings, validation, and measurement commands.
