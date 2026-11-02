@@ -321,6 +321,8 @@ These are throughput results, not per-message latency measurements. Dividing ela
 
 The runs used GCC 13.3 with C++20 and `-O3` in a KVM guest exposing nine vCPUs under an eight-CPU quota. In the four-producer case above, the consumer is pinned to CPU 0 and producers to CPUs 1–4. The CPUs are not isolated from host work; the eight-producer runs also place two producers on one logical CPU. There is no separate steady-state warmup. Hardware performance counters were unavailable, so the throughput difference alone cannot tell us how much time was lost to cache-line transfers.
 
+Later in this series, I plan to get an AWS bare-metal instance and rerun these benchmarks with a more controlled setup. I want to control physical-core placement, document CPU and operating-system settings, and collect hardware performance counters where available. That will also be the place to test uneven producer traffic, bursts, and per-message latency. For now, treat these VM results as a preliminary comparison, not a prediction of performance on dedicated hardware.
+
 A useful next experiment would measure message latency under uneven arrival rates: one busy producer, several mostly idle producers, and short bursts. The current balanced workload does not establish which arrangement wins there. As in [Optimizing the Wrong Thing, Faster](/blog/engineering/optimizing-the-wrong-thing-faster/), a faster measured stage only helps the application when that stage matters to its overall performance.
 
 ## When would I choose SPSC fan-in or MPSC?
