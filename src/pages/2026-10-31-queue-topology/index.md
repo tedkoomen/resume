@@ -1,6 +1,6 @@
 ---
 path: '/blog/engineering/queue-types-and-topology'
-date: '2026-10-31T09:00:00Z'
+date: '2026-11-02T09:00:00Z'
 title: 'Queues: Who Owns the Next Slot?'
 author: 'Ted Koomen'
 description: 'SPSC fan-in, a shared MPSC queue, and the ownership and capacity rules behind a fair comparison.'
