@@ -21,7 +21,13 @@ In [Threads, Mutexes, and Atomics: Start With What Can Go Wrong](/blog/engineeri
 
 Two names come up throughout this article. **SPSC means single producer, single consumer**: one thread pushes into a particular queue and one thread pops from it. **MPSC means multiple producers, single consumer**: several threads push into the same queue and one thread pops from it. A producer adds work; a consumer removes it. These names describe who can use each end, not whether the queue uses a mutex or atomics.
 
-My experiment has several producers sending small messages to one consumer. There are two useful ways to arrange that communication: give every producer its own SPSC queue, with the consumer polling all of them (**SPSC fan-in**), or let all producers share one MPSC queue. Both arrangements deliver work to the same consumer. They put the coordination in different places. I will show both implementations before comparing the measurements; neither arrangement is automatically better for every workload.
+Suppose several worker threads finish jobs and send their results to one collector. Each result might be only a job ID and a status, so handing it off can be a meaningful part of the work. I wanted to measure how much the queue arrangement changes the rate at which that collector can receive messages as more producers compete to send them.
+
+There are two useful ways to arrange that communication: give every producer its own SPSC queue, with the consumer polling all of them (**SPSC fan-in**), or let all producers share one MPSC queue. Fan-in avoids competition between producers for the same queue, but the consumer has to look for work in several places. A shared queue gives the consumer one place to look and lets a busy producer use any available slot, but producers must coordinate access to that storage.
+
+The experiment compares those arrangements by counting how many messages the consumer receives and validates per second. Both sides send the same small payloads and have the same total number of message slots, with runs at four and eight producers. The question is whether avoiding producer contention pays for the extra polling in this workload, and how the result changes when the queues use atomics or locks. The small messages keep the test focused on the handoff; it does not measure the time spent doing the jobs themselves.
+
+This article establishes the comparison, walks through both implementations, and shows an initial throughput result. That gives us a basis for interpreting the measurements without assuming either arrangement will be faster for every application.
 
 The [source, tests, raw data, and chart scripts](https://github.com/tedkoomen/resume/tree/master/benchmarks/spsc-vs-mpsc) live together outside the website build.
 

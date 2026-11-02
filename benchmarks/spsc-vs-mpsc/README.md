@@ -3,8 +3,6 @@
 This directory is a standalone C++20 benchmark project. It is outside the site's `src/`, `static/`, Gatsby source paths and npm build scripts. Nothing here is compiled into the website.
 
 - [New VM results and charts](charts/v3/REPORT.md)
-- [Code and harness review](REVIEW.md)
-- [CPU isolation follow-up and limits](ISOLATION.md)
 - [New raw data](data/v3/)
 - [Archived original report](charts/REPORT.md), [original source](historical/source/) and [original v2 data](data/v2/)
 
