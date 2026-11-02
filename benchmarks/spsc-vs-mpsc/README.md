@@ -58,3 +58,13 @@ The harness retries without yielding and takes at most one message from each que
 `./lock_contention <mutex|spin> <threads> <think_iters> <ops_per_thread>` compares protected counter updates with a private-work baseline. The elapsed-minus-baseline result includes contention and scheduling effects; it is not an isolated lock instruction latency. Count futex calls separately with `perf stat -e syscalls:sys_enter_futex ./lock_contention ...` when permitted.
 
 `./canary [iters=2000000]` runs a dependent multiply chain on each allowed CPU. It reports the slowest and fastest CPUs' best-of-five nanoseconds per iteration to help identify sustained machine slowdowns.
+
+## Planned follow-up: uneven producers and bursts
+
+This experiment is planned; no results are claimed yet.
+
+- Compare one busy producer with mostly idle peers, independent short bursts, and simultaneous bursts. Sweep burst size and offered load while matching arrival schedules, payloads, producer counts, and aggregate capacity between topologies.
+- Keep the one-pop-per-queue fan-in policy as the baseline; test bounded batching separately.
+- Report delivered throughput, full-queue retries, and per-producer latency distributions (p50, p95, p99, and maximum). Distinguish time waiting to enqueue from time between publication and consumption; include offered-to-consumed delay so producer backpressure is visible.
+- Use reproducible arrival schedules and report missed arrival deadlines. Measure timestamping overhead separately from the existing throughput-only runs.
+- Repeat on a documented bare-metal setup with separate physical cores and available hardware counters before attributing differences to cache-coherence traffic or generalizing beyond the VM.
