@@ -17,9 +17,15 @@ takeaways:
   - 'Exponential backoff helped this MPSC workload; one pause per retry did not.'
 ---
 
-Once the queue is correct, a tempting next step is to put `alignas(64)` on everything and add `_mm_pause()` to every loop. Both have a reasonable explanation behind them. That does not tell us whether either change helps this program.
+Several producers reach a shared queue at once. Each tries to claim the next slot by updating the same atomic counter with compare-and-exchange (CAS). Only one can claim that position. The others discover that the counter has changed and try again. Under contention, they can spend a substantial part of their time retrying instead of moving messages.
 
-In this experiment, multiple producers either share one MPSC queue or use separate SPSC queues feeding one consumer. Now I want to keep those arrangements visible while changing memory layout and retry behavior. A change to where data lives is different from a change to how often threads contend for it.
+Those retries have a cost. Repeated atomic update attempts compete for the same cache line, adding coordination between cores. Retrying as fast as possible can increase that competition. **Backoff spaces out the attempts:** after losing a reservation, a producer waits briefly before trying again. The aim is to reduce interference so the producers collectively complete more useful work. An exponential policy increases that wait after successive contention events, up to a limit.
+
+On x86, `_mm_pause()` is one way to spend that short wait. It tells the processor that the thread is in a spin loop. [Intel's optimization manual](https://www.intel.com/content/dam/doc/manual/64-ia-32-architectures-optimization-manual.pdf) describes how `PAUSE` reduces the execution resources and power consumed by such loops; this can also help a sibling hardware thread sharing the same physical core. The thread stays runnable. Backoff chooses how long to wait between attempts, and this implementation uses one or more `PAUSE` instructions during that wait.
+
+The tradeoff is responsiveness: waiting too long can delay an attempt that would have succeeded. A pause on every retry and an increasing backoff are therefore separate policies worth measuring. Neither promises a speedup.
+
+This experiment compares multiple producers sharing one MPSC queue with separate SPSC queues feeding one consumer. Alongside retry behavior, I vary memory layout: padding can keep independent writers off the same cache line, while backoff can reduce how often producers compete for a genuinely shared counter. First, we need to see which kind of sharing the queue has.
 
 ## A cache line contains more than your variable
 
