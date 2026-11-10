@@ -6,7 +6,7 @@ import "./card.scss"
 export default function Card({ data, issue }) {
   const {
     node: {
-      frontmatter: { description, date, path, title },
+      frontmatter: { description, date, path, title, readingMinutes },
       timeToRead,
     },
   } = data
@@ -32,7 +32,7 @@ export default function Card({ data, issue }) {
               {moment(date).format("YYYY.MM.DD")}
             </time>
           )}
-          <span>{timeToRead || 1} min read</span>
+          <span>{readingMinutes || timeToRead || 1} min read</span>
         </div>
       </Link>
     </article>

@@ -34,6 +34,7 @@ export const archivePostsQuery = graphql`
             posttype
             title
             date
+            readingMinutes
             dispatch
           }
         }

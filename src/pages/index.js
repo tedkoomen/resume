@@ -34,6 +34,7 @@ export const allPostsQuery = graphql`
             posttype
             title
             date
+            readingMinutes
             dispatch
           }
         }
