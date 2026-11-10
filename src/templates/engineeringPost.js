@@ -51,7 +51,7 @@ export default ({ data, location, pageContext }) => {
               <p className="dispatch-hero__byline">
                 <Link to="/about-me/">{author || "Ted Koomen"}</Link>
                 <span aria-hidden="true"> · </span><time dateTime={formattedDate}>{date ? moment(date).format("MMMM D, YYYY") : formattedDate}</time>
-                <span aria-hidden="true"> · </span>{post.timeToRead || 1} min read
+                <span aria-hidden="true"> · </span>{post.frontmatter.readingMinutes || post.timeToRead || 1} min read
               </p>
             </div>
 
@@ -90,6 +90,7 @@ export const pageQuery = graphql`
       frontmatter {
         path
         date
+        readingMinutes
         title
         description
         posttype
