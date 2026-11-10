@@ -1,6 +1,6 @@
 ---
 path: '/blog/engineering/cache-lines-and-pause'
-date: '2026-11-09T10:00:00Z'
+date: '2026-11-10T10:00:00Z'
 title: 'Cache Lines, Padding, and the Cost of Trying Again'
 author: 'Ted Koomen'
 description: 'What padding and x86 PAUSE change in a bounded queue, and what the measured backoff and layout comparisons actually support.'
