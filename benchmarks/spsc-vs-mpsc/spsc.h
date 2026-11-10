@@ -8,9 +8,7 @@
 #include <utility>
 #include "./concepts.h"
 
-// Each hot member gets its own cache line so the producer's writes to head_
-// and the consumer's writes to tail_ never false-share with each other or with
-// the buffer. Build with -DSPSC_CACHE_LINE=8 to get the natural (packed) layout.
+// Set to 8 for the packed-layout experiment.
 #ifndef SPSC_CACHE_LINE
 #define SPSC_CACHE_LINE 64
 #endif

@@ -14,11 +14,12 @@ done
 ```
 
 - `spsc-handoff.cpp`: bounded ring with publication and storage-reuse handoffs.
+- `mpsc-handoff.cpp`: four producers share a bounded ring using CAS reservation and per-slot sequences; validates per-producer order and counts, sum, and the drained state.
 - `layout-backoff.cpp`: actual member offsets and a capped x86 PAUSE/CAS loop.
 - `spin-mutex.cpp`: the same protected counter using a spinlock and a mutex.
 - `condition-queue.cpp`: producers block when full; consumer polls when empty.
 - `measured-handoff.cpp`: a start barrier, consumer finish timestamp, sequence validation, and median across seven runs.
 
-All programs return nonzero when their checks fail. They have no general shutdown or cancellation protocol. The SPSC examples use unsigned 64-bit counters and exercise only short runs. Alignment assumes 64-byte spacing; the PAUSE examples require x86. Do not use Compiler Explorer timing as a local-machine benchmark.
+All programs return nonzero when their checks fail. They have no general shutdown or cancellation protocol. The handoff examples use unsigned 64-bit counters and exercise only short runs. The MPSC demo assumes its counters never wrap; a producer paused after reservation can stall consumption. Alignment assumes 64-byte spacing; the PAUSE examples require x86. Do not use Compiler Explorer timing as a local-machine benchmark.
 
 From the repository root, `python3 scripts/sync-queue-examples.py` updates the exact code embedded in the posts. Browser compiler panels allow editing, running, assembly inspection, and downloading each complete program.

@@ -13,8 +13,7 @@
 #define LOCKED_CACHE_LINE 64
 #endif
 
-// Test-and-test-and-set spinlock: spin on a plain load (shared cache line,
-// no coherence writes) and only attempt the exchange once the lock looks free.
+// Test-and-test-and-set: poll with loads between exchange attempts.
 class SpinLock
 {
   public:
@@ -39,11 +38,7 @@ class SpinLock
     std::atomic<bool> locked_{false};
 };
 
-// Bounded ring buffer guarded by a single lock. Safe for any number of
-// producers and consumers, so the same class serves both the SPSC fan-in
-// (one queue per producer) and the MPSC (one shared queue) harnesses.
-// Same non-blocking interface as SpscQueue/MpscQueue: push/pop return false
-// when full/empty instead of waiting.
+// Supports multiple producers/consumers. Returns false on full/empty.
 template <typename T, std::size_t BufferSize, typename Lock>
   requires IsPositivePowerOfTwo<BufferSize>
 class LockedQueue
@@ -76,18 +71,13 @@ class LockedQueue
   private:
     static constexpr size_t kMask = BufferSize - 1;
 
-    // The lock and both indices are always touched together under the lock,
-    // so they share one cache line; the buffer starts on the next one.
     alignas(LOCKED_CACHE_LINE) Lock lock_;
     size_t head_ = 0;
     size_t tail_ = 0;
     alignas(LOCKED_CACHE_LINE) std::array<T, BufferSize> buffer_;
 };
 
-// The way a mutex queue is normally written: producers sleep on a condition
-// variable while the queue is full instead of spinning, so push() always
-// returns true. pop() stays non-blocking because the fan-in consumer polls
-// several queues and must not sleep on one that may never refill.
+// Push waits for space; pop polls so fan-in cannot sleep on an idle queue.
 template <typename T, std::size_t BufferSize>
   requires IsPositivePowerOfTwo<BufferSize>
 class BlockingQueue
@@ -114,10 +104,7 @@ class BlockingQueue
         {
             return false;
         }
-        // Wake a producer whenever one is asleep, not only on the full ->
-        // not-full transition: with several producers sleeping, a second pop
-        // before the first woken producer refills would otherwise leave the
-        // rest asleep with free space and nobody left to wake them.
+        // Notify on every pop with waiters, or free slots can leave producers asleep.
         const bool wake = waiters_ != 0;
         outVal = std::move(buffer_[tail_ & kMask]);
         ++tail_;

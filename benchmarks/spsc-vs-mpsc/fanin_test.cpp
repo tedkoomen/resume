@@ -1,47 +1,5 @@
-// Fan-in stress harness: P producers -> 1 consumer, through either one queue
-// per producer (QUEUE_SHARED=0, the consumer round-robins across them) or one
-// queue shared by every producer (QUEUE_SHARED=1).
-//
-// Queue implementation (QUEUE_IMPL):
-//   0 - lock-free: SpscQueue per producer, or MpscQueue when shared (default)
-//   1 - std::mutex-guarded ring buffer, try-push/try-pop (busy polling)
-//   2 - spinlock-guarded ring buffer, try-push/try-pop (busy polling)
-//   3 - std::mutex + condition_variable: producers sleep while full
-//
-// Contention is maximized by:
-//   - small queues (QUEUE_CAPACITY; default 8 per producer, or 64 shared =
-//     equal total buffering only with 8 producers), so producers hit "full" and the consumer
-//     hits "empty" constantly
-//   - no backoff or yielding in the harness's own spin loops
-//   - the consumer popping at most one item per queue per pass
-//
-// Each message is PAYLOAD_WORDS 64-bit words: word 0 encodes (producer id,
-// sequence number) and every other word is derived from it. The consumer
-// checks every word, so a message published before all its words were
-// written (a missing release/acquire) shows up as an error even on x86, where
-// a lone 8-byte store could never tear. It also checks that each producer's
-// messages arrive in order, exactly once, on the right queue, and that every
-// queue is empty at the end.
-//
-// Thread placement: everything stays on the NUMA node that owns `cpu`. The
-// consumer gets `cpu` to itself; producers are spread round-robin over the
-// node's other CPUs. Run with producers <= (node CPUs - 1) to avoid
-// oversubscription, where the scheduler rather than the queue dominates. The
-// main thread is pinned to `cpu` before the queues are allocated; optional
-// BENCH_CONTROL_CPU moves the controller off the worker CPUs at the start line.
-// Pinning before allocation means
-// first-touch places their memory on that node. Failing to pin is fatal.
-// cpu = -1 disables all pinning, for comparison.
-//
-// Timing: all threads pin themselves and check in at a barrier before the
-// clock starts; the consumer stamps the end time as it receives the final
-// message, so thread start-up and teardown are excluded.
-//
-// Build:  see Makefile (make all)
-// Run:    ./fanin [msgs_per_producer=1000000] [runs=3] [cpu=0, -1 = unpinned] [producers=8]
-// Each run prints a human-readable line and a machine-readable one:
-//   csv,impl,shared,producers,capacity,payload_words,backoff,msgs_per_producer,run,
-//       elapsed_s,msgs_per_s,full_spins,empty_polls,cas_retries,errors,pass
+// Validated fan-in harness; build options and usage are in README.md.
+// QUEUE_SHARED selects per-producer SPSC queues (0) or one shared MPSC queue (1).
 
 #include <algorithm>
 #include <array>
@@ -120,7 +78,6 @@ constexpr uint64_t pack(uint32_t producer, uint32_t seq)
   return (uint64_t(producer) << 32) | seq;
 }
 
-// Word k of a message is a cheap bijective mix of word 0 and k.
 constexpr uint64_t derived_word(uint64_t head, std::size_t k)
 {
   return (head ^ (0x9e3779b97f4a7c15ULL * (k + 1))) * 0xbf58476d1ce4e5b9ULL;
@@ -158,7 +115,6 @@ struct alignas(kCacheLine) StartLine
   alignas(kCacheLine) std::atomic<bool> go{false};
 };
 
-// Per-producer counters, one cache line each; written once at the end.
 struct alignas(kCacheLine) ProducerResult
 {
   uint64_t full_spins = 0;
@@ -173,7 +129,6 @@ struct ConsumerResult
   double end = 0;
 };
 
-// cpu < 0 means "leave this thread unpinned".
 void pin_or_die(int cpu, const char* who)
 {
   if (cpu >= 0 && !pin_self(cpu)) {
@@ -197,8 +152,6 @@ void producer_main(uint32_t id, uint64_t msgs, Queue& queue, StartLine& start,
   uint64_t spins = 0;
   for (uint32_t seq = 0; seq < msgs; ++seq) {
     const Message msg = make_message(id, seq);
-    // push() only moves from its argument on success, but a fresh copy per
-    // attempt keeps that out of the picture.
     while (!queue.push(Message{msg})) {
       ++spins;
     }
@@ -256,7 +209,6 @@ void consumer_main(uint32_t producers, uint64_t msgs_per_producer, Queue* queues
   }
   out.end = now_seconds();
 
-  // Every queue must be drained once every message has been accounted for.
   for (uint32_t q = 0; q < num_queues; ++q) {
     Message extra;
     if (queues[q].pop(extra)) {

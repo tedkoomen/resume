@@ -1,19 +1,5 @@
-// Lock cost vs contention: N threads, each pinned to its own CPU on one NUMA
-// node, repeatedly lock, bump a shared counter, unlock, then do `think`
-// iterations of private work outside the lock. More think time -> less
-// contention. With think large enough the lock is almost always free, which
-// is the case futex-based std::mutex is built for: an uncontended lock/unlock
-// is a single atomic RMW each in user space, with no syscall. Count futex
-// syscalls externally with:
-//   perf stat -e syscalls:sys_enter_futex ./lock_contention ...
-//
-// The per-acquisition lock cost is isolated by first timing the same loop
-// with no lock (think work only) and subtracting.
-//
-// Build:  clang++ -std=c++20 -O3 -pthread lock_contention.cpp -o lock_contention
-// Run:    ./lock_contention <mutex|spin> <threads> <think_iters> <ops_per_thread>
-// Output: one CSV line:
-//   lock,threads,think,ops_per_thread,elapsed_s,ns_per_iter,lock_ns_per_acquire,ok
+// Compare locked work with a private-work baseline; see README.md.
+// Run: ./lock_contention <mutex|spin> <threads> <think_iters> <ops_per_thread>
 
 #include <atomic>
 #include <chrono>
@@ -30,7 +16,7 @@
 
 namespace {
 
-// Private, unoptimizable work: a dependent LCG chain (~3-4 cycles/iter).
+// Keep the dependent chain observable to the compiler.
 inline uint64_t think(uint64_t x, uint64_t iters)
 {
   for (uint64_t i = 0; i < iters; ++i) {
@@ -92,8 +78,7 @@ int bench(const char* name, int threads, uint64_t think_iters, uint64_t ops)
   const double base = run(threads, think_iters, ops, false, lock, shared, cpus);
   const double elapsed = run(threads, think_iters, ops, true, lock, shared, cpus);
   const bool ok = shared.counter == uint64_t(threads) * ops;
-  // Each thread performs `ops` iterations; the lock's added cost per
-  // acquisition is the per-thread time difference divided by ops.
+  // Report elapsed-minus-baseline time per iteration, not isolated lock latency.
   std::printf("%s,%d,%llu,%llu,%.6f,%.2f,%.2f,%d\n", name, threads,
               static_cast<unsigned long long>(think_iters), static_cast<unsigned long long>(ops),
               elapsed, elapsed / double(ops) * 1e9, (elapsed - base) / double(ops) * 1e9, ok);

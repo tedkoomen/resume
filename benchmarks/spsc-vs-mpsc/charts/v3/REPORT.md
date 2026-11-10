@@ -17,7 +17,7 @@ All **1,080 equal-capacity runs** passed delivery, sequence, payload and drain v
 | condvar_spsc | 0.308 M msg/s | 0.165 M msg/s |
 | condvar_mpsc | 0.070 M msg/s | 0.080 M msg/s |
 
-SPSC fan-in is faster in these balanced atomic-queue workloads. It also has weaker aggregate ordering and partitioned capacity, so this is not a universal ranking of interchangeable APIs. See [code/harness review](../../REVIEW.md).
+SPSC fan-in is faster in these balanced atomic-queue workloads. It also has weaker aggregate ordering and partitioned capacity, so this is not a universal ranking of interchangeable APIs.
 
 ## Ratio uncertainty
 
@@ -73,7 +73,7 @@ Legacy [raw runs](../../data/v3/legacy_runs.csv); primary [raw runs](../../data/
 | isolcpus / nohz_full / RCU offload / IRQ routing | Not changed; read-only control files and no effective administrative capabilities |
 | Improvement from kernel isolation | Unmeasured (N/A) |
 
-RCU should remain enabled; the relevant tuning is callback offload. Eligible device IRQs are redirected, rather than disabling all interrupts. See the [host-isolation procedure](../../ISOLATION.md).
+RCU should remain enabled; the relevant tuning is callback offload. Eligible device IRQs are redirected, rather than disabling all interrupts.
 
 ## Longer-run confirmation
 
