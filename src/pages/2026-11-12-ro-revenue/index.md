@@ -1,7 +1,7 @@
 ---
 path: '/blog/business/ro-revenue-growth-and-ai-membership'
 date: '2026-11-12T15:00:00Z'
-title: 'Ro Revenue Growth and the AI Membership Strategy'
+title: 'What a Revenue Headline Leaves Out'
 author: 'Ted Koomen'
 description: 'Working through Ro’s $3 billion run-rate claim, GLP-1 economics, and what Robin might mean for its membership business.'
 posttype: 'business'
