@@ -21,6 +21,7 @@ export default ({ data, location, pageContext }) => {
     featuredImage,
     author,
     takeaways,
+    posttype,
   } = data.markdownRemark.frontmatter
 
   const post = data.markdownRemark
@@ -49,6 +50,7 @@ export default ({ data, location, pageContext }) => {
                 <p className="dispatch-hero__description">{description}</p>
               )}
               <p className="dispatch-hero__byline">
+                {posttype && <><span>{posttype.charAt(0).toUpperCase() + posttype.slice(1)}</span><span aria-hidden="true"> · </span></>}
                 <Link to="/about-me/">{author || "Ted Koomen"}</Link>
                 <span aria-hidden="true"> · </span><time dateTime={formattedDate}>{date ? moment(date).format("MMMM D, YYYY") : formattedDate}</time>
                 <span aria-hidden="true"> · </span>{post.frontmatter.readingMinutes || post.timeToRead || 1} min read

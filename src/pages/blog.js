@@ -10,7 +10,7 @@ const Blog = ({ data }) => {
 
   return (
     <Layout>
-      <Seo title="Writing archive" pathname="/blog/" description="All essays by Ted Koomen on software engineering, low-latency systems, Zig, and AI-assisted optimization." />
+      <Seo title="Writing archive" pathname="/blog/" description="Essays by Ted Koomen on software engineering, low-latency systems, business, and AI." />
       <section className="archive-header">
         <p>Writing / archive</p>
         <h1>

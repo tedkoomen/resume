@@ -6,7 +6,7 @@ import "./card.scss"
 export default function Card({ data, issue }) {
   const {
     node: {
-      frontmatter: { description, date, path, title, readingMinutes },
+      frontmatter: { description, date, path, title, readingMinutes, posttype },
       timeToRead,
     },
   } = data
@@ -27,6 +27,7 @@ export default function Card({ data, issue }) {
           )}
         </div>
         <div className="dispatch-card__meta">
+          {posttype && <span>{posttype.charAt(0).toUpperCase() + posttype.slice(1)}</span>}
           {date && (
             <time dateTime={moment(date).format("YYYY-MM-DD")}>
               {moment(date).format("YYYY.MM.DD")}

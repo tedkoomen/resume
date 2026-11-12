@@ -118,6 +118,11 @@
   margin: 2rem auto;
   border: 1px solid var(--void-line);
 }
+.dispatch-body .source-chart {
+  margin: 2rem 0;
+  img { width: 100%; max-width: 38rem; height: auto; margin: 0 auto 0.8rem; }
+  figcaption { color: var(--void-cream-muted); font-size: 0.8rem; line-height: 1.65; }
+}
 .dispatch-body hr {
   margin: 2.5rem 0;
   border: 0;

@@ -1,6 +1,24 @@
 .dispatch-list {
   margin-top: 1.5rem;
 }
+.dispatch-list__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-block: 1rem;
+  button {
+    border: 1px solid var(--void-line);
+    border-radius: 3px;
+    padding: 0.45rem 0.8rem;
+    background: transparent;
+    color: var(--void-cream-muted);
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    &[aria-pressed="true"] { color: var(--void-accent); border-color: var(--void-accent); }
+    &:focus-visible { outline: 2px solid var(--void-accent); outline-offset: 3px; }
+  }
+}
 .dispatch-list__header {
   display: flex;
   flex-wrap: wrap;
